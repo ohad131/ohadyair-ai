@@ -1,14 +1,61 @@
 <!doctype html>
-<html lang="en">
+<html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1"
     />
-    <link rel="icon" type="image/png" href="%VITE_APP_LOGO%" />
-    <link rel="apple-touch-icon" href="%VITE_APP_LOGO%" />
-    <title>%VITE_APP_TITLE%</title>
+    <link rel="icon" type="image/png" href="/RoundLOGO.png" />
+    <link rel="apple-touch-icon" href="/RoundLOGO.png" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Ohad Yair - בונה מערכות AI ואוטומציה</title>
+    <meta name="title" content="Ohad Yair - בונה מערכות AI ואוטומציה" />
+    <meta name="description" content="ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה. שירותי אוטומציה, פיתוח אתרים, AI לעסקים, השקעות ויזמות." />
+    <meta name="keywords" content="AI, אוטומציה, בינה מלאכותית, n8n, פיתוח אתרים, צ'אטבוט, השקעות, מסחר, יזמות, MVP, אוהד יאיר" />
+    <meta name="author" content="Ohad Yair" />
+    <meta name="language" content="Hebrew" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ohadyair.ai/" />
+    <meta property="og:title" content="Ohad Yair - בונה מערכות AI ואוטומציה" />
+    <meta property="og:description" content="ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה." />
+    <meta property="og:image" content="/RoundLOGO.png" />
+    <meta property="og:locale" content="he_IL" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://ohadyair.ai/" />
+    <meta property="twitter:title" content="Ohad Yair - בונה מערכות AI ואוטומציה" />
+    <meta property="twitter:description" content="ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה." />
+    <meta property="twitter:image" content="/RoundLOGO.png" />
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Ohad Yair",
+      "url": "https://ohadyair.ai",
+      "image": "/RoundLOGO.png",
+      "jobTitle": "AI & Automation Engineer",
+      "description": "בונה מערכות AI ואוטומציה שמייצרות אימפקט עסקי",
+      "email": "ohadyair.ai@gmail.com",
+      "knowsAbout": ["Artificial Intelligence", "Automation", "Web Development", "n8n", "Trading", "Entrepreneurship"],
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "כלכלה וניהול"
+      }
+    }
+    </script>
   </head>
 
   <body>
@@ -19,5 +66,25 @@
       src="%VITE_ANALYTICS_ENDPOINT%/umami"
       data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"
     ></script>
+    
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-banner" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(37, 50, 51, 0.95); backdrop-filter: blur(10px); padding: 20px; text-align: center; z-index: 9999; border-top: 1px solid rgba(0, 191, 111, 0.3);">
+      <p style="color: #cee0e0; margin: 0 0 10px 0; font-family: 'Heebo', sans-serif;">
+        אנחנו משתמשים בעוגיות כדי לשפר את חוויית המשתמש. המשך גלישה מהווה הסכמה לשימוש בעוגיות.
+      </p>
+      <button onclick="acceptCookies()" style="background: #00bf6f; color: white; border: none; padding: 10px 30px; border-radius: 8px; cursor: pointer; font-family: 'Heebo', sans-serif; font-weight: 500;">
+        הבנתי
+      </button>
+    </div>
+    
+    <script>
+      function acceptCookies() {
+        localStorage.setItem('cookieConsent', 'true');
+        document.getElementById('cookie-banner').style.display = 'none';
+      }
+      if (!localStorage.getItem('cookieConsent')) {
+        document.getElementById('cookie-banner').style.display = 'block';
+      }
+    </script>
   </body>
 </html>

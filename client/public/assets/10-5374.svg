@@ -1,0 +1,26 @@
+<svg width="78" height="199" viewBox="0 0 78 199" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M75.5 194V119.25C75.5 114.139 75.5 111.584 74.3665 109.411C73.2331 107.237 71.1374 105.775 66.9461 102.85L11.0539 63.8424C6.86259 60.9173 4.76695 59.4548 3.63347 57.2815C2.5 55.1083 2.5 52.5527 2.5 47.4416L2.5 4.5" stroke="white" stroke-opacity="0.25"/>
+<path d="M75.5 194V119.25C75.5 114.139 75.5 111.584 74.3665 109.411C73.2331 107.237 71.1374 105.775 66.9461 102.85L11.0539 63.8424C6.86259 60.9173 4.76695 59.4548 3.63347 57.2815C2.5 55.1083 2.5 52.5527 2.5 47.4416L2.5 4.5" stroke="url(#paint0_radial_10_5374)"/>
+<g style="mix-blend-mode:plus-lighter" filter="url(#filter0_f_10_5374)">
+<path d="M19.5 69.5L57.75 96.5" stroke="url(#paint1_radial_10_5374)" stroke-opacity="0.7"/>
+</g>
+<foreignObject x="-12" y="-12" width="29" height="29"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(6px);clip-path:url(#bgblur_0_10_5374_clip_path);height:100%;width:100%"></div></foreignObject><circle data-figma-bg-blur-radius="12" cx="2" cy="2" r="2" transform="matrix(1 0 0 -1 0.5 4.5)" stroke="white" stroke-opacity="0.25"/>
+<foreignObject x="61" y="181.5" width="29" height="29"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(6px);clip-path:url(#bgblur_1_10_5374_clip_path);height:100%;width:100%"></div></foreignObject><circle data-figma-bg-blur-radius="12" cx="2" cy="2" r="2" transform="matrix(1 0 0 -1 73.5 198)" stroke="white" stroke-opacity="0.25"/>
+<defs>
+<filter id="filter0_f_10_5374" x="14.7117" y="64.5916" width="47.8267" height="36.8169" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="2.25" result="effect1_foregroundBlur_10_5374"/>
+</filter>
+<clipPath id="bgblur_0_10_5374_clip_path" transform="translate(12 12)"><circle cx="2" cy="2" r="2" transform="matrix(1 0 0 -1 0.5 4.5)"/>
+</clipPath><clipPath id="bgblur_1_10_5374_clip_path" transform="translate(-61 -181.5)"><circle cx="2" cy="2" r="2" transform="matrix(1 0 0 -1 73.5 198)"/>
+</clipPath><radialGradient id="paint0_radial_10_5374" cx="0" cy="0" r="1" gradientTransform="matrix(36.0567 -22.643 -15.2823 -20.244 39.1478 82.133)" gradientUnits="userSpaceOnUse">
+<stop offset="0.00162628" stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint1_radial_10_5374" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(38.7024 80.5612) rotate(-53.1262) scale(20.0775 21.0147)">
+<stop offset="0.00162628" stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>
