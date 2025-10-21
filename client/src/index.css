@@ -151,16 +151,12 @@
   body {
     @apply text-foreground;
     font-family: 'Heebo', 'Inter', sans-serif;
-    /* Liquid gradient background inspired by logo colors */
-    background: linear-gradient(135deg, 
-      #e0f2f1 0%,    /* light cyan */
-      #b2dfdb 25%,   /* medium cyan */
-      #80cbc4 50%,   /* cyan */
-      #4db6ac 75%,   /* teal */
-      #26a69a 100%   /* deep teal */
-    );
+    /* Gray background like logo background */
+    background: #e8e8e8;
     background-attachment: fixed;
     min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
   }
   
   button:not(:disabled),
@@ -314,5 +310,235 @@ html {
 .animated-gradient {
   background-size: 200% 200%;
   animation: gradient-shift 15s ease infinite;
+}
+
+
+
+/* ============================================
+   ACCESSIBILITY STYLES (Israeli Law Compliance)
+   ============================================ */
+
+.high-contrast {
+  filter: contrast(1.5) !important;
+}
+
+.increased-line-height * {
+  line-height: 2 !important;
+}
+
+.large-cursor,
+.large-cursor * {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="%2300bcd4" opacity="0.5"/><circle cx="16" cy="16" r="4" fill="%23000"/></svg>') 16 16, auto !important;
+}
+
+.highlight-links a {
+  background-color: yellow !important;
+  color: black !important;
+  padding: 2px 4px !important;
+  border-radius: 2px !important;
+  text-decoration: underline !important;
+}
+
+/* Skip to content link for keyboard navigation */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #00bcd4;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* ============================================
+   FUTURISTIC BACKGROUND ANIMATIONS
+   ============================================ */
+
+/* Floating particles */
+@keyframes float-particle {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Pulsing glow orbs */
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+/* Wave motion */
+@keyframes wave-motion {
+  0% {
+    transform: translateX(-100%) translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(50%) translateY(-20px) rotate(180deg);
+  }
+  100% {
+    transform: translateX(200%) translateY(0) rotate(360deg);
+  }
+}
+
+/* Rotating circuit lines */
+@keyframes rotate-circuit {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 0.2;
+  }
+}
+
+/* Scanning line effect */
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+/* Utility classes for animations */
+.animate-float-particle {
+  animation: float-particle 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-wave {
+  animation: wave-motion 20s linear infinite;
+}
+
+.animate-rotate-circuit {
+  animation: rotate-circuit 30s linear infinite;
+}
+
+.animate-scan {
+  animation: scan-line 8s linear infinite;
+}
+
+.animate-glitch {
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Larger touch targets */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better spacing on mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Readable font sizes */
+  body {
+    font-size: 16px;
+  }
+  
+  h1 {
+    font-size: 2rem !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  h3 {
+    font-size: 1.25rem !important;
+  }
+  
+  /* Hide complex animations on mobile for performance */
+  .animate-wave,
+  .animate-rotate-circuit {
+    animation: none;
+  }
+}
+
+/* ============================================
+   ACTIVE SECTION HIGHLIGHTING
+   ============================================ */
+
+.nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-link.active {
+  color: #00bcd4 !important;
+  font-weight: 600;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00bcd4, transparent);
+  border-radius: 2px;
 }
 
