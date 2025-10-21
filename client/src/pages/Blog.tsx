@@ -25,10 +25,8 @@ export default function Blog() {
               <img src="/logo.png" alt="Ohad Yair Logo" className="w-full h-full object-contain p-2" />
             </div>
           </Link>
-          <Link href="/">
-            <a className="text-secondary hover:text-primary transition-colors text-sm font-medium">
-              ← חזרה לדף הבית
-            </a>
+          <Link href="/" className="text-secondary hover:text-primary transition-colors text-sm font-medium">
+            ← חזרה לדף הבית
           </Link>
         </nav>
       </header>
@@ -99,20 +97,20 @@ export default function Blog() {
             <div>
               <h4 className="text-white font-semibold mb-4">קישורים מהירים</h4>
               <div className="space-y-2">
-                <Link href="/#home">
-                  <a className="block text-white/80 text-sm hover:text-white transition-colors">בית</a>
+                <Link href="/#home" className="block text-white/80 text-sm hover:text-white transition-colors">
+                  בית
                 </Link>
-                <Link href="/#services">
-                  <a className="block text-white/80 text-sm hover:text-white transition-colors">שירותים</a>
+                <Link href="/#services" className="block text-white/80 text-sm hover:text-white transition-colors">
+                  שירותים
                 </Link>
-                <Link href="/#projects">
-                  <a className="block text-white/80 text-sm hover:text-white transition-colors">פרויקטים</a>
+                <Link href="/#projects" className="block text-white/80 text-sm hover:text-white transition-colors">
+                  פרויקטים
                 </Link>
-                <Link href="/blog">
-                  <a className="block text-white/80 text-sm hover:text-white transition-colors">בלוג</a>
+                <Link href="/blog" className="block text-white/80 text-sm hover:text-white transition-colors">
+                  בלוג
                 </Link>
-                <Link href="/#contact">
-                  <a className="block text-white/80 text-sm hover:text-white transition-colors">צור קשר</a>
+                <Link href="/#contact" className="block text-white/80 text-sm hover:text-white transition-colors">
+                  צור קשר
                 </Link>
               </div>
             </div>
