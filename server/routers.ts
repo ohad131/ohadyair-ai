@@ -116,9 +116,11 @@ export const appRouter = router({
   }),
 
   aiTools: router({
-    list: publicProcedure.query(async () => {
-      return await getAllAITools();
-    }),
+    list: publicProcedure
+      .input(z.void().optional())
+      .query(async () => {
+        return await getAllAITools();
+      }),
 
     update: publicProcedure
       .input(

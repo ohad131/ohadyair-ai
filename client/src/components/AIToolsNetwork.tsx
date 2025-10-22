@@ -1,68 +1,109 @@
 import { useEffect, useRef, useState } from "react";
-import { trpc } from "@/lib/trpc";
 
-interface Node {
+interface Tool {
   id: number;
+  name: string;
+  url: string;
+  color: string;
+}
+
+interface Node extends Tool {
   x: number;
   y: number;
   vx: number;
   vy: number;
-  name: string;
-  url: string;
-  color: string;
   width: number;
   height: number;
   rotation: number;
-  rotationSpeed: number;
+  element?: HTMLAnchorElement;
 }
 
-// Check mobile IMMEDIATELY before component renders
-const getIsMobile = () => {
-  if (typeof window === 'undefined') return false;
-  return window.innerWidth < 768;
-};
+interface Props {
+  tools: Tool[];
+}
 
-export default function AIToolsNetwork() {
-  // Initialize with immediate check
-  const [isMobile, setIsMobile] = useState(getIsMobile);
+export default function AIToolsNetwork({ tools }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const nodesRef = useRef<Node[]>([]);
-  const animationFrameRef = useRef<number | undefined>(undefined);
   const mouseRef = useRef({ x: 0, y: 0 });
-
-  // Fetch AI tools from database
-  const { data: aiTools = [] } = trpc.aiTools.list.useQuery();
+  const animationRef = useRef<number | undefined>(undefined);
+  const [isMobile, setIsMobile] = useState(() => 
+    typeof window !== 'undefined' && window.innerWidth < 768
+  );
 
   useEffect(() => {
-    const handleResize = () => {
-      const mobile = getIsMobile();
-      setIsMobile(mobile);
-      
-      // Stop animation immediately if switching to mobile
-      if (mobile && animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = undefined;
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    // CRITICAL: Do not start animation on mobile
-    if (isMobile || aiTools.length === 0) {
-      return;
-    }
+    if (!containerRef.current || !tools || tools.length === 0 || isMobile) return;
 
     const container = containerRef.current;
-    if (!container) return;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
 
-    const rect = container.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    // Initialize nodes once
+    if (nodesRef.current.length === 0) {
+      nodesRef.current = tools.map((tool) => ({
+        ...tool,
+        x: Math.random() * (width - 200) + 100,
+        y: Math.random() * (height - 100) + 50,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        width: 120 + Math.random() * 40,
+        height: 45 + Math.random() * 10,
+        rotation: Math.random() * 10 - 5,
+      }));
 
-    // Track mouse position
+      // Create DOM elements once
+      nodesRef.current.forEach((node) => {
+        const nodeEl = document.createElement("a");
+        nodeEl.href = node.url;
+        nodeEl.target = "_blank";
+        nodeEl.rel = "noopener noreferrer";
+        nodeEl.className = "absolute transition-none cursor-pointer block";
+        nodeEl.style.zIndex = "10";
+        nodeEl.style.pointerEvents = "auto";
+
+        nodeEl.innerHTML = `
+          <div class="liquid-glass-tile w-full h-full rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-4 py-2 hover:scale-110 hover:shadow-2xl relative overflow-hidden transition-transform duration-300"
+               style="
+                 background: linear-gradient(135deg, 
+                   rgba(${node.color}, 0.15) 0%, 
+                   rgba(${node.color}, 0.08) 50%, 
+                   rgba(${node.color}, 0.12) 100%);
+                 border-color: rgba(${node.color}, 0.25);
+                 box-shadow: 
+                   0 8px 32px rgba(${node.color}, 0.2),
+                   inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                   inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+               ">
+            <div class="absolute inset-0 rounded-2xl" 
+                 style="background: linear-gradient(120deg, 
+                   transparent 0%, 
+                   rgba(255, 255, 255, 0.15) 40%, 
+                   rgba(255, 255, 255, 0.25) 50%, 
+                   rgba(255, 255, 255, 0.15) 60%, 
+                   transparent 100%);
+                   transform: translateX(-100%);
+                   animation: liquid-shine 8s ease-in-out infinite;">
+            </div>
+            <div class="text-sm font-bold text-center whitespace-nowrap relative z-10" 
+                 style="color: rgb(${node.color}); 
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+              ${node.name}
+            </div>
+          </div>
+        `;
+
+        node.element = nodeEl;
+        container.appendChild(nodeEl);
+      });
+    }
+
+    // Track mouse
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
       mouseRef.current = {
@@ -70,59 +111,24 @@ export default function AIToolsNetwork() {
         y: e.clientY - rect.top,
       };
     };
-
     container.addEventListener("mousemove", handleMouseMove);
-
-    // Initialize nodes with slow consistent velocities
-    nodesRef.current = aiTools.map((tool) => {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 0.4 + Math.random() * 0.3;
-      return {
-        id: tool.id,
-        x: Math.random() * (width - 200) + 100,
-        y: Math.random() * (height - 100) + 50,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        name: tool.name,
-        url: tool.url,
-        color: tool.color,
-        width: 100 + Math.random() * 30,
-        height: 50 + Math.random() * 15,
-        rotation: (Math.random() - 0.5) * 5,
-        rotationSpeed: (Math.random() - 0.5) * 0.2,
-      };
-    });
 
     // Animation loop
     const animate = () => {
-      // Double check mobile state during animation
-      if (getIsMobile()) {
-        if (animationFrameRef.current) {
-          cancelAnimationFrame(animationFrameRef.current);
-          animationFrameRef.current = undefined;
-        }
-        return;
-      }
-
-      const rect = container.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
-
-      // Update nodes
       nodesRef.current.forEach((node, i) => {
-        // Mouse interaction - repel from mouse
+        // Mouse repulsion (gentle)
         const dx = node.x - mouseRef.current.x;
         const dy = node.y - mouseRef.current.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         const mouseRadius = 150;
 
         if (distance < mouseRadius && distance > 0) {
-          const force = (mouseRadius - distance) / mouseRadius * 0.15; // Reduced from 0.5 to 0.15
+          const force = ((mouseRadius - distance) / mouseRadius) * 0.15;
           node.vx += (dx / distance) * force;
           node.vy += (dy / distance) * force;
         }
 
-        // Apply friction to prevent infinite acceleration
+        // Apply friction
         node.vx *= 0.98;
         node.vy *= 0.98;
 
@@ -137,15 +143,14 @@ export default function AIToolsNetwork() {
         // Update position
         node.x += node.vx;
         node.y += node.vy;
-        node.rotation += node.rotationSpeed;
 
-        // Bounce off edges with realistic physics
+        // Bounce off walls
         const halfWidth = node.width / 2;
         const halfHeight = node.height / 2;
 
         if (node.x < halfWidth) {
           node.x = halfWidth;
-          node.vx = Math.abs(node.vx) * 0.8; // Energy loss on bounce
+          node.vx = Math.abs(node.vx) * 0.8;
         }
         if (node.x > width - halfWidth) {
           node.x = width - halfWidth;
@@ -165,51 +170,46 @@ export default function AIToolsNetwork() {
           const dx = otherNode.x - node.x;
           const dy = otherNode.y - node.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          // Use actual visual size (80% of declared size to account for padding/borders)
-          const minDistance = (Math.max(node.width, node.height) * 0.8) / 2 + (Math.max(otherNode.width, otherNode.height) * 0.8) / 2 + 10;
+          const minDistance =
+            (Math.max(node.width, node.height) * 0.8) / 2 +
+            (Math.max(otherNode.width, otherNode.height) * 0.8) / 2 +
+            10;
 
           if (distance < minDistance && distance > 0) {
-            // Realistic elastic collision
+            // Elastic collision
             const angle = Math.atan2(dy, dx);
-            const sin = Math.sin(angle);
-            const cos = Math.cos(angle);
+            const targetX = node.x + Math.cos(angle) * minDistance;
+            const targetY = node.y + Math.sin(angle) * minDistance;
 
-            // Rotate velocities
-            const vx1 = node.vx * cos + node.vy * sin;
-            const vy1 = node.vy * cos - node.vx * sin;
-            const vx2 = otherNode.vx * cos + otherNode.vy * sin;
-            const vy2 = otherNode.vy * cos - otherNode.vx * sin;
+            const ax = (targetX - otherNode.x) * 0.05;
+            const ay = (targetY - otherNode.y) * 0.05;
 
-            // Swap velocities (elastic collision)
-            const finalVx1 = vx2 * 0.9; // Energy loss
-            const finalVx2 = vx1 * 0.9;
-
-            // Rotate back
-            node.vx = finalVx1 * cos - vy1 * sin;
-            node.vy = vy1 * cos + finalVx1 * sin;
-            otherNode.vx = finalVx2 * cos - vy2 * sin;
-            otherNode.vy = vy2 * cos + finalVx2 * sin;
-
-            // Separate nodes to prevent overlap
-            const overlap = minDistance - distance;
-            const separateX = (overlap / 2) * cos;
-            const separateY = (overlap / 2) * sin;
-            node.x -= separateX;
-            node.y -= separateY;
-            otherNode.x += separateX;
-            otherNode.y += separateY;
+            node.vx -= ax;
+            node.vy -= ay;
+            otherNode.vx += ax;
+            otherNode.vy += ay;
           }
         });
+
+        // Update DOM element position (not recreating!)
+        if (node.element) {
+          node.element.style.left = `${node.x - node.width / 2}px`;
+          node.element.style.top = `${node.y - node.height / 2}px`;
+          node.element.style.width = `${node.width}px`;
+          node.element.style.height = `${node.height}px`;
+          node.element.style.transform = `rotate(${node.rotation}deg)`;
+        }
       });
 
-      // Render
-      container.innerHTML = "";
+      // Draw connections (SVG)
+      const existingSvg = container.querySelector("svg");
+      if (existingSvg) existingSvg.remove();
 
-      // Draw connections
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svg.setAttribute("class", "absolute inset-0 pointer-events-none");
       svg.setAttribute("width", width.toString());
       svg.setAttribute("height", height.toString());
+      svg.style.zIndex = "5";
 
       nodesRef.current.forEach((node, i) => {
         nodesRef.current.slice(i + 1).forEach((otherNode) => {
@@ -240,131 +240,70 @@ export default function AIToolsNetwork() {
         });
       });
 
-      container.appendChild(svg);
+      container.insertBefore(svg, container.firstChild);
 
-      // Draw liquid glass nodes (clickable)
-      nodesRef.current.forEach((node) => {
-        const nodeEl = document.createElement("a");
-        nodeEl.href = node.url;
-        nodeEl.target = "_blank";
-        nodeEl.rel = "noopener noreferrer";
-        nodeEl.className = "absolute transition-all duration-75 cursor-pointer block";
-        nodeEl.style.left = `${node.x - node.width / 2}px`;
-        nodeEl.style.top = `${node.y - node.height / 2}px`;
-        nodeEl.style.width = `${node.width}px`;
-        nodeEl.style.height = `${node.height}px`;
-        nodeEl.style.transform = `rotate(${node.rotation}deg)`;
-        nodeEl.style.zIndex = "10";
-        nodeEl.style.pointerEvents = "auto";
-
-        // Liquid glass effect - entire div is clickable
-        nodeEl.innerHTML = `
-          <div class="liquid-glass-tile w-full h-full rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-4 py-2 transition-all duration-300 hover:scale-110 hover:shadow-2xl relative overflow-hidden"
-               style="
-                 background: linear-gradient(135deg, 
-                   rgba(${node.color}, 0.15) 0%, 
-                   rgba(${node.color}, 0.08) 50%, 
-                   rgba(${node.color}, 0.12) 100%);
-                 border-color: rgba(${node.color}, 0.25);
-                 box-shadow: 
-                   0 8px 32px rgba(${node.color}, 0.2),
-                   inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                   inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-               ">
-            <div class="absolute inset-0 rounded-2xl" 
-                 style="background: linear-gradient(120deg, 
-                   transparent 0%, 
-                   rgba(255, 255, 255, 0.15) 40%, 
-                   rgba(255, 255, 255, 0.25) 50%, 
-                   rgba(255, 255, 255, 0.15) 60%, 
-                   transparent 100%);
-                   transform: translateX(-100%);
-                   animation: liquid-shine 8s ease-in-out infinite;">
-            </div>
-            <div class="text-sm font-bold text-center whitespace-nowrap relative z-10" 
-                 style="color: rgb(${node.color}); 
-                        text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
-              ${node.name}
-            </div>
-          </div>
-        `;
-
-        container.appendChild(nodeEl);
-      });
-
-      animationFrameRef.current = requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = undefined;
-      }
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [isMobile, aiTools]);
+  }, [tools, isMobile]);
 
-  // Mobile: Static grid layout ONLY - return early
+  // Mobile grid view
   if (isMobile) {
     return (
-      <div className="w-full py-6">
-        <div className="grid grid-cols-3 gap-3 max-w-sm mx-auto px-4">
-          {aiTools.map((tool, index) => (
-            <a
-              key={tool.id}
-              href={tool.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="liquid-glass-tile rounded-xl backdrop-blur-xl border flex items-center justify-center py-3 px-2 relative overflow-hidden hover:scale-105 transition-transform"
+      <div className="w-full max-w-sm mx-auto grid grid-cols-3 gap-3 p-4">
+        {tools?.map((tool) => (
+          <a
+            key={tool.id}
+            href={tool.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="liquid-glass-tile rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-3 py-2 hover:scale-105 transition-transform duration-300 relative overflow-hidden"
+            style={{
+              background: `linear-gradient(135deg, 
+                rgba(${tool.color}, 0.15) 0%, 
+                rgba(${tool.color}, 0.08) 50%, 
+                rgba(${tool.color}, 0.12) 100%)`,
+              borderColor: `rgba(${tool.color}, 0.25)`,
+              boxShadow: `
+                0 8px 32px rgba(${tool.color}, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1)`,
+            }}
+          >
+            <div
+              className="absolute inset-0 rounded-2xl"
               style={{
-                background: `linear-gradient(135deg, 
-                  rgba(${tool.color}, 0.15) 0%, 
-                  rgba(${tool.color}, 0.08) 50%, 
-                  rgba(${tool.color}, 0.12) 100%)`,
-                borderColor: `rgba(${tool.color}, 0.25)`,
-                boxShadow: `
-                  0 4px 16px rgba(${tool.color}, 0.2),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                  inset 0 -1px 0 rgba(0, 0, 0, 0.1)`,
+                background: `linear-gradient(120deg, 
+                  transparent 0%, 
+                  rgba(255, 255, 255, 0.15) 40%, 
+                  rgba(255, 255, 255, 0.25) 50%, 
+                  rgba(255, 255, 255, 0.15) 60%, 
+                  transparent 100%)`,
+                transform: "translateX(-100%)",
+                animation: "liquid-shine 8s ease-in-out infinite",
+              }}
+            />
+            <div
+              className="text-xs font-bold text-center whitespace-nowrap relative z-10"
+              style={{
+                color: `rgb(${tool.color})`,
+                textShadow: "0 1px 2px rgba(0,0,0,0.1)",
               }}
             >
-              <div
-                className="absolute inset-0 rounded-xl"
-                style={{
-                  background: `linear-gradient(120deg, 
-                    transparent 0%, 
-                    rgba(255, 255, 255, 0.15) 40%, 
-                    rgba(255, 255, 255, 0.25) 50%, 
-                    rgba(255, 255, 255, 0.15) 60%, 
-                    transparent 100%)`,
-                  transform: "translateX(-100%)",
-                  animation: "liquid-shine 8s ease-in-out infinite",
-                  animationDelay: `${index * 0.3}s`,
-                }}
-              />
-              <div
-                className="text-xs font-bold text-center relative z-10"
-                style={{
-                  color: `rgb(${tool.color})`,
-                  textShadow: "0 1px 2px rgba(0,0,0,0.1)",
-                }}
-              >
-                {tool.name}
-              </div>
-            </a>
-          ))}
-        </div>
+              {tool.name}
+            </div>
+          </a>
+        ))}
       </div>
     );
   }
 
-  // Desktop: Animated floating tiles
-  return (
-    <div className="relative w-full h-full">
-      <div ref={containerRef} className="absolute inset-0" />
-    </div>
-  );
+  return <div ref={containerRef} className="relative w-full h-full" />;
 }
 

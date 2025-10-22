@@ -5,8 +5,10 @@ import { useState, useEffect } from "react";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import AIToolsNetwork from "@/components/AIToolsNetwork";
+import { trpc } from "@/lib/trpc";
 
 export default function Home() {
+  const { data: tools = [] } = trpc.aiTools.list.useQuery();
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -189,7 +191,7 @@ export default function Home() {
 
           {/* Hero AI Tools Network - NO background, NO border */}
           <div className="w-full h-auto md:h-[320px] mb-8">
-            <AIToolsNetwork />
+            <AIToolsNetwork tools={tools} />
           </div>
 
           {/* CTA Buttons */}
