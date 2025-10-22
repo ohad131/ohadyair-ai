@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Node {
   x: number;
@@ -33,8 +33,22 @@ export default function AIToolsNetwork() {
   const containerRef = useRef<HTMLDivElement>(null);
   const nodesRef = useRef<Node[]>([]);
   const animationFrameRef = useRef<number | undefined>(undefined);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return; // Skip animation on mobile
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -175,7 +189,7 @@ export default function AIToolsNetwork() {
         nodeEl.style.transform = `rotate(${node.rotation}deg)`;
         nodeEl.style.zIndex = "10";
 
-        // Liquid glass effect - colorful translucent with subtle shine
+        // Liquid glass effect
         nodeEl.innerHTML = `
           <div class="liquid-glass-tile w-full h-full rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-4 py-2 transition-all duration-300 hover:scale-105 relative overflow-hidden"
                style="
@@ -189,7 +203,6 @@ export default function AIToolsNetwork() {
                    inset 0 1px 0 rgba(255, 255, 255, 0.3),
                    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
                ">
-            <!-- Liquid shine overlay -->
             <div class="absolute inset-0 rounded-2xl" 
                  style="background: linear-gradient(120deg, 
                    transparent 0%, 
@@ -200,8 +213,6 @@ export default function AIToolsNetwork() {
                    transform: translateX(-100%);
                    animation: liquid-shine 8s ease-in-out infinite;">
             </div>
-            
-            <!-- Text -->
             <div class="text-sm font-bold text-center whitespace-nowrap relative z-10" 
                  style="color: rgb(${node.color}); 
                         text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
@@ -223,8 +234,60 @@ export default function AIToolsNetwork() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, []);
+  }, [isMobile]);
 
+  // Mobile: Static grid layout
+  if (isMobile) {
+    return (
+      <div className="w-full h-full p-4">
+        <div className="grid grid-cols-3 gap-2 max-w-md mx-auto">
+          {AI_TOOLS.map((tool, index) => (
+            <div
+              key={index}
+              className="liquid-glass-tile rounded-lg backdrop-blur-xl border flex items-center justify-center p-2 relative overflow-hidden"
+              style={{
+                background: `linear-gradient(135deg, 
+                  rgba(${tool.color}, 0.15) 0%, 
+                  rgba(${tool.color}, 0.08) 50%, 
+                  rgba(${tool.color}, 0.12) 100%)`,
+                borderColor: `rgba(${tool.color}, 0.25)`,
+                boxShadow: `
+                  0 4px 16px rgba(${tool.color}, 0.2),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                  inset 0 -1px 0 rgba(0, 0, 0, 0.1)`,
+              }}
+            >
+              <div
+                className="absolute inset-0 rounded-lg"
+                style={{
+                  background: `linear-gradient(120deg, 
+                    transparent 0%, 
+                    rgba(255, 255, 255, 0.15) 40%, 
+                    rgba(255, 255, 255, 0.25) 50%, 
+                    rgba(255, 255, 255, 0.15) 60%, 
+                    transparent 100%)`,
+                  transform: "translateX(-100%)",
+                  animation: "liquid-shine 8s ease-in-out infinite",
+                  animationDelay: `${index * 0.3}s`,
+                }}
+              />
+              <div
+                className="text-xs font-bold text-center relative z-10"
+                style={{
+                  color: `rgb(${tool.color})`,
+                  textShadow: "0 1px 2px rgba(0,0,0,0.1)",
+                }}
+              >
+                {tool.name}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop: Animated floating tiles
   return (
     <div className="relative w-full h-full">
       <div ref={containerRef} className="absolute inset-0" />
