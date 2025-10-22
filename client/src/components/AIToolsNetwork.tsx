@@ -117,7 +117,7 @@ export default function AIToolsNetwork() {
         const mouseRadius = 150;
 
         if (distance < mouseRadius && distance > 0) {
-          const force = (mouseRadius - distance) / mouseRadius * 0.5;
+          const force = (mouseRadius - distance) / mouseRadius * 0.15; // Reduced from 0.5 to 0.15
           node.vx += (dx / distance) * force;
           node.vy += (dy / distance) * force;
         }
@@ -248,17 +248,18 @@ export default function AIToolsNetwork() {
         nodeEl.href = node.url;
         nodeEl.target = "_blank";
         nodeEl.rel = "noopener noreferrer";
-        nodeEl.className = "absolute transition-all duration-75 cursor-pointer";
+        nodeEl.className = "absolute transition-all duration-75 cursor-pointer block";
         nodeEl.style.left = `${node.x - node.width / 2}px`;
         nodeEl.style.top = `${node.y - node.height / 2}px`;
         nodeEl.style.width = `${node.width}px`;
         nodeEl.style.height = `${node.height}px`;
         nodeEl.style.transform = `rotate(${node.rotation}deg)`;
         nodeEl.style.zIndex = "10";
+        nodeEl.style.pointerEvents = "auto";
 
         // Liquid glass effect - entire div is clickable
         nodeEl.innerHTML = `
-          <div class="liquid-glass-tile w-full h-full rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-4 py-2 transition-all duration-300 hover:scale-110 hover:shadow-2xl relative overflow-hidden cursor-pointer"
+          <div class="liquid-glass-tile w-full h-full rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-4 py-2 transition-all duration-300 hover:scale-110 hover:shadow-2xl relative overflow-hidden"
                style="
                  background: linear-gradient(135deg, 
                    rgba(${node.color}, 0.15) 0%, 
