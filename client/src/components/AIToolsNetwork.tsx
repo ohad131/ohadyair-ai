@@ -239,8 +239,8 @@ export default function AIToolsNetwork() {
   // Mobile: Static grid layout
   if (isMobile) {
     return (
-      <div className="w-full h-full p-4">
-        <div className="grid grid-cols-3 gap-2 max-w-md mx-auto">
+      <div className="w-full py-4">
+        <div className="grid grid-cols-3 gap-2 max-w-sm mx-auto">
           {AI_TOOLS.map((tool, index) => (
             <div
               key={index}

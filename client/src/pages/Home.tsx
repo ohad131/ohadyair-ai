@@ -188,7 +188,7 @@ export default function Home() {
           </div>
 
           {/* Hero AI Tools Network - NO background, NO border */}
-          <div className="w-full h-[280px] md:h-[320px] mb-8">
+          <div className="w-full h-auto md:h-[320px] mb-8">
             <AIToolsNetwork />
           </div>
 
