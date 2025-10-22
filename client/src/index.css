@@ -557,3 +557,20 @@ html {
   animation: spin-slow 8s linear infinite;
 }
 
+/* Liquid Glass Animation */
+@keyframes liquid-shine {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  50% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+}
+
+.liquid-glass-tile {
+  position: relative;
+}
+

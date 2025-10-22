@@ -249,9 +249,9 @@ export default function Home() {
                 description: "שילוב מודלי שפה, צ'אטבוטים חכמים, וכלי AI מותאמים לצרכים עסקיים",
               },
               {
-                icon: "📈",
-                title: "השקעות ומסחר",
-                description: "ניתוח דאטה פיננסי, כלי החלטה מבוססי AI, ואסטרטגיות מסחר מתקדמות",
+                icon: "🎓",
+                title: "הרצאות והכשרות",
+                description: "הרצאות מעוררות השראה והכשרות מעשיות ב-AI, אוטומציה וטכנולוגיות מתקדמות",
               },
               {
                 icon: "💡",
@@ -533,8 +533,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <img src="/logo.png" alt="Ohad Yair" className="w-10 h-10" />
-                <span className="text-white font-bold text-lg">Ohad Yair</span>
+                <img src="/RoundLOGO.png" alt="אוהד יאיר רחימי" className="w-12 h-12 rounded-full" />
+                <span className="text-white font-bold text-lg">אוהד יאיר רחימי</span>
               </div>
               <p className="text-white/80 text-sm">
                 בונה מערכות AI ואוטומציה שמייצרות אימפקט עסקי

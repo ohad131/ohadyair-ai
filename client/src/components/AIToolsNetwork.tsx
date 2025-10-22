@@ -9,11 +9,8 @@ interface Node {
   color: string;
   width: number;
   height: number;
-  glow: number;
   rotation: number;
   rotationSpeed: number;
-  wobble: number;
-  ripple: number;
 }
 
 const AI_TOOLS = [
@@ -45,10 +42,10 @@ export default function AIToolsNetwork() {
     const width = rect.width;
     const height = rect.height;
 
-    // Initialize nodes with SLOW consistent velocities
+    // Initialize nodes with slow consistent velocities
     nodesRef.current = AI_TOOLS.map((tool) => {
       const angle = Math.random() * Math.PI * 2;
-      const speed = 0.3 + Math.random() * 0.2; // Very slow speed
+      const speed = 0.3 + Math.random() * 0.2;
       return {
         x: Math.random() * (width - 200) + 100,
         y: Math.random() * (height - 100) + 50,
@@ -58,11 +55,8 @@ export default function AIToolsNetwork() {
         color: tool.color,
         width: 100 + Math.random() * 30,
         height: 50 + Math.random() * 15,
-        glow: 0,
         rotation: (Math.random() - 0.5) * 5,
         rotationSpeed: (Math.random() - 0.5) * 0.2,
-        wobble: 0,
-        ripple: 0,
       };
     });
 
@@ -74,28 +68,22 @@ export default function AIToolsNetwork() {
 
       // Update nodes
       nodesRef.current.forEach((node, i) => {
-        // Update position with CONSTANT velocity
+        // Update position with constant velocity
         node.x += node.vx;
         node.y += node.vy;
         node.rotation += node.rotationSpeed;
 
-        // Bounce off edges - maintain speed
+        // Bounce off edges
         const halfWidth = node.width / 2;
         const halfHeight = node.height / 2;
 
         if (node.x < halfWidth || node.x > width - halfWidth) {
-          node.vx *= -1; // Perfect elastic collision
+          node.vx *= -1;
           node.x = Math.max(halfWidth, Math.min(width - halfWidth, node.x));
-          node.glow = 1;
-          node.wobble = 0.8;
-          node.ripple = 0.8;
         }
         if (node.y < halfHeight || node.y > height - halfHeight) {
-          node.vy *= -1; // Perfect elastic collision
+          node.vy *= -1;
           node.y = Math.max(halfHeight, Math.min(height - halfHeight, node.y));
-          node.glow = 1;
-          node.wobble = 0.8;
-          node.ripple = 0.8;
         }
 
         // Check collisions
@@ -106,28 +94,25 @@ export default function AIToolsNetwork() {
           const minDistance = Math.max(node.width, node.height) / 2 + Math.max(otherNode.width, otherNode.height) / 2 + 20;
 
           if (distance < minDistance && distance > 0) {
-            // Elastic collision - preserve energy
+            // Elastic collision
             const angle = Math.atan2(dy, dx);
             const sin = Math.sin(angle);
             const cos = Math.cos(angle);
 
-            // Rotate velocities
             const vx1 = node.vx * cos + node.vy * sin;
             const vy1 = node.vy * cos - node.vx * sin;
             const vx2 = otherNode.vx * cos + otherNode.vy * sin;
             const vy2 = otherNode.vy * cos - otherNode.vx * sin;
 
-            // Swap velocities (elastic collision)
             const finalVx1 = vx2;
             const finalVx2 = vx1;
 
-            // Rotate back
             node.vx = finalVx1 * cos - vy1 * sin;
             node.vy = vy1 * cos + finalVx1 * sin;
             otherNode.vx = finalVx2 * cos - vy2 * sin;
             otherNode.vy = vy2 * cos + finalVx2 * sin;
 
-            // Separate nodes to prevent sticking
+            // Separate nodes
             const overlap = minDistance - distance;
             const separateX = (overlap / 2) * cos;
             const separateY = (overlap / 2) * sin;
@@ -135,23 +120,8 @@ export default function AIToolsNetwork() {
             node.y -= separateY;
             otherNode.x += separateX;
             otherNode.y += separateY;
-
-            // Wobble-ripple effect
-            node.glow = 1.2;
-            otherNode.glow = 1.2;
-            node.wobble = 1;
-            otherNode.wobble = 1;
-            node.ripple = 1;
-            otherNode.ripple = 1;
           }
         });
-
-        // Decay effects
-        node.glow *= 0.92;
-        node.wobble *= 0.9;
-        node.ripple *= 0.88;
-
-        // NO FRICTION - maintain constant speed
       });
 
       // Render
@@ -170,7 +140,7 @@ export default function AIToolsNetwork() {
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 280) {
-            const opacity = (1 - distance / 280) * 0.3;
+            const opacity = (1 - distance / 280) * 0.25;
             const gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
             const gradientId = `grad-${i}-${nodesRef.current.indexOf(otherNode)}`;
             gradient.setAttribute("id", gradientId);
@@ -186,7 +156,7 @@ export default function AIToolsNetwork() {
             line.setAttribute("x2", otherNode.x.toString());
             line.setAttribute("y2", otherNode.y.toString());
             line.setAttribute("stroke", `url(#${gradientId})`);
-            line.setAttribute("stroke-width", "1.5");
+            line.setAttribute("stroke-width", "1");
             svg.appendChild(line);
           }
         });
@@ -194,7 +164,7 @@ export default function AIToolsNetwork() {
 
       container.appendChild(svg);
 
-      // Draw nodes
+      // Draw liquid glass nodes
       nodesRef.current.forEach((node) => {
         const nodeEl = document.createElement("div");
         nodeEl.className = "absolute transition-all duration-75";
@@ -202,32 +172,39 @@ export default function AIToolsNetwork() {
         nodeEl.style.top = `${node.y - node.height / 2}px`;
         nodeEl.style.width = `${node.width}px`;
         nodeEl.style.height = `${node.height}px`;
-        
-        // Wobble effect
-        const wobbleX = Math.sin(node.wobble * Math.PI * 3) * node.wobble * 3;
-        const wobbleY = Math.cos(node.wobble * Math.PI * 3) * node.wobble * 3;
-        nodeEl.style.transform = `rotate(${node.rotation + wobbleX}deg) translate(${wobbleX}px, ${wobbleY}px)`;
+        nodeEl.style.transform = `rotate(${node.rotation}deg)`;
         nodeEl.style.zIndex = "10";
 
-        const glowIntensity = Math.min(1.2, 0.35 + node.glow * 0.5);
-        const bgOpacity = 0.08 + node.glow * 0.06;
-        const rippleScale = 1 + node.ripple * 0.1;
-
+        // Liquid glass effect - colorful translucent with subtle shine
         nodeEl.innerHTML = `
-          <div class="w-full h-full rounded-xl backdrop-blur-xl border-2 flex items-center justify-center px-4 py-2 transition-all duration-200 hover:scale-105"
+          <div class="liquid-glass-tile w-full h-full rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-4 py-2 transition-all duration-300 hover:scale-105 relative overflow-hidden"
                style="
-                 background: rgba(${node.color}, ${bgOpacity});
-                 border-color: rgba(${node.color}, ${0.2 + node.glow * 0.3});
+                 background: linear-gradient(135deg, 
+                   rgba(${node.color}, 0.15) 0%, 
+                   rgba(${node.color}, 0.08) 50%, 
+                   rgba(${node.color}, 0.12) 100%);
+                 border-color: rgba(${node.color}, 0.25);
                  box-shadow: 
-                   0 10px 40px rgba(${node.color}, ${glowIntensity * 0.5}),
-                   inset 0 2px 6px rgba(255, 255, 255, 0.2),
-                   0 0 ${35 + node.glow * 50}px rgba(${node.color}, ${glowIntensity * 0.8}),
-                   inset 0 -2px 6px rgba(0, 0, 0, 0.08);
-                 transform: scale(${rippleScale});
+                   0 8px 32px rgba(${node.color}, 0.2),
+                   inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                   inset 0 -1px 0 rgba(0, 0, 0, 0.1);
                ">
-            <div class="text-sm font-bold text-center whitespace-nowrap" 
+            <!-- Liquid shine overlay -->
+            <div class="absolute inset-0 rounded-2xl" 
+                 style="background: linear-gradient(120deg, 
+                   transparent 0%, 
+                   rgba(255, 255, 255, 0.15) 40%, 
+                   rgba(255, 255, 255, 0.25) 50%, 
+                   rgba(255, 255, 255, 0.15) 60%, 
+                   transparent 100%);
+                   transform: translateX(-100%);
+                   animation: liquid-shine 8s ease-in-out infinite;">
+            </div>
+            
+            <!-- Text -->
+            <div class="text-sm font-bold text-center whitespace-nowrap relative z-10" 
                  style="color: rgb(${node.color}); 
-                        text-shadow: 0 0 10px rgba(${node.color}, 0.8), 0 2px 3px rgba(0,0,0,0.2);">
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
               ${node.name}
             </div>
           </div>
@@ -250,7 +227,6 @@ export default function AIToolsNetwork() {
 
   return (
     <div className="relative w-full h-full">
-      {/* Animated nodes container - NO BACKGROUND */}
       <div ref={containerRef} className="absolute inset-0" />
     </div>
   );
