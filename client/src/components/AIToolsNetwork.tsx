@@ -165,7 +165,8 @@ export default function AIToolsNetwork() {
           const dx = otherNode.x - node.x;
           const dy = otherNode.y - node.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          const minDistance = Math.max(node.width, node.height) / 2 + Math.max(otherNode.width, otherNode.height) / 2 + 20;
+          // Use actual visual size (80% of declared size to account for padding/borders)
+          const minDistance = (Math.max(node.width, node.height) * 0.8) / 2 + (Math.max(otherNode.width, otherNode.height) * 0.8) / 2 + 10;
 
           if (distance < minDistance && distance > 0) {
             // Realistic elastic collision
@@ -255,9 +256,9 @@ export default function AIToolsNetwork() {
         nodeEl.style.transform = `rotate(${node.rotation}deg)`;
         nodeEl.style.zIndex = "10";
 
-        // Liquid glass effect
+        // Liquid glass effect - entire div is clickable
         nodeEl.innerHTML = `
-          <div class="liquid-glass-tile w-full h-full rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-4 py-2 transition-all duration-300 hover:scale-110 hover:shadow-2xl relative overflow-hidden"
+          <div class="liquid-glass-tile w-full h-full rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-4 py-2 transition-all duration-300 hover:scale-110 hover:shadow-2xl relative overflow-hidden cursor-pointer"
                style="
                  background: linear-gradient(135deg, 
                    rgba(${node.color}, 0.15) 0%, 
