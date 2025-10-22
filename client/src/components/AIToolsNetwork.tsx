@@ -47,7 +47,15 @@ export default function AIToolsNetwork() {
   }, []);
 
   useEffect(() => {
-    if (isMobile) return; // Skip animation on mobile
+    // Skip animation entirely on mobile
+    if (isMobile) {
+      // Clean up any existing animation
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = undefined;
+      }
+      return;
+    }
 
     const container = containerRef.current;
     if (!container) return;
@@ -236,15 +244,15 @@ export default function AIToolsNetwork() {
     };
   }, [isMobile]);
 
-  // Mobile: Static grid layout
+  // Mobile: Static grid layout ONLY
   if (isMobile) {
     return (
-      <div className="w-full py-4">
-        <div className="grid grid-cols-3 gap-2 max-w-sm mx-auto">
+      <div className="w-full py-6">
+        <div className="grid grid-cols-3 gap-3 max-w-sm mx-auto px-4">
           {AI_TOOLS.map((tool, index) => (
             <div
               key={index}
-              className="liquid-glass-tile rounded-lg backdrop-blur-xl border flex items-center justify-center p-2 relative overflow-hidden"
+              className="liquid-glass-tile rounded-xl backdrop-blur-xl border flex items-center justify-center py-3 px-2 relative overflow-hidden"
               style={{
                 background: `linear-gradient(135deg, 
                   rgba(${tool.color}, 0.15) 0%, 
@@ -258,7 +266,7 @@ export default function AIToolsNetwork() {
               }}
             >
               <div
-                className="absolute inset-0 rounded-lg"
+                className="absolute inset-0 rounded-xl"
                 style={{
                   background: `linear-gradient(120deg, 
                     transparent 0%, 
