@@ -5,9 +5,12 @@ import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import {
   createContactSubmission,
+  getAllContactSubmissions,
   getAllBlogPosts,
   getBlogPostBySlug,
   incrementBlogPostViews,
+  createBlogPost,
+  deleteBlogPost,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 
@@ -57,6 +60,10 @@ export const appRouter = router({
           throw new Error("Failed to submit contact form");
         }
       }),
+
+    list: publicProcedure.query(async () => {
+      return await getAllContactSubmissions();
+    }),
   }),
 
   blog: router({
@@ -74,6 +81,26 @@ export const appRouter = router({
         // Increment view count
         await incrementBlogPostViews(input.slug);
         return post;
+      }),
+
+    create: publicProcedure
+      .input(
+        z.object({
+          title: z.string().min(1),
+          slug: z.string().min(1),
+          excerpt: z.string().min(1),
+          content: z.string().min(1),
+          author: z.string().min(1),
+        })
+      )
+      .mutation(async ({ input }) => {
+        return await createBlogPost(input);
+      }),
+
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        return await deleteBlogPost(input.id);
       }),
   }),
 });

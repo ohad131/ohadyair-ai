@@ -159,3 +159,14 @@ export async function createBlogPost(post: InsertBlogPost) {
   return result;
 }
 
+
+export async function deleteBlogPost(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db.delete(blogPosts).where(eq(blogPosts.id, id));
+  return { success: true };
+}
+

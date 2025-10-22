@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 export default function Home() {
   const [showCookieBanner, setShowCookieBanner] = useState(true);
@@ -82,9 +83,12 @@ export default function Home() {
       <header className="sticky top-0 z-50 glass border-b border-white/20">
         <nav className="container mx-auto py-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <a href="#home" className="w-14 h-14 glass-hover rounded-xl overflow-hidden flex items-center justify-center glow-cyan">
-              <img src="/logo.png" alt="Ohad Yair Logo" className="w-full h-full object-contain p-2" />
+            {/* Logo with Animation */}
+            <a href="#home" className="relative w-14 h-14 glass-hover rounded-full overflow-hidden flex items-center justify-center group">
+              <img src="/logo-round.png" alt="Ohad Yair Logo" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+              {/* Rotating ring animation */}
+              <div className="absolute inset-0 rounded-full border-2 border-primary/50 animate-spin-slow" />
+              <div className="absolute inset-0 rounded-full bg-primary/10 animate-pulse-glow" />
             </a>
 
             {/* Desktop Navigation */}
@@ -188,11 +192,11 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Hero Image with Glass Card */}
+            {/* Hero Image with Professional Photo */}
             <div className="relative">
               <Card className="glass glass-hover w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden glow-cyan">
-                <div className="w-full h-full liquid-gradient flex items-center justify-center relative">
-                  <img src="/logo.png" alt="Ohad Yair" className="w-48 h-48 md:w-64 md:h-64 object-contain" />
+                <div className="w-full h-full flex items-center justify-center relative bg-gradient-to-br from-primary/5 to-transparent">
+                  <img src="/ohad-profile.png" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute bottom-4 md:bottom-6 right-4 md:right-6 left-4 md:left-6">
                   <div className="glass-dark p-4 md:p-6 rounded-xl">
@@ -567,8 +571,21 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="pt-8 border-t border-white/20 text-center">
-            <p className="text-white/60 text-sm">© 2024 Ohad Yair. All rights reserved.</p>
+          <div className="pt-8 border-t border-white/20">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <p className="text-white/60 text-sm">© 2024 Ohad Yair. All rights reserved.</p>
+              <div className="flex gap-4 text-xs">
+                <Link href="/privacy-policy" className="text-white/60 hover:text-white transition-colors">
+                  מדיניות פרטיות
+                </Link>
+                <Link href="/terms-of-service" className="text-white/60 hover:text-white transition-colors">
+                  תקנון שימוש
+                </Link>
+                <Link href="/accessibility" className="text-white/60 hover:text-white transition-colors">
+                  הצהרת נגישות
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
@@ -589,6 +606,9 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* WhatsApp Floating Button */}
+      <WhatsAppButton />
     </div>
   );
 }
