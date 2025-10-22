@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AIToolsNetwork from "@/components/AIToolsNetwork";
 
 export default function Home() {
   const [showCookieBanner, setShowCookieBanner] = useState(true);
@@ -192,19 +193,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Hero Image with Professional Photo */}
-            <div className="relative">
-              <Card className="glass glass-hover w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden glow-cyan">
-                <div className="w-full h-full flex items-center justify-center relative bg-gradient-to-br from-primary/5 to-transparent">
-                  <img src="/ohad-profile.png" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-full object-cover" />
-                </div>
-                <div className="absolute bottom-4 md:bottom-6 right-4 md:right-6 left-4 md:left-6">
-                  <div className="glass-dark p-4 md:p-6 rounded-xl">
-                    <h3 className="text-white text-sm md:text-base font-semibold mb-2">מומחיות בפיתוח AI ואוטומציה</h3>
-                    <p className="text-white/80 text-xs md:text-sm">משלב חשיבה עסקית עם יכולות טכניות מתקדמות ליצירת פתרונות שמניבים תוצאות.</p>
-                  </div>
-                </div>
-              </Card>
+            {/* Hero AI Tools Network */}
+            <div className="relative w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden">
+              <AIToolsNetwork />
             </div>
           </div>
 
@@ -330,7 +321,7 @@ export default function Home() {
         <section id="about" className="container mx-auto py-12 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="order-2 lg:order-1">
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-6">אודות אוהד</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-6">אודות</h2>
               <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed">
                 <p>
                   אני אוהד יאיר, סטודנט לכלכלה וניהול ופרקטי-הנדסאי מכטרוניקה. בעבר שירתתי כמעצב מכני ביחידה טכנולוגית בצה"ל, שם פיתחתי יכולות של פתרון בעיות מורכבות וחשיבה מערכתית.
@@ -359,8 +350,8 @@ export default function Home() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <Card className="glass glass-hover w-full h-[400px] rounded-2xl overflow-hidden flex items-center justify-center">
-                <img src="/logo.png" alt="Ohad Yair" className="w-64 h-64 md:w-80 md:h-80 object-contain" />
+              <Card className="glass glass-hover w-full h-[400px] rounded-2xl overflow-hidden">
+                <img src="/ohad-profile.png" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-full object-cover" />
               </Card>
             </div>
           </div>
