@@ -29,31 +29,38 @@ const AI_TOOLS = [
   { name: "Kling", color: "236, 72, 153" },
 ];
 
+// Check mobile IMMEDIATELY before component renders
+const getIsMobile = () => {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth < 768;
+};
+
 export default function AIToolsNetwork() {
+  // Initialize with immediate check
+  const [isMobile, setIsMobile] = useState(getIsMobile);
   const containerRef = useRef<HTMLDivElement>(null);
   const nodesRef = useRef<Node[]>([]);
   const animationFrameRef = useRef<number | undefined>(undefined);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if mobile
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    // Skip animation entirely on mobile
-    if (isMobile) {
-      // Clean up any existing animation
-      if (animationFrameRef.current) {
+    const handleResize = () => {
+      const mobile = getIsMobile();
+      setIsMobile(mobile);
+      
+      // Stop animation immediately if switching to mobile
+      if (mobile && animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = undefined;
       }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    // CRITICAL: Do not start animation on mobile
+    if (isMobile) {
       return;
     }
 
@@ -84,6 +91,15 @@ export default function AIToolsNetwork() {
 
     // Animation loop
     const animate = () => {
+      // Double check mobile state during animation
+      if (getIsMobile()) {
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+          animationFrameRef.current = undefined;
+        }
+        return;
+      }
+
       const rect = container.getBoundingClientRect();
       const width = rect.width;
       const height = rect.height;
@@ -240,11 +256,12 @@ export default function AIToolsNetwork() {
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = undefined;
       }
     };
   }, [isMobile]);
 
-  // Mobile: Static grid layout ONLY
+  // Mobile: Static grid layout ONLY - return early
   if (isMobile) {
     return (
       <div className="w-full py-6">
