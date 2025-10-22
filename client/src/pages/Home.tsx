@@ -170,33 +170,39 @@ export default function Home() {
       {/* Main Content */}
       <main id="main-content" className="relative z-10">
         {/* Hero Section */}
-        <section id="home" className="container mx-auto py-12 md:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* Hero Text */}
-            <div className="space-y-6 md:space-y-8">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary leading-tight">
-                בונה מערכות <span className="text-primary">AI</span> ואוטומציה שמייצרות אימפקט עסקי
-              </h1>
-              <p className="text-base md:text-lg text-muted-foreground font-medium">
-                ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base">
-                  <svg className="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="none">
-                    <path d="M15.83 10.83L11.83 14.83C11.64 15.02 11.39 15.13 11.13 15.13C10.87 15.13 10.62 15.02 10.43 14.83C10.04 14.44 10.04 13.81 10.43 13.42L12.34 11.5H4.5C3.95 11.5 3.5 11.05 3.5 10.5C3.5 9.95 3.95 9.5 4.5 9.5H12.34L10.43 7.58C10.04 7.19 10.04 6.56 10.43 6.17C10.82 5.78 11.45 5.78 11.84 6.17L15.84 10.17C16.22 10.56 16.22 11.19 15.83 10.83Z" fill="currentColor" />
-                  </svg>
-                  דברו איתי
-                </Button>
-                <Button variant="outline" className="h-12 md:h-14 px-6 md:px-8 glass glass-hover border-primary/30 rounded-full text-secondary font-medium text-sm md:text-base">
-                  צפה בעבודות
-                </Button>
-              </div>
+        <section id="home" className="container mx-auto py-8 md:py-12">
+          {/* Hero Title and Subtitle - ABOVE animation */}
+          <div className="text-center space-y-4 md:space-y-6 mb-8 md:mb-12">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight px-4">
+              בונה מערכות <span className="text-primary">AI</span> ואוטומציה שמייצרות אימפקט עסקי
+            </h1>
+            <p className="text-base md:text-lg text-muted-foreground font-medium px-4 max-w-3xl mx-auto">
+              ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה.
+            </p>
+            <div className="text-xl md:text-2xl font-bold text-primary mb-4">
+              מתמחה בשילוב הכלים המתקדמים ביותר
             </div>
+            <p className="text-sm md:text-base text-muted-foreground font-medium">
+              13+ פלטפורמות AI ואוטומציה בשליטה מלאה
+            </p>
+          </div>
 
-            {/* Hero AI Tools Network */}
-            <div className="relative w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden">
-              <AIToolsNetwork />
-            </div>
+          {/* Hero AI Tools Network - NO background, NO border */}
+          <div className="w-full h-[280px] md:h-[320px] mb-8">
+            <AIToolsNetwork />
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base">
+              <svg className="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="none">
+                <path d="M15.83 10.83L11.83 14.83C11.64 15.02 11.39 15.13 11.13 15.13C10.87 15.13 10.62 15.02 10.43 14.83C10.04 14.44 10.04 13.81 10.43 13.42L12.34 11.5H4.5C3.95 11.5 3.5 11.05 3.5 10.5C3.5 9.95 3.95 9.5 4.5 9.5H12.34L10.43 7.58C10.04 7.19 10.04 6.56 10.43 6.17C10.82 5.78 11.45 5.78 11.84 6.17L15.84 10.17C16.22 10.56 16.22 11.19 15.83 10.83Z" fill="currentColor" />
+              </svg>
+              דברו איתי
+            </Button>
+            <Button variant="outline" className="h-12 md:h-14 px-6 md:px-8 glass glass-hover border-primary/30 rounded-full text-secondary font-medium text-sm md:text-base">
+              צפה בעבודות
+            </Button>
           </div>
 
           {/* Stats */}
@@ -350,8 +356,8 @@ export default function Home() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <Card className="glass glass-hover w-full h-[400px] rounded-2xl overflow-hidden">
-                <img src="/ohad-profile.png" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-full object-cover" />
+              <Card className="glass glass-hover w-full rounded-2xl overflow-hidden p-4">
+                <img src="/ohad-profile.png" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-auto object-contain" />
               </Card>
             </div>
           </div>
