@@ -36,6 +36,10 @@ export default function Admin() {
     onSuccess: () => alert("הבלוג נמחק בהצלחה!"),
   });
 
+  const toggleFeatured = trpc.blog.toggleFeatured.useMutation({
+    onSuccess: () => alert("הסטטוס עודכן!"),
+  });
+
   // Check authentication
   if (!isAuthenticated) {
     return (
@@ -247,6 +251,17 @@ export default function Admin() {
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span>👁️ {post.views} צפיות</span>
                             <span>📅 {new Date(post.publishedAt).toLocaleDateString("he-IL")}</span>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={post.isFeatured || false}
+                                onChange={(e) => {
+                                  toggleFeatured.mutate({ id: post.id, isFeatured: e.target.checked });
+                                }}
+                                className="w-4 h-4 accent-primary"
+                              />
+                              <span>⭐ מוצע</span>
+                            </label>
                           </div>
                         </div>
                         <div className="flex gap-2">

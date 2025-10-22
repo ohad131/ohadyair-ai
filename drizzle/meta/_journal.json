@@ -15,6 +15,13 @@
       "when": 1761053384174,
       "tag": "0001_minor_the_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1761174087088,
+      "tag": "0002_smiling_silver_centurion",
+      "breakpoints": true
     }
   ]
 }

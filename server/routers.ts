@@ -11,6 +11,11 @@ import {
   incrementBlogPostViews,
   createBlogPost,
   deleteBlogPost,
+  getAllAITools,
+  updateAITool,
+  getSiteContent,
+  setSiteContent,
+  toggleBlogFeatured,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 
@@ -101,6 +106,48 @@ export const appRouter = router({
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         return await deleteBlogPost(input.id);
+      }),
+
+    toggleFeatured: publicProcedure
+      .input(z.object({ id: z.number(), isFeatured: z.boolean() }))
+      .mutation(async ({ input }) => {
+        return await toggleBlogFeatured(input.id, input.isFeatured);
+      }),
+  }),
+
+  aiTools: router({
+    list: publicProcedure.query(async () => {
+      return await getAllAITools();
+    }),
+
+    update: publicProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          name: z.string().optional(),
+          url: z.string().optional(),
+          color: z.string().optional(),
+          displayOrder: z.number().optional(),
+          isActive: z.boolean().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        return await updateAITool(id, data);
+      }),
+  }),
+
+  siteContent: router({
+    get: publicProcedure
+      .input(z.object({ key: z.string() }))
+      .query(async ({ input }) => {
+        return await getSiteContent(input.key);
+      }),
+
+    set: publicProcedure
+      .input(z.object({ key: z.string(), value: z.string() }))
+      .mutation(async ({ input }) => {
+        return await setSiteContent(input.key, input.value);
       }),
   }),
 });

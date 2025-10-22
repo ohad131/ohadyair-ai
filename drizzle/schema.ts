@@ -48,9 +48,38 @@ export const blogPosts = mysqlTable("blogPosts", {
   publishedAt: timestamp("publishedAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   isPublished: boolean("isPublished").default(true).notNull(),
+  isFeatured: boolean("isFeatured").default(false).notNull(),
   views: int("views").default(0).notNull(),
 });
 
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = typeof blogPosts.$inferInsert;
+
+/**
+ * AI Tools table - for Hero animation tiles
+ */
+export const aiTools = mysqlTable("aiTools", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 100 }).notNull(),
+  url: varchar("url", { length: 500 }).notNull(),
+  color: varchar("color", { length: 50 }).notNull(), // RGB format: "255, 100, 50"
+  displayOrder: int("displayOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+});
+
+export type AITool = typeof aiTools.$inferSelect;
+export type InsertAITool = typeof aiTools.$inferInsert;
+
+/**
+ * Site content table - for editable content (About, images, etc.)
+ */
+export const siteContent = mysqlTable("siteContent", {
+  id: int("id").primaryKey().autoincrement(),
+  key: varchar("key", { length: 100 }).notNull().unique(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type SiteContent = typeof siteContent.$inferSelect;
+export type InsertSiteContent = typeof siteContent.$inferInsert;
 

@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, contactSubmissions, InsertContactSubmission, blogPosts, BlogPost, InsertBlogPost } from "../drizzle/schema";
+import { InsertUser, users, contactSubmissions, InsertContactSubmission, blogPosts, BlogPost, InsertBlogPost, aiTools, AITool, InsertAITool, siteContent, SiteContent, InsertSiteContent } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -167,6 +167,78 @@ export async function deleteBlogPost(id: number) {
   }
 
   await db.delete(blogPosts).where(eq(blogPosts.id, id));
+  return { success: true };
+}
+
+
+
+// AI Tools
+export async function getAllAITools(): Promise<AITool[]> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  return await db
+    .select()
+    .from(aiTools)
+    .where(eq(aiTools.isActive, true))
+    .orderBy(aiTools.displayOrder);
+}
+
+export async function updateAITool(id: number, data: Partial<InsertAITool>) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db.update(aiTools).set(data).where(eq(aiTools.id, id));
+  return { success: true };
+}
+
+// Site Content
+export async function getSiteContent(key: string): Promise<string | null> {
+  const db = await getDb();
+  if (!db) {
+    return null;
+  }
+
+  const result = await db
+    .select()
+    .from(siteContent)
+    .where(eq(siteContent.key, key))
+    .limit(1);
+
+  return result.length > 0 ? result[0].value : null;
+}
+
+export async function setSiteContent(key: string, value: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  // Upsert
+  const existing = await getSiteContent(key);
+  if (existing) {
+    await db
+      .update(siteContent)
+      .set({ value, updatedAt: new Date() })
+      .where(eq(siteContent.key, key));
+  } else {
+    await db.insert(siteContent).values({ key, value });
+  }
+
+  return { success: true };
+}
+
+export async function toggleBlogFeatured(id: number, isFeatured: boolean) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db.update(blogPosts).set({ isFeatured }).where(eq(blogPosts.id, id));
   return { success: true };
 }
 
