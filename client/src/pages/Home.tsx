@@ -409,7 +409,7 @@ export default function Home() {
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.projectsTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
-              דוגמאות לעבודות שביצעתי בתחומי AI, אוטומציה ופיתוח
+              {t.projectsSubtitle}
             </p>
           </div>
 
@@ -457,7 +457,7 @@ export default function Home() {
                   <div className="p-6 md:p-8">
                     <h3 className="text-2xl font-bold text-secondary mb-3">Study Buddy</h3>
                     <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                      פלטפורמת למידה חכמה מבוססת AI שמסייעת לסטודנטים ללמוד ביעילות
+                      An AI-powered smart learning platform that helps students learn efficiently
                     </p>
                     <div className="flex flex-wrap gap-2">
                       <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">AI</span>
@@ -472,7 +472,7 @@ export default function Home() {
                   <div className="p-6 md:p-8">
                     <h3 className="text-2xl font-bold text-secondary mb-3">BuzzAI</h3>
                     <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                      כלי אוטומציה לניהול תוכן ברשתות חברתיות
+                      An automation tool for managing content on social networks
                     </p>
                     <div className="flex flex-wrap gap-2">
                       <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">AI</span>
