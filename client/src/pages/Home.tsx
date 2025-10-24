@@ -4,6 +4,8 @@ import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
+import { Twitter, Linkedin, Phone } from "lucide-react";
 import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
 
@@ -116,25 +118,33 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden glass-hover p-2 rounded-lg"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="תפריט ניווט"
-            >
-              <svg className="w-6 h-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
+            {/* Right Side Actions */}
+            <div className="flex items-center gap-3">
+              {/* Dark Mode Toggle - Desktop */}
+              <div className="hidden md:block">
+                <DarkModeToggle />
+              </div>
 
-            {/* CTA Button - Desktop */}
-            <Button className="hidden md:flex liquid-button h-12 px-6 rounded-full text-white text-sm font-medium">
-              התחל עכשיו
-            </Button>
+              {/* CTA Button - Desktop */}
+              <Button className="hidden md:flex liquid-button h-12 px-6 rounded-full text-white text-sm font-medium">
+                התחל עכשיו
+              </Button>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden glass-hover p-2 rounded-lg"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="תפריט ניווט"
+              >
+                <svg className="w-6 h-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  {mobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Mobile Menu */}
@@ -266,12 +276,17 @@ export default function Home() {
                 description: "ייעוץ אסטרטגי לבחירת טכנולוגיות, אופטימיזציה של תהליכים, ושיפור ביצועים",
               },
             ].map((service, index) => (
-              <Card key={index} className="glass glass-hover p-6 rounded-2xl group">
-                <div className="w-16 h-16 rounded-2xl liquid-gradient flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
+              <Card key={index} className="glass glass-hover p-6 md:p-8 rounded-2xl group relative overflow-hidden">
+                {/* Large background icon - monochrome */}
+                <div className="absolute top-4 left-4 text-7xl md:text-8xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
                   {service.icon}
                 </div>
-                <h3 className="text-xl font-bold text-secondary mb-3">{service.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
+                
+                {/* Content */}
+                <div className="relative z-10">
+                  <h3 className="text-xl md:text-2xl font-bold text-secondary mb-4 group-hover:text-primary transition-colors">{service.title}</h3>
+                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{service.description}</p>
+                </div>
               </Card>
             ))}
           </div>
@@ -358,8 +373,8 @@ export default function Home() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <Card className="glass glass-hover w-full rounded-2xl overflow-hidden p-4">
-                <img src="/ohad-profile.png" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-auto object-contain" />
+              <Card className="glass glass-hover w-full rounded-2xl overflow-hidden">
+                <img src="/ohad-profile.png" alt="אוהד יאיר רחימי - מומחה AI ואוטומציה" className="w-full h-auto object-cover" />
               </Card>
             </div>
           </div>
@@ -429,13 +444,17 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: "📝", title: "איך להתחיל עם AI בעסק שלך", date: "15 אוקטובר 2024" },
-              { icon: "⚡", title: "אוטומציה עם n8n - מדריך למתחילים", date: "10 אוקטובר 2024" },
-              { icon: "💡", title: "5 דרכים שAI יכול לשפר את העסק שלך", date: "5 אוקטובר 2024" },
+              { image: "/blog-ai-business.jpg", title: "איך להתחיל עם AI בעסק שלך", date: "15 אוקטובר 2024" },
+              { image: "/blog-ai-automation.jpg", title: "אוטומציה עם n8n - מדריך למתחילים", date: "10 אוקטובר 2024" },
+              { image: "/blog-ai-future.jpg", title: "5 דרכים שAI יכול לשפר את העסק שלך", date: "5 אוקטובר 2024" },
             ].map((post, index) => (
               <Card key={index} className="glass glass-hover overflow-hidden group cursor-pointer">
-                <div className="h-40 liquid-gradient flex items-center justify-center text-5xl group-hover:scale-110 transition-transform">
-                  {post.icon}
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={post.image} 
+                    alt={post.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
                 <div className="p-6">
                   <div className="text-xs text-primary font-medium mb-2">{post.date}</div>
@@ -460,9 +479,13 @@ export default function Home() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 md:mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">צור קשר</h2>
-              <p className="text-base md:text-lg text-muted-foreground">
+              <p className="text-base md:text-lg text-muted-foreground mb-4">
                 מוזמנים ליצור קשר לשיחת ייעוץ ראשונית ללא התחייבות
               </p>
+              <a href="tel:+972504003234" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-lg font-medium">
+                <Phone className="w-5 h-5" />
+                050-400-3234
+              </a>
             </div>
 
             <Card className="glass glass-hover p-6 md:p-8">
@@ -557,15 +580,24 @@ export default function Home() {
             <div>
               <h4 className="text-white font-semibold mb-4">רשתות חברתיות</h4>
               <div className="flex gap-3">
-                {["LI", "GH", "TW"].map((social, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    className="w-10 h-10 glass-hover rounded-full flex items-center justify-center text-white hover:text-primary transition-colors text-sm font-bold"
-                  >
-                    {social}
-                  </a>
-                ))}
+                <a
+                  href="https://twitter.com/YairOhad15930"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 glass-hover rounded-full flex items-center justify-center text-white hover:text-primary transition-colors"
+                  aria-label="Twitter"
+                >
+                  <Twitter className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/אוהד-רחימי-4ba222385"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 glass-hover rounded-full flex items-center justify-center text-white hover:text-primary transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
               </div>
             </div>
           </div>

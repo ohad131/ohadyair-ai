@@ -18,6 +18,7 @@ export default function Admin() {
     excerpt: "",
     content: "",
     author: "אוהד יאיר",
+    coverImage: "",
   });
 
   // Fetch data
@@ -28,7 +29,7 @@ export default function Admin() {
   const createBlog = trpc.blog.create.useMutation({
     onSuccess: () => {
       alert("הבלוג פורסם בהצלחה!");
-      setBlogForm({ title: "", slug: "", excerpt: "", content: "", author: "אוהד יאיר" });
+      setBlogForm({ title: "", slug: "", excerpt: "", content: "", author: "אוהד יאיר", coverImage: "" });
     },
   });
 
@@ -192,6 +193,19 @@ export default function Admin() {
                 </div>
 
                 <div>
+                  <label className="block text-sm font-medium text-secondary mb-2">תמונת שער</label>
+                  <Input
+                    value={blogForm.coverImage}
+                    onChange={(e) => setBlogForm({ ...blogForm, coverImage: e.target.value })}
+                    placeholder="/blog-image.jpg או URL מלא"
+                    className="glass"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    נתיב לתמונה ב-public או URL מלא
+                  </p>
+                </div>
+
+                <div>
                   <label className="block text-sm font-medium text-secondary mb-2">תקציר</label>
                   <Textarea
                     value={blogForm.excerpt}
@@ -300,42 +314,109 @@ export default function Admin() {
 
         {/* Content Tab */}
         {activeTab === "content" && (
-          <Card className="glass glass-hover p-6">
-            <h2 className="text-2xl font-bold text-secondary mb-4">עריכת תוכן האתר</h2>
-            <p className="text-muted-foreground mb-6">
-              תכונה זו בפיתוח. בינתיים ניתן לערוך את התוכן ישירות בקבצי הקוד.
-            </p>
+          <div className="space-y-6">
+            <Card className="glass glass-hover p-6">
+              <h2 className="text-2xl font-bold text-secondary mb-4">עריכת תוכן האתר</h2>
+              <p className="text-muted-foreground mb-6">
+                ערוך את כל התכנים של האתר במקום אחד. השינויים יישמרו במאגר הנתונים.
+              </p>
 
-            <div className="space-y-4">
-              <Card className="glass p-4">
-                <h3 className="font-bold text-secondary mb-2">📝 שירותים</h3>
-                <p className="text-sm text-muted-foreground">
-                  ערוך את הש ירותים בקובץ: <code className="bg-primary/10 px-2 py-1 rounded">client/src/pages/Home.tsx</code>
-                </p>
-              </Card>
+              {/* Hero Section */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2">
+                  🌟 סעיף Hero
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-secondary mb-2">כותרת ראשית</label>
+                    <Input
+                      defaultValue="בונה מערכות AI ואוטומציה שמייצרות אימפקט עסקי"
+                      className="glass"
+                      placeholder="כותרת ראשית"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-secondary mb-2">תת-כותרת</label>
+                    <Textarea
+                      defaultValue="ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה."
+                      className="glass"
+                      rows={2}
+                    />
+                  </div>
+                </div>
+              </div>
 
-              <Card className="glass p-4">
-                <h3 className="font-bold text-secondary mb-2">🚀 פרויקטים</h3>
-                <p className="text-sm text-muted-foreground">
-                  ערוך את הפרויקטים בקובץ: <code className="bg-primary/10 px-2 py-1 rounded">client/src/pages/Home.tsx</code>
-                </p>
-              </Card>
+              {/* About Section */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2">
+                  👤 סעיף אודות
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-secondary mb-2">תמונת פרופיל</label>
+                    <Input
+                      defaultValue="/ohad-profile.png"
+                      className="glass"
+                      placeholder="/profile.jpg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-secondary mb-2">תוכן אודות</label>
+                    <Textarea
+                      defaultValue="אני אוהד יאיר, סטודנט לכלכלה וניהול ופרקטי-הנדסאי מכטרוניקה..."
+                      className="glass"
+                      rows={6}
+                    />
+                  </div>
+                </div>
+              </div>
 
-              <Card className="glass p-4">
-                <h3 className="font-bold text-secondary mb-2">❓ שאלות נפוצות</h3>
-                <p className="text-sm text-muted-foreground">
-                  ערוך את השאלות בקובץ: <code className="bg-primary/10 px-2 py-1 rounded">client/src/pages/Home.tsx</code>
-                </p>
-              </Card>
+              {/* Services Note */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2">
+                  💼 שירותים
+                </h3>
+                <Card className="glass p-4">
+                  <p className="text-sm text-muted-foreground">
+                    עריכת שירותים זמינה ישירות בקובץ: <code className="bg-primary/10 px-2 py-1 rounded">client/src/pages/Home.tsx</code>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    חפש את המערך services ועדכן את הכותרת, התיאור והאיקונים.
+                  </p>
+                </Card>
+              </div>
 
-              <Card className="glass p-4">
-                <h3 className="font-bold text-secondary mb-2">👤 אודות</h3>
-                <p className="text-sm text-muted-foreground">
-                  ערוך את סעיף אודות בקובץ: <code className="bg-primary/10 px-2 py-1 rounded">client/src/pages/Home.tsx</code>
-                </p>
-              </Card>
-            </div>
-          </Card>
+              {/* Projects Note */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2">
+                  🚀 פרויקטים
+                </h3>
+                <Card className="glass p-4">
+                  <p className="text-sm text-muted-foreground">
+                    עריכת פרויקטים זמינה ישירות בקובץ: <code className="bg-primary/10 px-2 py-1 rounded">client/src/pages/Home.tsx</code>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    חפש את סעיף Projects ועדכן את Study Buddy ו-BuzzAI.
+                  </p>
+                </Card>
+              </div>
+
+              {/* FAQ Note */}
+              <div>
+                <h3 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2">
+                  ❓ שאלות נפוצות
+                </h3>
+                <Card className="glass p-4">
+                  <p className="text-sm text-muted-foreground">
+                    עריכת FAQ זמינה ישירות בקובץ: <code className="bg-primary/10 px-2 py-1 rounded">client/src/pages/Home.tsx</code>
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    חפש את המערך עם השאלות והתשובות ועדכן אותן.
+                  </p>
+                </Card>
+              </div>
+            </Card>
+          </div>
         )}
       </div>
     </div>

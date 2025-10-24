@@ -96,6 +96,7 @@ export const appRouter = router({
           excerpt: z.string().min(1),
           content: z.string().min(1),
           author: z.string().min(1),
+          coverImage: z.string().optional(),
         })
       )
       .mutation(async ({ input }) => {
