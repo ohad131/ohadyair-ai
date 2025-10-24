@@ -491,7 +491,7 @@ export default function Home() {
         <section id="faq" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.faqTitle}</h2>
-            <p className="text-base md:text-lg text-muted-foreground animate-fade-in-up stagger-1">Answers to frequently asked questions</p>
+            <p className="text-base md:text-lg text-muted-foreground animate-fade-in-up stagger-1">{t.faqSubtitle}</p>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-4">
@@ -545,7 +545,7 @@ export default function Home() {
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.blogTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
-              מאמרים, מדריכים ותובנות בתחומי AI, אוטומציה וטכנולוגיה
+              {t.blogSubtitle}
             </p>
           </div>
 

@@ -52,6 +52,7 @@ export const translations = {
     
     // FAQ
     faqTitle: "שאלות נפוצות",
+    faqSubtitle: "תשובות לשאלות שנשאלות לעתים קרובות",
     faq1Q: "מה הטהליך של העבודה?",
     faq1A: "התהליך מתחיל בשיחה דהיכרות להבנה הצרכים, ממשיך בתכנון מפורט והצעה מחיר, ואז עובר לשלב הפיתוח עם עדכונים שוטפים. בסיום מתבצע מסירה מלאה עם הדרכה ותמיכה.",
     faq2Q: "כמה זמן לוקח לפתח פרוייקט?",
@@ -152,6 +153,7 @@ export const translations = {
     
     // FAQ
     faqTitle: "Frequently Asked Questions",
+    faqSubtitle: "Answers to frequently asked questions",
     faq1Q: "What is your work process?",
     faq1A: "The process starts with a discovery call to understand your needs, continues with detailed planning and a price quote, then moves to the development phase with regular updates. At the end, there is a full handover with training and support.",
     faq2Q: "How long does it take to develop a project?",
