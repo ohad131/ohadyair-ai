@@ -299,15 +299,15 @@ export default function Home() {
           <div className="mt-8 md:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
             <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-1 hover-glow">
               <div className="text-4xl md:text-5xl font-bold text-primary mb-2">+5</div>
-              <div className="text-sm text-secondary font-medium">פרויקטים מוצלחים</div>
+              <div className="text-sm text-secondary font-medium">{t.statProjects}</div>
             </div>
             <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-2 hover-glow">
               <div className="text-4xl md:text-5xl font-bold text-primary mb-2">+10</div>
-              <div className="text-sm text-secondary font-medium">לקוחות מרוצים</div>
+              <div className="text-sm text-secondary font-medium">{t.statClients}</div>
             </div>
             <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-3 hover-glow">
               <div className="text-4xl md:text-5xl font-bold text-primary mb-2">100%</div>
-              <div className="text-sm text-secondary font-medium">מחויבות לאיכות</div>
+              <div className="text-sm text-secondary font-medium">{t.statQuality}</div>
             </div>
           </div>
         </section>
@@ -315,7 +315,7 @@ export default function Home() {
         {/* Services Section */}
         <section id="services" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">שירותים</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.servicesTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               פתרונות מותאמים אישית שמשלבים AI, אוטומציה וטכנולוגיות מתקדמות
             </p>
@@ -376,7 +376,7 @@ export default function Home() {
         <section id="about" className="container mx-auto py-12 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="order-2 lg:order-1">
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-6 animate-fade-in-left">אודות</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.aboutTitle}</h2>
               <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed animate-fade-in-left stagger-1">
                 <p>
                   אני אוהד יאיר, סטודנט לכלכלה וניהול ופרקטי-הנדסאי מכטרוניקה. בעבר שירתתי כמעצב מכני ביחידה טכנולוגית בצה"ל, שם פיתחתי יכולות של פתרון בעיות מורכבות וחשיבה מערכתית.
@@ -413,7 +413,7 @@ export default function Home() {
         </section>
         <section id="projects" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">פרויקטים נבחרים</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.projectsTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               דוגמאות לעבודות שביצעתי בתחומי AI, אוטומציה ופיתוח
             </p>
@@ -496,7 +496,7 @@ export default function Home() {
         {/* FAQ Section */}
         <section id="faq" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">שאלות נפוצות</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.faqTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground animate-fade-in-up stagger-1">תשובות לשאלות שמרבים לשאול</p>
           </div>
 
@@ -549,7 +549,7 @@ export default function Home() {
         {/* Blog Section */}
         <section id="blog" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">בלוג</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.blogTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               מאמרים, מדריכים ותובנות בתחומי AI, אוטומציה וטכנולוגיה
             </p>
@@ -622,7 +622,7 @@ export default function Home() {
         <section id="contact" className="container mx-auto py-12 md:py-20">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">צור קשר</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.contactTitle}</h2>
               <p className="text-base md:text-lg text-muted-foreground mb-4 animate-fade-in-up stagger-1">
                 מוזמנים ליצור קשר לשיחת ייעוץ ראשונית ללא התחייבות
               </p>

@@ -19,7 +19,9 @@ export const translations = {
     
     // Stats
     statSatisfaction: "שביעות רצון",
-    statProjects: "פרויקטים הושלמו",
+    statProjects: "פרויקטים מוצלחים",
+    statClients: "לקוחות מרוצים",
+    statQuality: "מחויבות לאיכות",
     statYearsExperience: "שנות ניסיון",
     
     // Services
@@ -103,7 +105,9 @@ export const translations = {
     
     // Stats
     statSatisfaction: "Satisfaction",
-    statProjects: "Projects Completed",
+    statProjects: "Successful Projects",
+    statClients: "Happy Clients",
+    statQuality: "Commitment to Quality",
     statYearsExperience: "Years Experience",
     
     // Services
