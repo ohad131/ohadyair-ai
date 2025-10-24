@@ -185,28 +185,28 @@ export default function Home() {
         <section id="home" className="container mx-auto py-8 md:py-12">
           {/* Hero Title and Subtitle - ABOVE animation */}
           <div className="text-center space-y-4 md:space-y-6 mb-8 md:mb-12">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight px-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight px-4 animate-fade-in-up">
               בונה מערכות <span className="text-primary">AI</span> ואוטומציה שמייצרות אימפקט עסקי
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground font-medium px-4 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground font-medium px-4 max-w-3xl mx-auto animate-fade-in-up stagger-1">
               ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה.
             </p>
-            <div className="text-xl md:text-2xl font-bold text-primary mb-4">
+            <div className="text-xl md:text-2xl font-bold text-primary mb-4 animate-fade-in-up stagger-2">
               מתמחה בשילוב הכלים המתקדמים ביותר
             </div>
-            <p className="text-sm md:text-base text-muted-foreground font-medium">
+            <p className="text-sm md:text-base text-muted-foreground font-medium animate-fade-in-up stagger-3">
               13+ פלטפורמות AI ואוטומציה בשליטה מלאה
             </p>
           </div>
 
           {/* Hero AI Tools Network - NO background, NO border */}
-          <div className="w-full h-auto md:h-[320px] mb-8">
+          <div className="w-full h-auto md:h-[320px] mb-8 animate-scale-in stagger-4">
             <AIToolsNetwork tools={tools} />
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up stagger-5">
+            <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base hover-lift">
               <svg className="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="none">
                 <path d="M15.83 10.83L11.83 14.83C11.64 15.02 11.39 15.13 11.13 15.13C10.87 15.13 10.62 15.02 10.43 14.83C10.04 14.44 10.04 13.81 10.43 13.42L12.34 11.5H4.5C3.95 11.5 3.5 11.05 3.5 10.5C3.5 9.95 3.95 9.5 4.5 9.5H12.34L10.43 7.58C10.04 7.19 10.04 6.56 10.43 6.17C10.82 5.78 11.45 5.78 11.84 6.17L15.84 10.17C16.22 10.56 16.22 11.19 15.83 10.83Z" fill="currentColor" />
               </svg>
@@ -219,15 +219,15 @@ export default function Home() {
 
           {/* Stats */}
           <div className="mt-12 md:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
-            <div className="glass glass-hover p-6 rounded-2xl text-center">
+            <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-1 hover-glow">
               <div className="text-4xl md:text-5xl font-bold text-primary mb-2">+5</div>
               <div className="text-sm text-secondary font-medium">פרויקטים מוצלחים</div>
             </div>
-            <div className="glass glass-hover p-6 rounded-2xl text-center">
+            <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-2 hover-glow">
               <div className="text-4xl md:text-5xl font-bold text-primary mb-2">+10</div>
               <div className="text-sm text-secondary font-medium">לקוחות מרוצים</div>
             </div>
-            <div className="glass glass-hover p-6 rounded-2xl text-center">
+            <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-3 hover-glow">
               <div className="text-4xl md:text-5xl font-bold text-primary mb-2">100%</div>
               <div className="text-sm text-secondary font-medium">מחויבות לאיכות</div>
             </div>
@@ -237,8 +237,8 @@ export default function Home() {
         {/* Services Section */}
         <section id="services" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">שירותים</h2>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">שירותים</h2>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               פתרונות מותאמים אישית שמשלבים AI, אוטומציה וטכנולוגיות מתקדמות
             </p>
           </div>
@@ -276,7 +276,7 @@ export default function Home() {
                 description: "ייעוץ אסטרטגי לבחירת טכנולוגיות, אופטימיזציה של תהליכים, ושיפור ביצועים",
               },
             ].map((service, index) => (
-              <Card key={index} className="glass glass-hover p-6 md:p-8 rounded-2xl group relative overflow-hidden">
+              <Card key={index} className={`glass glass-hover p-6 md:p-8 rounded-2xl group relative overflow-hidden animate-fade-in-up hover-lift hover-glow stagger-${index + 1}`}>
                 {/* Large monochrome SVG icon in background */}
                 <div className="absolute top-4 left-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pointer-events-none">
                   <svg className="w-32 h-32 md:w-40 md:h-40" viewBox="0 0 24 24" fill="currentColor">
@@ -297,15 +297,15 @@ export default function Home() {
         {/* Projects Section */}
         <section id="projects" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">פרויקטים נבחרים</h2>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">פרויקטים נבחרים</h2>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               דוגמאות לעבודות שביצעתי בתחומי AI, אוטומציה ופיתוח
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
             {/* Study Buddy */}
-            <Card className="glass glass-hover overflow-hidden group">
+            <Card className="glass glass-hover overflow-hidden group animate-fade-in-left stagger-2 hover-lift">
               <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
                 📚
               </div>
@@ -323,7 +323,7 @@ export default function Home() {
             </Card>
 
             {/* BuzzAI */}
-            <Card className="glass glass-hover overflow-hidden group">
+            <Card className="glass glass-hover overflow-hidden group animate-fade-in-right stagger-3 hover-lift">
               <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
                 🤖
               </div>
@@ -346,8 +346,8 @@ export default function Home() {
         <section id="about" className="container mx-auto py-12 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="order-2 lg:order-1">
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-6">אודות</h2>
-              <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed">
+              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-6 animate-fade-in-left">אודות</h2>
+              <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed animate-fade-in-left stagger-1">
                 <p>
                   אני אוהד יאיר, סטודנט לכלכלה וניהול ופרקטי-הנדסאי מכטרוניקה. בעבר שירתתי כמעצב מכני ביחידה טכנולוגית בצה"ל, שם פיתחתי יכולות של פתרון בעיות מורכבות וחשיבה מערכתית.
                 </p>
@@ -366,7 +366,7 @@ export default function Home() {
                   { title: "מעצב מכני", subtitle: "צה\"ל (לשעבר)" },
                   { title: "יזם AI", subtitle: "נוכחי" },
                 ].map((item, index) => (
-                  <div key={index} className="glass glass-hover p-4 rounded-xl">
+                  <div key={index} className={`glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`}>
                     <div className="text-primary font-bold text-sm mb-1">{item.title}</div>
                     <div className="text-muted-foreground text-xs">{item.subtitle}</div>
                   </div>
@@ -375,8 +375,8 @@ export default function Home() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <Card className="glass glass-hover w-full rounded-2xl overflow-hidden">
-                <img src="/frame.webp" alt="אוהד יאיר רחימי - מומחה AI ואוטומציה" className="w-full h-auto object-cover" />
+              <Card className="glass glass-hover w-full rounded-2xl overflow-hidden animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                <img src="/ohad-professional.svg" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105" />
               </Card>
             </div>
           </div>
@@ -385,8 +385,8 @@ export default function Home() {
         {/* FAQ Section */}
         <section id="faq" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">שאלות נפוצות</h2>
-            <p className="text-base md:text-lg text-muted-foreground">תשובות לשאלות שמרבים לשאול</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">שאלות נפוצות</h2>
+            <p className="text-base md:text-lg text-muted-foreground animate-fade-in-up stagger-1">תשובות לשאלות שמרבים לשאול</p>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-4">
@@ -420,7 +420,7 @@ export default function Home() {
                 a: "כן, אני עובד עם לקוחות בישראל ובעולם. התקשורת מתבצעת באמצעות וידאו קונפרנס, ואני מתאים את שעות העבודה לאזור הזמן של הלקוח.",
               },
             ].map((faq, index) => (
-              <details key={index} className="glass glass-hover rounded-xl group">
+              <details key={index} className={`glass glass-hover rounded-xl group animate-slide-in-bottom hover-glow stagger-${Math.min(index + 1, 6)}`}>
                 <summary className="p-4 md:p-6 cursor-pointer text-base md:text-lg font-semibold text-secondary flex items-center justify-between">
                   <span>{faq.q}</span>
                   <svg className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -438,8 +438,8 @@ export default function Home() {
         {/* Blog Section */}
         <section id="blog" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">בלוג</h2>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">בלוג</h2>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               מאמרים, מדריכים ותובנות בתחומי AI, אוטומציה וטכנולוגיה
             </p>
           </div>
@@ -450,7 +450,7 @@ export default function Home() {
               { image: "/blog-ai-automation.jpg", title: "אוטומציה עם n8n - מדריך למתחילים", date: "10 אוקטובר 2024" },
               { image: "/blog-ai-future.jpg", title: "5 דרכים שAI יכול לשפר את העסק שלך", date: "5 אוקטובר 2024" },
             ].map((post, index) => (
-              <Card key={index} className="glass glass-hover overflow-hidden group cursor-pointer">
+              <Card key={index} className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in hover-lift hover-glow stagger-${index + 2}`}>
                 <div className="h-48 overflow-hidden">
                   <img 
                     src={post.image} 
@@ -480,8 +480,8 @@ export default function Home() {
         <section id="contact" className="container mx-auto py-12 md:py-20">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">צור קשר</h2>
-              <p className="text-base md:text-lg text-muted-foreground mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">צור קשר</h2>
+              <p className="text-base md:text-lg text-muted-foreground mb-4 animate-fade-in-up stagger-1">
                 מוזמנים ליצור קשר לשיחת ייעוץ ראשונית ללא התחייבות
               </p>
               <a href="tel:+972504003234" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-lg font-medium">
@@ -490,7 +490,7 @@ export default function Home() {
               </a>
             </div>
 
-            <Card className="glass glass-hover p-6 md:p-8">
+            <Card className="glass glass-hover p-6 md:p-8 animate-scale-in stagger-2">
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
