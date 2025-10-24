@@ -13,6 +13,8 @@ import { SplashScreen } from "@/components/SplashScreen";
 
 export default function Home() {
   const { data: tools = [] } = trpc.aiTools.list.useQuery();
+  const { data: blogPosts = [] } = trpc.blog.list.useQuery();
+  const { data: projects = [] } = trpc.projects.list.useQuery();
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -416,41 +418,74 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
-            {/* Study Buddy */}
-            <Card className="glass glass-hover overflow-hidden group animate-fade-in-left stagger-2 card-hover-effect">
-              <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
-                📚
-              </div>
-              <div className="p-6 md:p-8">
-                <h3 className="text-2xl font-bold text-secondary mb-3">Study Buddy</h3>
-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                  פלטפורמת למידה חכמה מבוססת AI שמסייעת לסטודנטים ללמוד ביעילות, עם תכונות של סיכום חומרים, יצירת שאלות תרגול, והמלצות מותאמות אישית.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">AI</span>
-                  <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">Education</span>
-                  <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">Web App</span>
-                </div>
-              </div>
-            </Card>
-
-            {/* BuzzAI */}
-            <Card className="glass glass-hover overflow-hidden group animate-fade-in-right stagger-3 card-hover-effect">
-              <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
-                🤖
-              </div>
-              <div className="p-6 md:p-8">
-                <h3 className="text-2xl font-bold text-secondary mb-3">BuzzAI</h3>
-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                  כלי אוטומציה לניהול תוכן ברשתות חברתיות, כולל יצירת תוכן בעזרת AI, תזמון פרסומים, וניתוח ביצועים בזמן אמת.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">AI</span>
-                  <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">Automation</span>
-                  <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">Social Media</span>
-                </div>
-              </div>
-            </Card>
+            {projects.length > 0 ? (
+              projects.slice(0, 4).map((project: any, index: number) => (
+                <Link key={project.id} href={`/projects/${project.slug}`}>
+                  <Card className={`glass glass-hover overflow-hidden group cursor-pointer animate-fade-in-${index % 2 === 0 ? 'left' : 'right'} stagger-${index + 2} card-hover-effect`}>
+                    {project.coverImage ? (
+                      <div className="h-48 overflow-hidden">
+                        <img 
+                          src={project.coverImage} 
+                          alt={project.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
+                        🚀
+                      </div>
+                    )}
+                    <div className="p-6 md:p-8">
+                      <h3 className="text-2xl font-bold text-secondary mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                        {project.description}
+                      </p>
+                      {project.technologies && (
+                        <div className="flex flex-wrap gap-2">
+                          {JSON.parse(project.technologies).slice(0, 3).map((tech: string, i: number) => (
+                            <span key={i} className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">{tech}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </Link>
+              ))
+            ) : (
+              // Fallback to static projects if database is empty
+              <>
+                <Card className="glass glass-hover overflow-hidden group animate-fade-in-left stagger-2 card-hover-effect">
+                  <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
+                    📚
+                  </div>
+                  <div className="p-6 md:p-8">
+                    <h3 className="text-2xl font-bold text-secondary mb-3">Study Buddy</h3>
+                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                      פלטפורמת למידה חכמה מבוססת AI שמסייעת לסטודנטים ללמוד ביעילות
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">AI</span>
+                      <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">Education</span>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="glass glass-hover overflow-hidden group animate-fade-in-right stagger-3 card-hover-effect">
+                  <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
+                    🤖
+                  </div>
+                  <div className="p-6 md:p-8">
+                    <h3 className="text-2xl font-bold text-secondary mb-3">BuzzAI</h3>
+                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                      כלי אוטומציה לניהול תוכן ברשתות חברתיות
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">AI</span>
+                      <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">Automation</span>
+                    </div>
+                  </div>
+                </Card>
+              </>
+            )}
           </div>
         </section>
 
@@ -519,26 +554,57 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { image: "/blog-ai-business.jpg", title: "איך להתחיל עם AI בעסק שלך", date: "15 אוקטובר 2024" },
-              { image: "/blog-ai-automation.jpg", title: "אוטומציה עם n8n - מדריך למתחילים", date: "10 אוקטובר 2024" },
-              { image: "/blog-ai-future.jpg", title: "5 דרכים שAI יכול לשפר את העסק שלך", date: "5 אוקטובר 2024" },
-            ].map((post, index) => (
-              <Card key={index} className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`}>
-                <div className="h-48 overflow-hidden">
-                  <img 
-                    src={post.image} 
-                    alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="text-xs text-primary font-medium mb-2">{post.date}</div>
-                  <h3 className="text-lg font-bold text-secondary mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
-                  <div className="text-primary text-sm font-medium hover:underline">קרא עוד ←</div>
-                </div>
-              </Card>
-            ))}
+            {blogPosts.length > 0 ? (
+              blogPosts.slice(0, 3).map((post: any, index: number) => (
+                <Link key={post.id} href={`/blog/${post.slug}`}>
+                  <Card className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`}>
+                    <div className="h-48 overflow-hidden">
+                      {post.coverImage ? (
+                        <img 
+                          src={post.coverImage} 
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full liquid-gradient flex items-center justify-center text-4xl">
+                          📝
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <div className="text-xs text-primary font-medium mb-2">
+                        {new Date(post.publishedAt).toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </div>
+                      <h3 className="text-lg font-bold text-secondary mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{post.excerpt}</p>
+                      <div className="text-primary text-sm font-medium hover:underline">קרא עוד ←</div>
+                    </div>
+                  </Card>
+                </Link>
+              ))
+            ) : (
+              // Fallback to static blog posts if database is empty
+              [
+                { image: "/blog-ai-business.jpg", title: "איך להתחיל עם AI בעסק שלך", date: "15 אוקטובר 2024" },
+                { image: "/blog-ai-automation.jpg", title: "אוטומציה עם n8n - מדריך למתחילים", date: "10 אוקטובר 2024" },
+                { image: "/blog-ai-future.jpg", title: "5 דרכים שAI יכול לשפר את העסק שלך", date: "5 אוקטובר 2024" },
+              ].map((post, index) => (
+                <Card key={index} className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`}>
+                  <div className="h-48 overflow-hidden">
+                    <img 
+                      src={post.image} 
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="text-xs text-primary font-medium mb-2">{post.date}</div>
+                    <h3 className="text-lg font-bold text-secondary mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
+                    <div className="text-primary text-sm font-medium hover:underline">קרא עוד ←</div>
+                  </div>
+                </Card>
+              ))
+            )}
           </div>
 
           <div className="text-center mt-8">

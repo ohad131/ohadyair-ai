@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function LanguageToggle() {
-  const [language, setLanguage] = useState<"he" | "en">("he");
+  const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
     // Load saved language preference
@@ -12,7 +13,7 @@ export function LanguageToggle() {
       document.documentElement.lang = saved;
       document.documentElement.dir = saved === "he" ? "rtl" : "ltr";
     }
-  }, []);
+  }, [setLanguage]);
 
   const toggleLanguage = () => {
     const newLang = language === "he" ? "en" : "he";
@@ -20,9 +21,6 @@ export function LanguageToggle() {
     localStorage.setItem("language", newLang);
     document.documentElement.lang = newLang;
     document.documentElement.dir = newLang === "he" ? "rtl" : "ltr";
-    
-    // Reload page to apply language changes
-    window.location.reload();
   };
 
   return (
