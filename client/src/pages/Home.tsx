@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { Twitter, Linkedin, Phone } from "lucide-react";
 import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
@@ -173,6 +174,11 @@ export default function Home() {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-3">
+              {/* Language Toggle - Desktop */}
+              <div className="hidden md:block">
+                <LanguageToggle />
+              </div>
+              
               {/* Dark Mode Toggle - Desktop */}
               <div className="hidden md:block">
                 <DarkModeToggle />
@@ -225,7 +231,11 @@ export default function Home() {
                   {item.label}
                 </a>
               ))}
-              <div className="pt-4 mt-4 border-t border-primary/20">
+              <div className="pt-4 mt-4 border-t border-primary/20 space-y-2">
+                <div className="flex items-center justify-between px-4 py-2">
+                  <span className="text-sm font-medium text-secondary">שפה</span>
+                  <LanguageToggle />
+                </div>
                 <div className="flex items-center justify-between px-4 py-2">
                   <span className="text-sm font-medium text-secondary">מצב תצוגה</span>
                   <DarkModeToggle />

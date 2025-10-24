@@ -116,6 +116,51 @@ export const appRouter = router({
       }),
   }),
 
+  projects: router({
+    list: publicProcedure.query(async () => {
+      const db = await import("./db");
+      return await db.getAllProjects();
+    }),
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        const db = await import("./db");
+        const project = await db.getProjectBySlug(input.slug);
+        if (!project) {
+          throw new Error("Project not found");
+        }
+        return project;
+      }),
+    create: publicProcedure
+      .input(
+        z.object({
+          title: z.string().min(1),
+          slug: z.string().min(1),
+          description: z.string().min(1),
+          fullDescription: z.string().optional(),
+          coverImage: z.string().optional(),
+          technologies: z.string().optional(),
+          projectUrl: z.string().optional(),
+          githubUrl: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const db = await import("./db");
+        return await db.createProject(input);
+      }),
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const db = await import("./db");
+        return await db.deleteProject(input.id);
+      }),
+    toggleFeatured: publicProcedure
+      .input(z.object({ id: z.number(), isFeatured: z.boolean() }))
+      .mutation(async ({ input }) => {
+        const db = await import("./db");
+        return await db.toggleProjectFeatured(input.id, input.isFeatured);
+      }),
+  }),
   aiTools: router({
     list: publicProcedure
       .input(z.void().optional())

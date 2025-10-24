@@ -83,3 +83,26 @@ export const siteContent = mysqlTable("siteContent", {
 export type SiteContent = typeof siteContent.$inferSelect;
 export type InsertSiteContent = typeof siteContent.$inferInsert;
 
+/**
+ * Projects table
+ */
+export const projects = mysqlTable("projects", {
+  id: int("id").primaryKey().autoincrement(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description").notNull(),
+  fullDescription: text("fullDescription"),
+  coverImage: varchar("coverImage", { length: 500 }),
+  technologies: text("technologies"), // JSON array of tech tags
+  projectUrl: varchar("projectUrl", { length: 500 }),
+  githubUrl: varchar("githubUrl", { length: 500 }),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  isPublished: boolean("isPublished").default(true).notNull(),
+  isFeatured: boolean("isFeatured").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type Project = typeof projects.$inferSelect;
+export type InsertProject = typeof projects.$inferInsert;
+

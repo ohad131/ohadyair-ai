@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, contactSubmissions, InsertContactSubmission, blogPosts, BlogPost, InsertBlogPost, aiTools, AITool, InsertAITool, siteContent, SiteContent, InsertSiteContent } from "../drizzle/schema";
+import { InsertUser, users, contactSubmissions, InsertContactSubmission, blogPosts, BlogPost, InsertBlogPost, aiTools, AITool, InsertAITool, siteContent, SiteContent, InsertSiteContent, projects, Project, InsertProject } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -239,6 +239,65 @@ export async function toggleBlogFeatured(id: number, isFeatured: boolean) {
   }
 
   await db.update(blogPosts).set({ isFeatured }).where(eq(blogPosts.id, id));
+  return { success: true };
+}
+
+
+
+// Projects
+export async function getAllProjects(): Promise<Project[]> {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+  return await db
+    .select()
+    .from(projects)
+    .where(eq(projects.isPublished, true))
+    .orderBy(desc(projects.displayOrder), desc(projects.createdAt));
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  const db = await getDb();
+  if (!db) {
+    return null;
+  }
+  const result = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.slug, slug))
+    .limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createProject(data: InsertProject) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  await db.insert(projects).values({
+    ...data,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+  return { success: true };
+}
+
+export async function deleteProject(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  await db.delete(projects).where(eq(projects.id, id));
+  return { success: true };
+}
+
+export async function toggleProjectFeatured(id: number, isFeatured: boolean) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  await db.update(projects).set({ isFeatured }).where(eq(projects.id, id));
   return { success: true };
 }
 

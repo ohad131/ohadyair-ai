@@ -7,7 +7,7 @@ export function SplashScreen() {
     // Hide splash screen after animation completes
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, 2500);
+    }, 3500);
 
     return () => clearTimeout(timer);
   }, []);
