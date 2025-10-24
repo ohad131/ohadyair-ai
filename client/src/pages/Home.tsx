@@ -246,40 +246,42 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                icon: "⚡",
+                iconPath: "M13 10V3L4 14h7v7l9-11h-7z",
                 title: "אוטומציות",
                 description: "בניית זרימות עבודה אוטומטיות עם n8n/Activepieces, חיבור API, וסקרייפינג מתקדם",
               },
               {
-                icon: "🌐",
+                iconPath: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z",
                 title: "אתרים",
                 description: "פיתוח אתרים תדמיתיים, מהירים ומותאמי SEO עם טכנולוגיות מודרניות",
               },
               {
-                icon: "🤖",
+                iconPath: "M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z",
                 title: "AI לעסקים",
                 description: "שילוב מודלי שפה, צ'אטבוטים חכמים, וכלי AI מותאמים לצרכים עסקיים",
               },
               {
-                icon: "🎓",
+                iconPath: "M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z",
                 title: "הרצאות והכשרות",
                 description: "הרצאות מעוררות השראה והכשרות מעשיות ב-AI, אוטומציה וטכנולוגיות מתקדמות",
               },
               {
-                icon: "💡",
+                iconPath: "M9 21c0 .5.4 1 1 1h4c.6 0 1-.5 1-1v-1H9v1zm3-19C8.1 2 5 5.1 5 9c0 2.4 1.2 4.5 3 5.7V17c0 .5.4 1 1 1h6c.6 0 1-.5 1-1v-2.3c1.8-1.3 3-3.4 3-5.7 0-3.9-3.1-7-7-7z",
                 title: "יזמות",
                 description: "בניית MVP, ניסוי רעיונות, וליווי טכנולוגי לסטארטאפים ויזמים",
               },
               {
-                icon: "🎯",
+                iconPath: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z",
                 title: "ייעוץ טכנולוגי",
                 description: "ייעוץ אסטרטגי לבחירת טכנולוגיות, אופטימיזציה של תהליכים, ושיפור ביצועים",
               },
             ].map((service, index) => (
               <Card key={index} className="glass glass-hover p-6 md:p-8 rounded-2xl group relative overflow-hidden">
-                {/* Large background icon - monochrome */}
-                <div className="absolute top-4 left-4 text-7xl md:text-8xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-                  {service.icon}
+                {/* Large monochrome SVG icon in background */}
+                <div className="absolute top-4 left-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pointer-events-none">
+                  <svg className="w-32 h-32 md:w-40 md:h-40" viewBox="0 0 24 24" fill="currentColor">
+                    <path d={service.iconPath} />
+                  </svg>
                 </div>
                 
                 {/* Content */}
@@ -374,7 +376,7 @@ export default function Home() {
 
             <div className="order-1 lg:order-2">
               <Card className="glass glass-hover w-full rounded-2xl overflow-hidden">
-                <img src="/ohad-profile.png" alt="אוהד יאיר רחימי - מומחה AI ואוטומציה" className="w-full h-auto object-cover" />
+                <img src="/frame.webp" alt="אוהד יאיר רחימי - מומחה AI ואוטומציה" className="w-full h-auto object-cover" />
               </Card>
             </div>
           </div>
