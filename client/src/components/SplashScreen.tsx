@@ -7,7 +7,7 @@ export function SplashScreen() {
     // Hide splash screen after animation completes
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, 3800);
+    }, 4500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -30,7 +30,7 @@ export function SplashScreen() {
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-gradient drop-shadow-[0_0_30px_rgba(0,188,212,0.5)]">
               Welcome to the era of
             </span>
-            <span className="block text-6xl md:text-8xl lg:text-9xl mt-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400 animate-gradient splash-ai drop-shadow-[0_0_50px_rgba(138,43,226,0.8)]">
+            <span className="block text-7xl md:text-9xl lg:text-10xl mt-2 font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400 animate-gradient splash-ai drop-shadow-[0_0_60px_rgba(138,43,226,1)]">
               AI
             </span>
           </h1>

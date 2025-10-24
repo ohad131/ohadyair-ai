@@ -386,7 +386,7 @@ html {
 }
 
 .splash-ai {
-  animation: splashAIIn 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s forwards;
+  animation: splashAIIn 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.8s forwards;
   opacity: 0;
   display: inline-block !important;
 }
@@ -394,11 +394,10 @@ html {
 @keyframes splashAIIn {
   0% {
     opacity: 0;
-    transform: scale(0.3) rotate(-10deg);
+    transform: scale(0.2) rotate(-15deg);
   }
-  50% {
+  40% {
     opacity: 1;
-    transform: scale(1.2) rotate(5deg);
   }
   100% {
     opacity: 1;
