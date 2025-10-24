@@ -30,11 +30,8 @@ export default function Home() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Add visible when entering, remove when leaving (bidirectional)
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-          } else {
-            entry.target.classList.remove('visible');
           }
         });
       },
@@ -68,7 +65,7 @@ export default function Home() {
   // Track active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["home", "services", "about", "projects", "faq", "blog", "contact"];
+      const sections = ["home", "services", "projects", "about", "faq", "blog", "contact"];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -153,8 +150,8 @@ export default function Home() {
               {[
                 { href: "home", label: "בית" },
                 { href: "services", label: "שירותים" },
-                { href: "about", label: "אודות" },
                 { href: "projects", label: "פרויקטים" },
+                { href: "about", label: "אודות" },
                 { href: "faq", label: "שאלות נפוצות" },
                 { href: "blog", label: "בלוג" },
                 { href: "contact", label: "צור קשר" },
@@ -206,8 +203,8 @@ export default function Home() {
               {[
                 { href: "home", label: "בית" },
                 { href: "services", label: "שירותים" },
-                { href: "about", label: "אודות" },
                 { href: "projects", label: "פרויקטים" },
+                { href: "about", label: "אודות" },
                 { href: "faq", label: "שאלות נפוצות" },
                 { href: "blog", label: "בלוג" },
                 { href: "contact", label: "צור קשר" },
@@ -359,44 +356,6 @@ export default function Home() {
         </section>
 
         {/* Projects Section */}
-        <section id="about" className="container mx-auto py-12 md:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div className="order-2 lg:order-1">
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-6 animate-fade-in-left">אודות</h2>
-              <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed animate-fade-in-left stagger-1">
-                <p>
-                  אני אוהד יאיר, סטודנט לכלכלה וניהול ופרקטי-הנדסאי מכטרוניקה. בעבר שירתתי כמעצב מכני ביחידה טכנולוגית בצה"ל, שם פיתחתי יכולות של פתרון בעיות מורכבות וחשיבה מערכתית.
-                </p>
-                <p>
-                  היום אני מתמחה בבניית מערכות AI ואוטומציה שמייצרות ערך עסקי אמיתי. אני משלב ידע עסקי עם כישורים טכניים מתקדמים כדי ליצור פתרונות שמתאימים בדיוק לצרכי הלקוח.
-                </p>
-                <p>
-                  כיזם AI, אני תמיד מחפש הזדמנויות חדשות ללמוד, לצמוח ולעזור לאחרים להצליח בעידן הדיגיטלי.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mt-8">
-                {[
-                  { title: "כלכלה וניהול", subtitle: "סטודנט" },
-                  { title: "מכטרוניקה", subtitle: "פרקטי-הנדסאי" },
-                  { title: "מעצב מכני", subtitle: "צה\"ל (לשעבר)" },
-                  { title: "יזם AI", subtitle: "נוכחי" },
-                ].map((item, index) => (
-                  <div key={index} className={`glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`}>
-                    <div className="text-primary font-bold text-sm mb-1">{item.title}</div>
-                    <div className="text-muted-foreground text-xs">{item.subtitle}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="order-1 lg:order-2">
-              <Card className="glass glass-hover w-full rounded-2xl overflow-hidden animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-                <img src="/ohad-professional.svg" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105" />
-              </Card>
-            </div>
-          </div>
-        </section>
         <section id="projects" className="container mx-auto py-12 md:py-20">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">פרויקטים נבחרים</h2>
@@ -445,6 +404,44 @@ export default function Home() {
         </section>
 
         {/* About Section */}
+        <section id="about" className="container mx-auto py-12 md:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-6 animate-fade-in-left">אודות</h2>
+              <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed animate-fade-in-left stagger-1">
+                <p>
+                  אני אוהד יאיר, סטודנט לכלכלה וניהול ופרקטי-הנדסאי מכטרוניקה. בעבר שירתתי כמעצב מכני ביחידה טכנולוגית בצה"ל, שם פיתחתי יכולות של פתרון בעיות מורכבות וחשיבה מערכתית.
+                </p>
+                <p>
+                  היום אני מתמחה בבניית מערכות AI ואוטומציה שמייצרות ערך עסקי אמיתי. אני משלב ידע עסקי עם כישורים טכניים מתקדמים כדי ליצור פתרונות שמתאימים בדיוק לצרכי הלקוח.
+                </p>
+                <p>
+                  כיזם AI, אני תמיד מחפש הזדמנויות חדשות ללמוד, לצמוח ולעזור לאחרים להצליח בעידן הדיגיטלי.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-8">
+                {[
+                  { title: "כלכלה וניהול", subtitle: "סטודנט" },
+                  { title: "מכטרוניקה", subtitle: "פרקטי-הנדסאי" },
+                  { title: "מעצב מכני", subtitle: "צה\"ל (לשעבר)" },
+                  { title: "יזם AI", subtitle: "נוכחי" },
+                ].map((item, index) => (
+                  <div key={index} className={`glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`}>
+                    <div className="text-primary font-bold text-sm mb-1">{item.title}</div>
+                    <div className="text-muted-foreground text-xs">{item.subtitle}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <Card className="glass glass-hover w-full rounded-2xl overflow-hidden animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                <img src="/ohad-professional.svg" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105" />
+              </Card>
+            </div>
+          </div>
+        </section>
 
         {/* FAQ Section */}
         <section id="faq" className="container mx-auto py-12 md:py-20">
