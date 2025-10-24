@@ -25,7 +25,14 @@ export function DarkModeToggle() {
   const toggle = () => {
     const newDark = !isDark;
     setIsDark(newDark);
-    document.documentElement.classList.toggle("dark", newDark);
+    
+    // Force remove and add class to ensure it works
+    if (newDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    
     localStorage.setItem("theme", newDark ? "dark" : "light");
   };
 

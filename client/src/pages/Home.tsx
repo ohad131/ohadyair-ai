@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
@@ -14,6 +14,52 @@ export default function Home() {
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Scroll animation observer
+  useEffect(() => {
+    // Immediately show hero section animations
+    const heroSection = document.getElementById('home');
+    if (heroSection) {
+      const heroAnimated = heroSection.querySelectorAll(
+        '.animate-fade-in-up, .animate-fade-in-left, .animate-fade-in-right, .animate-scale-in, .animate-bounce-in, .animate-slide-in-bottom'
+      );
+      heroAnimated.forEach((el) => el.classList.add('visible'));
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '50px',
+      }
+    );
+
+    // Observe all animated elements EXCEPT those in hero section
+    const animatedElements = document.querySelectorAll(
+      '.animate-fade-in-up, .animate-fade-in-left, .animate-fade-in-right, .animate-scale-in, .animate-bounce-in, .animate-slide-in-bottom'
+    );
+
+    animatedElements.forEach((el) => {
+      // Skip hero section elements
+      if (!heroSection?.contains(el)) {
+        observer.observe(el);
+      }
+    });
+
+    return () => {
+      animatedElements.forEach((el) => {
+        if (!heroSection?.contains(el)) {
+          observer.unobserve(el);
+        }
+      });
+    };
+  }, []);
 
   // Track active section on scroll
   useEffect(() => {
@@ -218,7 +264,7 @@ export default function Home() {
           </div>
 
           {/* Stats */}
-          <div className="mt-12 md:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
+          <div className="mt-8 md:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
             <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-1 hover-glow">
               <div className="text-4xl md:text-5xl font-bold text-primary mb-2">+5</div>
               <div className="text-sm text-secondary font-medium">פרויקטים מוצלחים</div>

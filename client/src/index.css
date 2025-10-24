@@ -728,8 +728,12 @@ html {
 }
 
 .animate-fade-in-up {
+  opacity: 1;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.animate-fade-in-up.visible {
   animation: fadeInUp 0.8s ease-out forwards;
-  opacity: 0;
 }
 
 /* Fade in with slide from right */
@@ -745,8 +749,12 @@ html {
 }
 
 .animate-fade-in-right {
+  opacity: 1;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.animate-fade-in-right.visible {
   animation: fadeInRight 0.8s ease-out forwards;
-  opacity: 0;
 }
 
 /* Fade in with slide from left */
@@ -762,8 +770,12 @@ html {
 }
 
 .animate-fade-in-left {
+  opacity: 1;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.animate-fade-in-left.visible {
   animation: fadeInLeft 0.8s ease-out forwards;
-  opacity: 0;
 }
 
 /* Scale in animation */
@@ -779,8 +791,12 @@ html {
 }
 
 .animate-scale-in {
+  opacity: 1;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-scale-in.visible {
   animation: scaleIn 0.6s ease-out forwards;
-  opacity: 0;
 }
 
 /* Floating animation */
@@ -940,8 +956,12 @@ html {
 }
 
 .animate-bounce-in {
+  opacity: 1;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-bounce-in.visible {
   animation: bounceIn 0.6s ease-out forwards;
-  opacity: 0;
 }
 
 /* Slide in from bottom */
@@ -957,7 +977,11 @@ html {
 }
 
 .animate-slide-in-bottom {
+  opacity: 1;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.animate-slide-in-bottom.visible {
   animation: slideInBottom 0.8s ease-out forwards;
-  opacity: 0;
 }
 
