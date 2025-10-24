@@ -497,32 +497,32 @@ export default function Home() {
           <div className="max-w-3xl mx-auto space-y-4">
             {[
               {
-                q: "איך נראה תהליך העבודה?",
-                a: "התהליך מתחיל בשיחת היכרות להבנת הצרכים, ממשיך בתכנון מפורט והצעת מחיר, ואז עובר לשלב הפיתוח עם עדכונים שוטפים. בסיום מתבצע מסירה מלאה עם הדרכה ותמיכה.",
+                q: t.faq1Q,
+                a: t.faq1A,
               },
               {
-                q: "כמה זמן לוקח לפתח פרויקט?",
-                a: "משך הזמן משתנה לפי היקף הפרויקט. פרויקט קטן יכול להסתיים תוך שבועיים, בעוד פרויקט מורכב יכול לקחת מספר חודשים. אני מספק הערכת זמן מדויקת לאחר שיחת ההיכרות.",
+                q: t.faq2Q,
+                a: t.faq2A,
               },
               {
-                q: "האם יש תחזוקה לאחר המסירה?",
-                a: "כן, אני מציע חבילות תחזוקה שונות שכוללות עדכונים, תיקוני באגים, ותמיכה טכנית. ניתן לבחור בחבילה המתאימה ביותר לצרכים שלך.",
+                q: t.faq3Q,
+                a: t.faq3A,
               },
               {
-                q: "איך מטפלים בפרטיות ואבטחת מידע?",
-                a: "אני מקפיד על סטנדרטים גבוהים של אבטחת מידע, כולל הצפנה, גיבויים קבועים, ועמידה בתקני GDPR. כל המידע מטופל בסודיות מוחלטת.",
+                q: t.faq4Q,
+                a: t.faq4A,
               },
               {
-                q: "האם אפשר לראות דוגמאות נוספות?",
-                a: "בהחלט! צור איתי קשר ואשמח להציג לך פרויקטים נוספים שביצעתי, כולל case studies מפורטים ותוצאות עסקיות.",
+                q: t.faq5Q,
+                a: t.faq5A,
               },
               {
-                q: "מה כלול במחיר?",
-                a: "המחיר כולל את כל שלבי הפיתוח, בדיקות איכות, מסירה מלאה, הדרכה בסיסית ותמיכה לחודש הראשון. עלויות נוספות כמו אחסון או שירותי צד שלישי מפורטות בנפרד.",
+                q: t.faq6Q,
+                a: t.faq6A,
               },
               {
-                q: "האם אתה עובד עם לקוחות בחו\"ל?",
-                a: "כן, אני עובד עם לקוחות בישראל ובעולם. התקשורת מתבצעת באמצעות וידאו קונפרנס, ואני מתאים את שעות העבודה לאזור הזמן של הלקוח.",
+                q: t.faq7Q,
+                a: t.faq7A,
               },
             ].map((faq, index) => (
               <details key={index} className={`glass glass-hover rounded-xl group animate-slide-in-bottom hover-glow stagger-${Math.min(index + 1, 6)}`}>
@@ -618,7 +618,7 @@ export default function Home() {
             <div className="text-center mb-12 md:mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.contactTitle}</h2>
               <p className="text-base md:text-lg text-muted-foreground mb-4 animate-fade-in-up stagger-1">
-                מוזמנים ליצור קשר לשיחת ייעוץ ראשונית ללא התחייבות
+                {t.contactSubtitle}
               </p>
               <a href="tel:+972504003234" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-lg font-medium">
                 <Phone className="w-5 h-5" />
@@ -631,18 +631,18 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-secondary mb-2">
-                      שם מלא <span className="text-primary">*</span>
+                      {t.contactName} <span className="text-primary">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary"
-                      placeholder="שם מלא"
+                      placeholder={t.contactName}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-secondary mb-2">
-                      אימייל <span className="text-primary">*</span>
+                      {t.contactEmail} <span className="text-primary">*</span>
                     </label>
                     <input
                       type="email"
@@ -654,7 +654,7 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-secondary mb-2">טלפון</label>
+                  <label className="block text-sm font-medium text-secondary mb-2">{t.contactPhone}</label>
                   <input
                     type="tel"
                     className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary"
@@ -664,7 +664,7 @@ export default function Home() {
 
                 <div>
                   <label className="block text-sm font-medium text-secondary mb-2">
-                    הודעה <span className="text-primary">*</span>
+                    {t.contactMessage} <span className="text-primary">*</span>
                   </label>
                   <textarea
                     required
@@ -675,12 +675,12 @@ export default function Home() {
                 </div>
 
                 <Button type="submit" className="w-full liquid-button h-14 rounded-full text-white font-medium text-base">
-                  שלח הודעה
+                  {t.contactButton}
                 </Button>
               </form>
 
               <div className="mt-8 pt-8 border-t border-primary/20 text-center">
-                <p className="text-sm text-muted-foreground mb-2">או צור קשר ישירות:</p>
+                <p className="text-sm text-muted-foreground mb-2">Or contact directly:</p>
                 <a href="mailto:ohadyair.ai@gmail.com" className="text-primary font-medium hover:underline">
                   ohadyair.ai@gmail.com
                 </a>
@@ -700,12 +700,12 @@ export default function Home() {
                 <span className="text-white font-bold text-lg">אוהד יאיר רחימי</span>
               </div>
               <p className="text-white/80 text-sm">
-                בונה מערכות AI ואוטומציה שמייצרות אימפקט עסקי
+                {t.footerAboutText}
               </p>
             </div>
 
             <div>
-              <h4 className="text-white font-semibold mb-4">קישורים מהירים</h4>
+              <h4 className="text-white font-semibold mb-4">{t.footerQuickLinks}</h4>
               <div className="space-y-2">
                 {["בית", "שירותים", "פרויקטים", "בלוג", "צור קשר"].map((link, index) => (
                   <a key={index} href={`#${link.toLowerCase()}`} className="block text-white/80 text-sm hover:text-white transition-colors">
@@ -715,8 +715,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div>
-              <h4 className="text-white font-semibold mb-4">רשתות חברתיות</h4>
+            <div>              <h4 className="text-white font-semibold mb-4">{t.footerSocial}</h4>
               <div className="flex gap-3">
                 <a
                   href="https://twitter.com/YairOhad15930"

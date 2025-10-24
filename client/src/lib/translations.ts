@@ -52,6 +52,20 @@ export const translations = {
     
     // FAQ
     faqTitle: "שאלות נפוצות",
+    faq1Q: "מה הטהליך של העבודה?",
+    faq1A: "התהליך מתחיל בשיחה דהיכרות להבנה הצרכים, ממשיך בתכנון מפורט והצעה מחיר, ואז עובר לשלב הפיתוח עם עדכונים שוטפים. בסיום מתבצע מסירה מלאה עם הדרכה ותמיכה.",
+    faq2Q: "כמה זמן לוקח לפתח פרוייקט?",
+    faq2A: "משך הזמן משתנה לפי היקף הפרוייקט. פרוייקט קטן יכול להסתיים תוך שבועיים, בעוד פרוייקט מורכב יכול לקחות מספר חודשים. אני מספק הערכה זמן מדויקה לאחר שיחה ההיכרות.",
+    faq3Q: "האם יש תחזוקה לאחר המסירה?",
+    faq3A: "כן, אני מציע חבילות תחזוקה שונות שכוללות עדכונים, תיקוני באגים, ותמיכה טכנית. ניתן לבחור בחבילה המתאימה ביותר לצרכים שלך.",
+    faq4Q: "איך מטפלים בפרטיות ואבטחה מידע?",
+    faq4A: "אני מקפיד על סטנדרטים גבוהים של אבטחה מידע, כולל הצפנה, גיבויים קבועים, ועמידה בתקני GDPR. כל המידע מטופל בסודיות מוחלטה.",
+    faq5Q: "האם אפשר לראות דוגמאות נוספות?",
+    faq5A: "בהחלט! צור איתי קשר ואשמח להציג לך פרוייקטים נוספים שביצעתי, כולל case studies מפורטים ותוצאות עסקיות.",
+    faq6Q: "מה כלול במחיר?",
+    faq6A: "המחיר כולל את כל שלבי הפיתוח, בדיקות איכות, מסירה מלאה, הדרכה בסיסית ותמיכה לחודש הראשון. עלויות נוספות כמו אחסון או שירותי צד שלישי מפורטות בנפרד.",
+    faq7Q: "האם אתה עובד עם לקוחות בחו\"l?",
+    faq7A: "כן, אני עובד עם לקוחות בישראל ובעולם. התקשורה מתבצעת באמצעות ווידאו קונפרנס, ואני מתאים את שעות העבודה לאזור הזמן של הלקוח.",
     
     // Blog
     blogTitle: "בלוג",
@@ -138,6 +152,20 @@ export const translations = {
     
     // FAQ
     faqTitle: "Frequently Asked Questions",
+    faq1Q: "What is your work process?",
+    faq1A: "The process starts with a discovery call to understand your needs, continues with detailed planning and a price quote, then moves to the development phase with regular updates. At the end, there is a full handover with training and support.",
+    faq2Q: "How long does it take to develop a project?",
+    faq2A: "The timeline varies depending on the project scope. A small project can be completed in two weeks, while a complex project may take several months. I provide an accurate time estimate after the discovery call.",
+    faq3Q: "Is there maintenance after delivery?",
+    faq3A: "Yes, I offer different maintenance packages that include updates, bug fixes, and technical support. You can choose the package that best suits your needs.",
+    faq4Q: "How do you handle privacy and data security?",
+    faq4A: "I adhere to high standards of data security, including encryption, regular backups, and GDPR compliance. All information is handled with complete confidentiality.",
+    faq5Q: "Can I see more examples?",
+    faq5A: "Absolutely! Contact me and I would be happy to show you additional projects I have done, including detailed case studies and business results.",
+    faq6Q: "What is included in the price?",
+    faq6A: "The price includes all development stages, quality testing, full delivery, basic training, and support for the first month. Additional costs like hosting or third-party services are detailed separately.",
+    faq7Q: "Do you work with international clients?",
+    faq7A: "Yes, I work with clients in Israel and around the world. Communication is done via video conference, and I adjust my working hours to your time zone.",
     
     // Blog
     blogTitle: "Blog",
