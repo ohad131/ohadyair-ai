@@ -256,7 +256,7 @@ export default function AIToolsNetwork({ tools }: Props) {
   // Mobile grid view
   if (isMobile) {
     return (
-      <div className="w-full max-w-sm mx-auto grid grid-cols-3 gap-3 p-4">
+      <div className="w-full max-w-md mx-auto grid grid-cols-2 gap-3 p-4 overflow-x-hidden">
         {tools?.map((tool) => (
           <a
             key={tool.id}

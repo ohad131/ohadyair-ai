@@ -151,8 +151,9 @@ export default function Home() {
                 { href: "home", label: "בית" },
                 { href: "services", label: "שירותים" },
                 { href: "projects", label: "פרויקטים" },
-                { href: "blog", label: "בלוג" },
                 { href: "about", label: "אודות" },
+                { href: "faq", label: "שאלות נפוצות" },
+                { href: "blog", label: "בלוג" },
                 { href: "contact", label: "צור קשר" },
               ].map((item) => (
                 <a
@@ -203,8 +204,9 @@ export default function Home() {
                 { href: "home", label: "בית" },
                 { href: "services", label: "שירותים" },
                 { href: "projects", label: "פרויקטים" },
-                { href: "blog", label: "בלוג" },
                 { href: "about", label: "אודות" },
+                { href: "faq", label: "שאלות נפוצות" },
+                { href: "blog", label: "בלוג" },
                 { href: "contact", label: "צור קשר" },
               ].map((item) => (
                 <a
@@ -220,6 +222,12 @@ export default function Home() {
                   {item.label}
                 </a>
               ))}
+              <div className="pt-4 mt-4 border-t border-primary/20">
+                <div className="flex items-center justify-between px-4 py-2">
+                  <span className="text-sm font-medium text-secondary">מצב תצוגה</span>
+                  <DarkModeToggle />
+                </div>
+              </div>
               <Button className="w-full liquid-button h-12 rounded-full text-white text-sm font-medium mt-4">
                 התחל עכשיו
               </Button>
@@ -255,15 +263,19 @@ export default function Home() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up stagger-5">
-            <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base button-ripple">
-              <svg className="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="none">
-                <path d="M15.83 10.83L11.83 14.83C11.64 15.02 11.39 15.13 11.13 15.13C10.87 15.13 10.62 15.02 10.43 14.83C10.04 14.44 10.04 13.81 10.43 13.42L12.34 11.5H4.5C3.95 11.5 3.5 11.05 3.5 10.5C3.5 9.95 3.95 9.5 4.5 9.5H12.34L10.43 7.58C10.04 7.19 10.04 6.56 10.43 6.17C10.82 5.78 11.45 5.78 11.84 6.17L15.84 10.17C16.22 10.56 16.22 11.19 15.83 10.83Z" fill="currentColor" />
-              </svg>
-              דברו איתי
-            </Button>
-            <Button variant="outline" className="h-12 md:h-14 px-6 md:px-8 glass glass-hover border-primary/30 rounded-full text-secondary font-medium text-sm md:text-base">
-              צפה בעבודות
-            </Button>
+            <a href="#contact">
+              <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base button-ripple">
+                <svg className="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="none">
+                  <path d="M15.83 10.83L11.83 14.83C11.64 15.02 11.39 15.13 11.13 15.13C10.87 15.13 10.62 15.02 10.43 14.83C10.04 14.44 10.04 13.81 10.43 13.42L12.34 11.5H4.5C3.95 11.5 3.5 11.05 3.5 10.5C3.5 9.95 3.95 9.5 4.5 9.5H12.34L10.43 7.58C10.04 7.19 10.04 6.56 10.43 6.17C10.82 5.78 11.45 5.78 11.84 6.17L15.84 10.17C16.22 10.56 16.22 11.19 15.83 10.83Z" fill="currentColor" />
+                </svg>
+                דברו איתי
+              </Button>
+            </a>
+            <a href="#projects">
+              <Button variant="outline" className="h-12 md:h-14 px-6 md:px-8 glass glass-hover border-primary/30 rounded-full text-secondary font-medium text-sm md:text-base">
+                צפה בעבודות
+              </Button>
+            </a>
           </div>
 
           {/* Stats */}

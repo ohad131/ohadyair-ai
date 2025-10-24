@@ -25,12 +25,17 @@ export function SplashScreen() {
         </div>
         
         {/* Logo/Text */}
-        <div className="relative z-10 text-center splash-content">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient">
-            AI
+        <div className="relative z-10 text-center splash-content px-4">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 splash-title">
+            <span className="block bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient">
+              Welcome to the era of
+            </span>
+            <span className="block text-6xl md:text-8xl lg:text-9xl mt-2 bg-gradient-to-r from-secondary via-primary to-secondary bg-clip-text text-transparent animate-gradient splash-ai">
+              AI
+            </span>
           </h1>
-          <p className="text-sm text-muted-foreground mt-2 animate-fade-in-delayed">
-            Ohad Yair
+          <p className="text-base md:text-lg text-muted-foreground mt-4 animate-fade-in-delayed font-medium">
+            Ohad Yair - AI & Automation Solutions
           </p>
         </div>
       </div>
