@@ -26,15 +26,15 @@ export function SplashScreen() {
         
         {/* Logo/Text */}
         <div className="relative z-10 text-center splash-content px-4">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 splash-title">
-            <span className="block bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient">
+          <h1 className="font-inter text-3xl md:text-5xl lg:text-6xl font-black mb-4 splash-title tracking-tight">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-gradient drop-shadow-[0_0_30px_rgba(0,188,212,0.5)]">
               Welcome to the era of
             </span>
-            <span className="block text-6xl md:text-8xl lg:text-9xl mt-2 bg-gradient-to-r from-secondary via-primary to-secondary bg-clip-text text-transparent animate-gradient splash-ai">
+            <span className="block text-6xl md:text-8xl lg:text-9xl mt-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400 animate-gradient splash-ai drop-shadow-[0_0_50px_rgba(138,43,226,0.8)]">
               AI
             </span>
           </h1>
-          <p className="text-base md:text-lg text-muted-foreground mt-4 animate-fade-in-delayed font-medium">
+          <p className="text-base md:text-lg mt-4 animate-fade-in-delayed font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400">
             Ohad Yair - AI & Automation Solutions
           </p>
         </div>

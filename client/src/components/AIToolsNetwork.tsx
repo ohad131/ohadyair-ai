@@ -256,14 +256,14 @@ export default function AIToolsNetwork({ tools }: Props) {
   // Mobile grid view
   if (isMobile) {
     return (
-      <div className="w-full max-w-md mx-auto grid grid-cols-2 gap-3 p-4 overflow-x-hidden">
+      <div className="w-full px-4 mx-auto grid grid-cols-3 gap-2 max-w-sm overflow-hidden">
         {tools?.map((tool) => (
           <a
             key={tool.id}
             href={tool.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="liquid-glass-tile rounded-2xl backdrop-blur-2xl border flex items-center justify-center px-3 py-2 hover:scale-105 transition-transform duration-300 relative overflow-hidden"
+            className="liquid-glass-tile rounded-xl backdrop-blur-2xl border flex items-center justify-center px-2 py-3 hover:scale-105 transition-transform duration-300 relative overflow-hidden text-xs font-semibold"
             style={{
               background: `linear-gradient(135deg, 
                 rgba(${tool.color}, 0.15) 0%, 
