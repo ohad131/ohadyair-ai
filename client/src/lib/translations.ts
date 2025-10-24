@@ -11,7 +11,9 @@ export const translations = {
     
     // Hero
     heroTitle: "בונה מערכות AI ואוטומציה שמייצרות אפקט עסקי",
-    heroSubtitle: "מתמחה בפיתוח פתרונות חכמים המשלבים בינה מלאכותית ואוטומציה לעסקים בעידן הדיגיטלי",
+    heroSubtitle: "ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה",
+    heroHighlight: "מתמחה בשילוב הכלים המתקדמים ביותר",
+    heroPlatforms: "13+ פלטפורמות AI ואוטומציה בשליטה מלאה",
     heroButton1: "דברו איתי",
     heroButton2: "צפה בעבודות",
     
@@ -93,7 +95,9 @@ export const translations = {
     
     // Hero
     heroTitle: "Building AI & Automation Systems That Drive Business Impact",
-    heroSubtitle: "Specializing in developing intelligent solutions that integrate artificial intelligence and automation for businesses in the digital age",
+    heroSubtitle: "Mapping processes, connecting data, and growing performance with AI—exactly where it matters",
+    heroHighlight: "Specializing in integrating the most advanced tools",
+    heroPlatforms: "13+ AI and automation platforms under full control",
     heroButton1: "Talk to Me",
     heroButton2: "View Work",
     

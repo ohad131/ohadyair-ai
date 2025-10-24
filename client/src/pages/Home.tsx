@@ -10,8 +10,10 @@ import { Twitter, Linkedin, Phone } from "lucide-react";
 import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
 import { SplashScreen } from "@/components/SplashScreen";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
+  const { t } = useLanguage();
   const { data: tools = [] } = trpc.aiTools.list.useQuery();
   const { data: blogPosts = [] } = trpc.blog.list.useQuery();
   const { data: projects = [] } = trpc.projects.list.useQuery();
@@ -154,13 +156,13 @@ export default function Home() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-6 glass px-6 py-2 rounded-full">
               {[
-                { href: "home", label: "בית" },
-                { href: "services", label: "שירותים" },
-                { href: "about", label: "אודות" },
-                { href: "projects", label: "פרויקטים" },
-                { href: "faq", label: "שאלות נפוצות" },
-                { href: "blog", label: "בלוג" },
-                { href: "contact", label: "צור קשר" },
+                { href: "home", label: t.home },
+                { href: "services", label: t.services },
+                { href: "about", label: t.about },
+                { href: "projects", label: t.projects },
+                { href: "faq", label: t.faq },
+                { href: "blog", label: t.blog },
+                { href: "contact", label: t.contact },
               ].map((item) => (
                 <a
                   key={item.href}
@@ -212,13 +214,13 @@ export default function Home() {
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 glass p-4 rounded-2xl space-y-2">
               {[
-                { href: "home", label: "בית" },
-                { href: "services", label: "שירותים" },
-                { href: "about", label: "אודות" },
-                { href: "projects", label: "פרויקטים" },
-                { href: "faq", label: "שאלות נפוצות" },
-                { href: "blog", label: "בלוג" },
-                { href: "contact", label: "צור קשר" },
+                { href: "home", label: t.home },
+                { href: "services", label: t.services },
+                { href: "about", label: t.about },
+                { href: "projects", label: t.projects },
+                { href: "faq", label: t.faq },
+                { href: "blog", label: t.blog },
+                { href: "contact", label: t.contact },
               ].map((item) => (
                 <a
                   key={item.href}
@@ -258,16 +260,16 @@ export default function Home() {
           {/* Hero Title and Subtitle - ABOVE animation */}
           <div className="text-center space-y-4 md:space-y-6 mb-8 md:mb-12">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight px-4 animate-fade-in-up">
-              בונה מערכות <span className="text-primary">AI</span> ואוטומציה שמייצרות אימפקט עסקי
+              {t.heroTitle}
             </h1>
             <p className="text-base md:text-lg text-muted-foreground font-medium px-4 max-w-3xl mx-auto animate-fade-in-up stagger-1">
-              ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה.
+              {t.heroSubtitle}
             </p>
             <div className="text-xl md:text-2xl font-bold text-primary mb-4 animate-fade-in-up stagger-2">
-              מתמחה בשילוב הכלים המתקדמים ביותר
+              {t.heroHighlight}
             </div>
             <p className="text-sm md:text-base text-muted-foreground font-medium animate-fade-in-up stagger-3">
-              13+ פלטפורמות AI ואוטומציה בשליטה מלאה
+              {t.heroPlatforms}
             </p>
           </div>
 
@@ -283,12 +285,12 @@ export default function Home() {
                 <svg className="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="none">
                   <path d="M15.83 10.83L11.83 14.83C11.64 15.02 11.39 15.13 11.13 15.13C10.87 15.13 10.62 15.02 10.43 14.83C10.04 14.44 10.04 13.81 10.43 13.42L12.34 11.5H4.5C3.95 11.5 3.5 11.05 3.5 10.5C3.5 9.95 3.95 9.5 4.5 9.5H12.34L10.43 7.58C10.04 7.19 10.04 6.56 10.43 6.17C10.82 5.78 11.45 5.78 11.84 6.17L15.84 10.17C16.22 10.56 16.22 11.19 15.83 10.83Z" fill="currentColor" />
                 </svg>
-                דברו איתי
+                {t.heroButton1}
               </Button>
             </a>
             <a href="#projects">
               <Button variant="outline" className="h-12 md:h-14 px-6 md:px-8 glass glass-hover border-primary/30 rounded-full text-secondary font-medium text-sm md:text-base">
-                צפה בעבודות
+                {t.heroButton2}
               </Button>
             </a>
           </div>
