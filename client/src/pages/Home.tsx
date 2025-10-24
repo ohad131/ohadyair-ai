@@ -8,6 +8,7 @@ import { DarkModeToggle } from "@/components/DarkModeToggle";
 import { Twitter, Linkedin, Phone } from "lucide-react";
 import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
+import { SplashScreen } from "@/components/SplashScreen";
 
 export default function Home() {
   const { data: tools = [] } = trpc.aiTools.list.useQuery();
@@ -84,7 +85,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <>
+      <SplashScreen />
+      <div className="min-h-screen">
       {/* Skip to content link for accessibility */}
       <a href="#main-content" className="skip-to-content">
         דלג לתוכן הראשי
@@ -252,7 +255,7 @@ export default function Home() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up stagger-5">
-            <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base hover-lift">
+            <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base button-ripple">
               <svg className="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="none">
                 <path d="M15.83 10.83L11.83 14.83C11.64 15.02 11.39 15.13 11.13 15.13C10.87 15.13 10.62 15.02 10.43 14.83C10.04 14.44 10.04 13.81 10.43 13.42L12.34 11.5H4.5C3.95 11.5 3.5 11.05 3.5 10.5C3.5 9.95 3.95 9.5 4.5 9.5H12.34L10.43 7.58C10.04 7.19 10.04 6.56 10.43 6.17C10.82 5.78 11.45 5.78 11.84 6.17L15.84 10.17C16.22 10.56 16.22 11.19 15.83 10.83Z" fill="currentColor" />
               </svg>
@@ -322,7 +325,7 @@ export default function Home() {
                 description: "ייעוץ אסטרטגי לבחירת טכנולוגיות, אופטימיזציה של תהליכים, ושיפור ביצועים",
               },
             ].map((service, index) => (
-              <Card key={index} className={`glass glass-hover p-6 md:p-8 rounded-2xl group relative overflow-hidden animate-fade-in-up hover-lift hover-glow stagger-${index + 1}`}>
+              <Card key={index} className={`glass glass-hover p-6 md:p-8 rounded-2xl group relative overflow-hidden animate-fade-in-up card-hover-effect stagger-${index + 1}`}>
                 {/* Large monochrome SVG icon in background */}
                 <div className="absolute top-4 left-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pointer-events-none">
                   <svg className="w-32 h-32 md:w-40 md:h-40" viewBox="0 0 24 24" fill="currentColor">
@@ -351,7 +354,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
             {/* Study Buddy */}
-            <Card className="glass glass-hover overflow-hidden group animate-fade-in-left stagger-2 hover-lift">
+            <Card className="glass glass-hover overflow-hidden group animate-fade-in-left stagger-2 card-hover-effect">
               <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
                 📚
               </div>
@@ -369,7 +372,7 @@ export default function Home() {
             </Card>
 
             {/* BuzzAI */}
-            <Card className="glass glass-hover overflow-hidden group animate-fade-in-right stagger-3 hover-lift">
+            <Card className="glass glass-hover overflow-hidden group animate-fade-in-right stagger-3 card-hover-effect">
               <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
                 🤖
               </div>
@@ -496,7 +499,7 @@ export default function Home() {
               { image: "/blog-ai-automation.jpg", title: "אוטומציה עם n8n - מדריך למתחילים", date: "10 אוקטובר 2024" },
               { image: "/blog-ai-future.jpg", title: "5 דרכים שAI יכול לשפר את העסק שלך", date: "5 אוקטובר 2024" },
             ].map((post, index) => (
-              <Card key={index} className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in hover-lift hover-glow stagger-${index + 2}`}>
+              <Card key={index} className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`}>
                 <div className="h-48 overflow-hidden">
                   <img 
                     src={post.image} 
@@ -689,6 +692,7 @@ export default function Home() {
       {/* WhatsApp Floating Button */}
       <WhatsAppButton />
     </div>
+    </>
   );
 }
 

@@ -23,7 +23,10 @@ export function DarkModeToggle() {
   }, []);
 
   const toggle = () => {
-    const newDark = !isDark;
+    // Check actual DOM state instead of React state
+    const currentlyDark = document.documentElement.classList.contains("dark");
+    const newDark = !currentlyDark;
+    
     setIsDark(newDark);
     
     // Force remove and add class to ensure it works
