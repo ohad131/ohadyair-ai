@@ -237,16 +237,16 @@ export default function Home() {
               ))}
               <div className="pt-4 mt-4 border-t border-primary/20 space-y-2">
                 <div className="flex items-center justify-between px-4 py-2">
-                  <span className="text-sm font-medium text-secondary">שפה</span>
+                  <span className="text-sm font-medium text-secondary">{t.language}</span>
                   <LanguageToggle />
                 </div>
                 <div className="flex items-center justify-between px-4 py-2">
-                  <span className="text-sm font-medium text-secondary">מצב תצוגה</span>
+                  <span className="text-sm font-medium text-secondary">{t.darkMode}</span>
                   <DarkModeToggle />
                 </div>
               </div>
               <Button className="w-full liquid-button h-12 rounded-full text-white text-sm font-medium mt-4">
-                התחל עכשיו
+                {t.startNow}
               </Button>
             </div>
           )}
@@ -385,14 +385,14 @@ export default function Home() {
 
               <div className="grid grid-cols-2 gap-4 mt-8">
                 {[
-                  { title: "כלכלה וניהול", subtitle: "סטודנט" },
-                  { title: "מכטרוניקה", subtitle: "פרקטי-הנדסאי" },
-                  { title: "מעצב מכני", subtitle: "צה\"ל (לשעבר)" },
-                  { title: "יזם AI", subtitle: "נוכחי" },
+                  { title: "כלכלה וניהול", subtitle: "סטודנט", titleEn: "Economics & Management", subtitleEn: "Student" },
+                  { title: "מכטרוניקה", subtitle: "פרקטי-הנדסאי", titleEn: "Mechatronics", subtitleEn: "Practical Engineer" },
+                  { title: "מעצב מכני", subtitle: "צה\"ל (לשעבר)", titleEn: "Mechanical Designer", subtitleEn: "IDF (Former)" },
+                  { title: "יזם AI", subtitle: "נוכחי", titleEn: "AI Entrepreneur", subtitleEn: "Current" },
                 ].map((item, index) => (
                   <div key={index} className={`glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`}>
-                    <div className="text-primary font-bold text-sm mb-1">{item.title}</div>
-                    <div className="text-muted-foreground text-xs">{item.subtitle}</div>
+                    <div className="text-primary font-bold text-sm mb-1">{item.titleEn || item.title}</div>
+                    <div className="text-muted-foreground text-xs">{item.subtitleEn || item.subtitle}</div>
                   </div>
                 ))}
               </div>
@@ -400,7 +400,7 @@ export default function Home() {
 
             <div className="order-1 lg:order-2">
               <Card className="glass glass-hover w-full rounded-2xl overflow-hidden animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-                <img src="/ohad-professional.svg" alt="אוהד יאיר - מומחה AI ואוטומציה" className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105" />
+                <img src="/ohad-professional.svg" alt={t.language === 'he' ? 'אוהד יאיר - מומחה AI ואוטומציה' : 'Ohad Yair - AI & Automation Expert'} className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105" />
               </Card>
             </div>
           </div>
@@ -606,7 +606,7 @@ export default function Home() {
           <div className="text-center mt-8">
             <Link href="/blog">
               <Button variant="outline" className="glass glass-hover border-primary/30 px-8 py-3 rounded-full text-secondary">
-                צפה בכל המאמרים
+                {t.blogViewAll}
               </Button>
             </Link>
           </div>
@@ -670,7 +670,7 @@ export default function Home() {
                     required
                     rows={6}
                     className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary resize-none"
-                    placeholder="ספר לי על הפרויקט שלך..."
+                    placeholder={t.language === 'he' ? "ספר לי על הפרויקט שלך..." : "Tell me about your project..."}
                   />
                 </div>
 
@@ -697,7 +697,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <img src="/RoundLOGO.png" alt="אוהד יאיר רחימי" className="w-12 h-12 rounded-full" />
-                <span className="text-white font-bold text-lg">אוהד יאיר רחימי</span>
+                <span className="text-white font-bold text-lg">Ohad Yair Rahimi</span>
               </div>
               <p className="text-white/80 text-sm">
                 {t.footerAboutText}
@@ -707,9 +707,15 @@ export default function Home() {
             <div>
               <h4 className="text-white font-semibold mb-4">{t.footerQuickLinks}</h4>
               <div className="space-y-2">
-                {["בית", "שירותים", "פרויקטים", "בלוג", "צור קשר"].map((link, index) => (
-                  <a key={index} href={`#${link.toLowerCase()}`} className="block text-white/80 text-sm hover:text-white transition-colors">
-                    {link}
+                {[
+                  { href: "home", label: t.home },
+                  { href: "services", label: t.services },
+                  { href: "projects", label: t.projects },
+                  { href: "blog", label: t.blog },
+                  { href: "contact", label: t.contact },
+                ].map((item, index) => (
+                  <a key={index} href={`#${item.href}`} className="block text-white/80 text-sm hover:text-white transition-colors">
+                    {item.label}
                   </a>
                 ))}
               </div>
@@ -744,13 +750,13 @@ export default function Home() {
               <p className="text-white/60 text-sm">© 2024 Ohad Yair. All rights reserved.</p>
               <div className="flex gap-4 text-xs">
                 <Link href="/privacy-policy" className="text-white/60 hover:text-white transition-colors">
-                  מדיניות פרטיות
+                  {t.privacyPolicy}
                 </Link>
                 <Link href="/terms-of-service" className="text-white/60 hover:text-white transition-colors">
-                  תקנון שימוש
+                  {t.termsOfService}
                 </Link>
                 <Link href="/accessibility" className="text-white/60 hover:text-white transition-colors">
-                  הצהרת נגישות
+                  {t.accessibilityStatement}
                 </Link>
               </div>
             </div>
@@ -763,13 +769,13 @@ export default function Home() {
         <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md z-50">
           <div className="glass-dark p-4 md:p-6 rounded-2xl">
             <p className="text-white text-sm mb-4">
-              אנחנו משתמשים בעוגיות כדי לשפר את חוויית המשתמש. המשך גלישה מהווה הסכמה לשימוש בעוגיות.
+              {t.language === 'he' ? 'אנחנו משתמשים בעוגיות כדי לשפר את חוויית המשתמש. המשך גלישה מהווה הסכמה לשימוש בעוגיות.' : 'We use cookies to improve your experience. Continuing to browse constitutes agreement to our use of cookies.'}
             </p>
             <Button
               onClick={() => setShowCookieBanner(false)}
               className="w-full liquid-button rounded-full text-white text-sm"
             >
-              הבנתי
+              {t.language === 'he' ? 'הבנתי' : 'I Understand'}
             </Button>
           </div>
         </div>

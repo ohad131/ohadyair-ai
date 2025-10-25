@@ -99,6 +99,9 @@ export const translations = {
     language: "שפה",
     darkMode: "מצב תצוגה",
     startNow: "התחל עכשיו",
+    privacyPolicy: "מדיניות פרטיות",
+    termsOfService: "תקנון שימוש",
+    accessibilityStatement: "הצהרת נגישות",
   },
   en: {
     // Navigation
@@ -200,6 +203,9 @@ export const translations = {
     language: "Language",
     darkMode: "Display Mode",
     startNow: "Start Now",
+    privacyPolicy: "Privacy Policy",
+    termsOfService: "Terms of Service",
+    accessibilityStatement: "Accessibility Statement",
   },
 };
 
