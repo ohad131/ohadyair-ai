@@ -8,7 +8,7 @@ export const translations = {
     faq: "שאלות נפוצות",
     blog: "בלוג",
     contact: "צור קשר",
-    
+
     // Hero
     heroTitle: "בונה מערכות AI ואוטומציה שמייצרות אפקט עסקי",
     heroSubtitle: "ממפה תהליכים, מחבר דאטה, ומצמיח ביצועים בעזרת AI—בדיוק איפה שזה משנה",
@@ -16,19 +16,19 @@ export const translations = {
     heroPlatforms: "13+ פלטפורמות AI ואוטומציה בשליטה מלאה",
     heroButton1: "דברו איתי",
     heroButton2: "צפה בעבודות",
-    
+
     // Stats
     statSatisfaction: "שביעות רצון",
     statProjects: "פרויקטים מוצלחים",
     statClients: "לקוחות מרוצים",
     statQuality: "מחויבות לאיכות",
     statYearsExperience: "שנות ניסיון",
-    
+
     // Services
     servicesTitle: "שירותים",
     servicesSubtitle: "פתרונות מותאמים אישית שמשלבים AI, אוטומציה וטכנולוגיות מתקדמות",
     service1Title: "AI לעסקים",
-    service1Desc: "שילוב מודלי שפה, צ'חטבוטים חכמים, וכלי AI מותאמים לצרכים עסקיים",
+    service1Desc: "שילוב מודלי שפה, צ'אטבוטים חכמים, וכלי AI מותאמים לצרכים עסקיים",
     service2Title: "אתרים",
     service2Desc: "פיתוח אתרים תדמיתיים, מהירים ומותאמי SEO עם טכנולוגיות מודרניות",
     service3Title: "אוטומציות",
@@ -38,42 +38,42 @@ export const translations = {
     service5Title: "יזמות",
     service5Desc: "בניית MVP, ניסוי רעיונות, וליווי טכנולוגי לסטארטאפים ויזמים",
     service6Title: "ייעוץ טכנולוגי",
-    service6Desc: "ייעוץ אסטרטגי לבחירה טכנולוגיות, אופטימיזציה של תהליכים, ושיפור ביצועים",
-    
+    service6Desc: "ייעוץ אסטרטגי לבחירת טכנולוגיות, אופטימיזציה של תהליכים, ושיפור ביצועים",
+
     // About
     aboutTitle: "אודות",
     aboutP1: "אני אוהד יאיר, סטודנט לכלכלה וניהול ופרקטי-הנדסאי מכטרוניקה. בעבר שירתתי כמעצב מכני ביחידה טכנולוגית בצה\"ל, שם פיתחתי יכולות של פתרון בעיות מורכבות וחשיבה מערכתית.",
     aboutP2: "היום אני מתמחה בבניית מערכות AI ואוטומציה שמייצרות ערך עסקי אמיתי. אני משלב ידע עסקי עם כישורים טכניים מתקדמים כדי ליצור פתרונות שמתאימים בדיוק לצרכי הלקוח.",
     aboutP3: "כיזם AI, אני תמיד מחפש הזדמנויות חדשות ללמוד, לצמוח ולעזור לאחרים להצליח בעידן הדיגיטלי.",
-    
+
     // Projects
     projectsTitle: "פרויקטים נבחרים",
     projectsSubtitle: "דוגמאות לעבודות שביצעתי בתחומי AI, אוטומציה ופיתוח",
-    
+
     // FAQ
     faqTitle: "שאלות נפוצות",
     faqSubtitle: "תשובות לשאלות שנשאלות לעתים קרובות",
-    faq1Q: "מה הטהליך של העבודה?",
-    faq1A: "התהליך מתחיל בשיחה דהיכרות להבנה הצרכים, ממשיך בתכנון מפורט והצעה מחיר, ואז עובר לשלב הפיתוח עם עדכונים שוטפים. בסיום מתבצע מסירה מלאה עם הדרכה ותמיכה.",
-    faq2Q: "כמה זמן לוקח לפתח פרוייקט?",
-    faq2A: "משך הזמן משתנה לפי היקף הפרוייקט. פרוייקט קטן יכול להסתיים תוך שבועיים, בעוד פרוייקט מורכב יכול לקחות מספר חודשים. אני מספק הערכה זמן מדויקה לאחר שיחה ההיכרות.",
+    faq1Q: "מה התהליך של העבודה?",
+    faq1A: "התהליך מתחיל בשיחת היכרות להבנת הצרכים, ממשיך בתכנון מפורט והצעת מחיר, ואז עובר לשלב הפיתוח עם עדכונים שוטפים. בסיום מתבצעת מסירה מלאה עם הדרכה ותמיכה.",
+    faq2Q: "כמה זמן לוקח לפתח פרויקט?",
+    faq2A: "משך הזמן משתנה לפי היקף הפרויקט. פרויקט קטן יכול להסתיים תוך שבועיים, בעוד פרויקט מורכב יכול לקחת מספר חודשים. אני מספק הערכת זמן מדויקת לאחר שיחת היכרות.",
     faq3Q: "האם יש תחזוקה לאחר המסירה?",
     faq3A: "כן, אני מציע חבילות תחזוקה שונות שכוללות עדכונים, תיקוני באגים, ותמיכה טכנית. ניתן לבחור בחבילה המתאימה ביותר לצרכים שלך.",
-    faq4Q: "איך מטפלים בפרטיות ואבטחה מידע?",
-    faq4A: "אני מקפיד על סטנדרטים גבוהים של אבטחה מידע, כולל הצפנה, גיבויים קבועים, ועמידה בתקני GDPR. כל המידע מטופל בסודיות מוחלטה.",
+    faq4Q: "איך מטפלים בפרטיות ואבטחת מידע?",
+    faq4A: "אני מקפיד על סטנדרטים גבוהים של אבטחת מידע, כולל הצפנה, גיבויים קבועים, ועמידה בתקני GDPR. כל המידע מטופל בסודיות מוחלטת.",
     faq5Q: "האם אפשר לראות דוגמאות נוספות?",
-    faq5A: "בהחלט! צור איתי קשר ואשמח להציג לך פרוייקטים נוספים שביצעתי, כולל case studies מפורטים ותוצאות עסקיות.",
+    faq5A: "בהחלט! צור איתי קשר ואשמח להציג לך פרויקטים נוספים שביצעתי, כולל case studies מפורטים ותוצאות עסקיות.",
     faq6Q: "מה כלול במחיר?",
     faq6A: "המחיר כולל את כל שלבי הפיתוח, בדיקות איכות, מסירה מלאה, הדרכה בסיסית ותמיכה לחודש הראשון. עלויות נוספות כמו אחסון או שירותי צד שלישי מפורטות בנפרד.",
-    faq7Q: "האם אתה עובד עם לקוחות בחו\"l?",
-    faq7A: "כן, אני עובד עם לקוחות בישראל ובעולם. התקשורה מתבצעת באמצעות ווידאו קונפרנס, ואני מתאים את שעות העבודה לאזור הזמן של הלקוח.",
-    
+    faq7Q: "האם אתה עובד עם לקוחות בחו\"ל?",
+    faq7A: "כן, אני עובד עם לקוחות בישראל ובעולם. התקשורת מתבצעת באמצעות ווידאו קונפרנס, ואני מתאים את שעות העבודה לאזור הזמן של הלקוח.",
+
     // Blog
     blogTitle: "בלוג",
     blogSubtitle: "מאמרים, מדריכים ותובנות בתחומי AI, אוטומציה וטכנולוגיה",
     blogReadMore: "קרא עוד",
     blogViewAll: "צפה בכל המאמרים",
-    
+
     // Contact
     contactTitle: "צור קשר",
     contactSubtitle: "מוזמנים ליצור קשר לשיחת ייעוץ ראשונית ללא התחייבות",
@@ -84,14 +84,14 @@ export const translations = {
     contactButton: "שלח הודעה",
     contactSuccess: "ההודעה נשלחה בהצלחה!",
     contactError: "אירעה שגיאה. אנא נסה שוב.",
-    
+
     // Footer
     footerAbout: "אודות אוהד יאיר",
     footerAboutText: "מומחה AI ואוטומציה, מתמחה בבניית פתרונות חכמים לעסקים בעידן הדיגיטלי.",
     footerQuickLinks: "קישורים מהירים",
     footerSocial: "עקבו אחרי",
     footerRights: "כל הזכויות שמורות",
-    
+
     // Other
     loading: "טוען...",
     notFound: "לא נמצא",
@@ -112,7 +112,7 @@ export const translations = {
     faq: "FAQ",
     blog: "Blog",
     contact: "Contact",
-    
+
     // Hero
     heroTitle: "Building AI & Automation Systems That Drive Business Impact",
     heroSubtitle: "Mapping processes, connecting data, and growing performance with AI—exactly where it matters",
@@ -120,40 +120,40 @@ export const translations = {
     heroPlatforms: "13+ AI and automation platforms under full control",
     heroButton1: "Talk to Me",
     heroButton2: "View Work",
-    
+
     // Stats
     statSatisfaction: "Satisfaction",
     statProjects: "Successful Projects",
     statClients: "Happy Clients",
     statQuality: "Commitment to Quality",
     statYearsExperience: "Years Experience",
-    
+
     // Services
     servicesTitle: "Services",
     servicesSubtitle: "Custom solutions integrating AI, automation, and advanced technologies",
     service1Title: "AI for Business",
-    service1Desc: "Integration of language models, smart assistants, and AI & automation tools for business needs",
+    service1Desc: "Integration of language models, smart chatbots, and AI tools tailored to business needs",
     service2Title: "Websites",
     service2Desc: "Development of advanced, fast, and SEO-optimized websites with modern technologies",
     service3Title: "Automation",
-    service3Desc: "Specializing in integrating the most advanced tools like n8n, connecting, processing, and handling data",
-    service4Title: "Consulting",
-    service4Desc: "Guidance and training in AI integration, strategic planning, and solving technological challenges",
-    service5Title: "Custom Solutions",
-    service5Desc: "Development of dedicated tools, applications, and systems fully tailored to client needs",
-    service6Title: "Support",
-    service6Desc: "Professional technical support, ongoing maintenance, and updates for existing systems",
-    
+    service3Desc: "Building automated workflows with n8n/Activepieces, API integration, and advanced scraping",
+    service4Title: "Lectures and Training",
+    service4Desc: "Inspiring lectures and practical training in AI, automation, and advanced technologies",
+    service5Title: "Entrepreneurship",
+    service5Desc: "Building MVPs, testing ideas, and providing technological guidance for startups and entrepreneurs",
+    service6Title: "Technology Consulting",
+    service6Desc: "Strategic consulting for technology selection, process optimization, and performance improvement",
+
     // About
     aboutTitle: "About",
     aboutP1: "I'm Ohad Yair, a student of Economics and Management and a practical mechatronics engineer. I previously served as a mechanical designer in a technological unit in the IDF, where I developed skills in solving complex problems and systems thinking.",
     aboutP2: "Today I specialize in building AI and automation systems that generate real business value. I combine business knowledge with advanced technical skills to create solutions that precisely fit client needs.",
     aboutP3: "As an AI entrepreneur, I'm always looking for new opportunities to learn, grow, and help others succeed in the digital age.",
-    
+
     // Projects
     projectsTitle: "Selected Projects",
     projectsSubtitle: "Examples of work I've done in AI, automation, and development",
-    
+
     // FAQ
     faqTitle: "Frequently Asked Questions",
     faqSubtitle: "Answers to frequently asked questions",
@@ -171,13 +171,13 @@ export const translations = {
     faq6A: "The price includes all development stages, quality testing, full delivery, basic training, and support for the first month. Additional costs like hosting or third-party services are detailed separately.",
     faq7Q: "Do you work with international clients?",
     faq7A: "Yes, I work with clients in Israel and around the world. Communication is done via video conference, and I adjust my working hours to your time zone.",
-    
+
     // Blog
     blogTitle: "Blog",
     blogSubtitle: "Articles, guides, and insights on AI, automation, and technology",
     blogReadMore: "Read More",
     blogViewAll: "View All Articles",
-    
+
     // Contact
     contactTitle: "Contact",
     contactSubtitle: "Feel free to reach out for an initial consultation with no obligation",
@@ -188,14 +188,14 @@ export const translations = {
     contactButton: "Send Message",
     contactSuccess: "Message sent successfully!",
     contactError: "An error occurred. Please try again.",
-    
+
     // Footer
     footerAbout: "About Ohad Yair",
     footerAboutText: "AI & Automation expert, specializing in building intelligent solutions for businesses in the digital age.",
     footerQuickLinks: "Quick Links",
     footerSocial: "Follow Me",
     footerRights: "All Rights Reserved",
-    
+
     // Other
     loading: "Loading...",
     notFound: "Not Found",
@@ -234,4 +234,3 @@ export function getTranslation(lang: Language, key: keyof typeof translations.he
 }
 
 import * as React from "react";
-
