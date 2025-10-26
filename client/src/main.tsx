@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
+import { getStoredAdminToken } from "./lib/adminToken";
 import "./index.css";
 import { LanguageProvider } from "./contexts/LanguageContext";
 
@@ -44,8 +45,14 @@ const trpcClient = trpc.createClient({
       url: "/api/trpc",
       transformer: superjson,
       fetch(input, init) {
+        const headers = new Headers(init?.headers ?? {});
+        const token = getStoredAdminToken();
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`);
+        }
         return globalThis.fetch(input, {
           ...(init ?? {}),
+          headers,
           credentials: "include",
         });
       },
