@@ -1,6 +1,7 @@
 import {
   boolean,
   int,
+  longtext,
   mysqlEnum,
   mysqlTable,
   text,
@@ -128,4 +129,18 @@ export const projects = mysqlTable("projects", {
 
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = typeof projects.$inferInsert;
+
+/**
+ * Media library images table
+ */
+export const images = mysqlTable("images", {
+  id: int("id").primaryKey().autoincrement(),
+  fileName: varchar("fileName", { length: 255 }).notNull(),
+  mimeType: varchar("mimeType", { length: 100 }).notNull(),
+  data: longtext("data").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Image = typeof images.$inferSelect;
+export type InsertImage = typeof images.$inferInsert;
 

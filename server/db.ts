@@ -16,12 +16,17 @@ import {
   projects,
   Project,
   InsertProject,
+  images,
+  Image,
+  InsertImage,
 } from "../src/db/schema";
 import { type LanguageCode } from "@shared/language";
 import { ENV } from './_core/env';
 
 let pool: mysql.Pool | null = null;
 let _db: ReturnType<typeof drizzle> | null = null;
+
+const BASE64_HEADER_PATTERN = /^data:[^;]+;base64,/i;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
@@ -404,6 +409,90 @@ export async function toggleBlogFeatured(id: number, isFeatured: boolean) {
 }
 
 
+// Images / Media Library
+
+function normalizeBase64Data(value: string): string {
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    throw new Error("Image data is empty");
+  }
+  return trimmed.replace(BASE64_HEADER_PATTERN, "");
+}
+
+export async function createImageRecord(
+  input: Pick<InsertImage, "fileName" | "mimeType"> & { base64Data: string }
+): Promise<{ id: number }> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const data = normalizeBase64Data(input.base64Data);
+
+  const result = await db.insert(images).values({
+    fileName: input.fileName,
+    mimeType: input.mimeType,
+    data,
+  });
+
+  const insertId = Number((result as mysql.ResultSetHeader).insertId ?? 0);
+  if (!insertId) {
+    const latest = await db
+      .select({ id: images.id })
+      .from(images)
+      .orderBy(desc(images.id))
+      .limit(1);
+    if (!latest[0]) {
+      throw new Error("Failed to determine new image ID");
+    }
+    return { id: Number(latest[0]!.id) };
+  }
+
+  return { id: insertId };
+}
+
+export async function getImageRecord(id: number): Promise<Image | null> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const rows = await db.select().from(images).where(eq(images.id, id)).limit(1);
+  return rows.length > 0 ? rows[0] : null;
+}
+
+export async function listImageRecords(): Promise<Array<Omit<Image, "data">>> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const rows = await db
+    .select({
+      id: images.id,
+      fileName: images.fileName,
+      mimeType: images.mimeType,
+      createdAt: images.createdAt,
+    })
+    .from(images)
+    .orderBy(desc(images.createdAt));
+
+  return rows.map(row => ({
+    ...row,
+  }));
+}
+
+export async function deleteImageRecord(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db.delete(images).where(eq(images.id, id));
+  return { success: true };
+}
+
+
 
 // Projects
 export async function getAllProjects(): Promise<Project[]> {
@@ -416,6 +505,18 @@ export async function getAllProjects(): Promise<Project[]> {
     .from(projects)
     .where(eq(projects.isPublished, true))
     .orderBy(desc(projects.displayOrder), desc(projects.createdAt));
+}
+
+export async function getAllProjectsAdmin(): Promise<Project[]> {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  return await db
+    .select()
+    .from(projects)
+    .orderBy(desc(projects.updatedAt));
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
@@ -441,6 +542,27 @@ export async function createProject(data: InsertProject) {
     createdAt: new Date(),
     updatedAt: new Date(),
   });
+  return { success: true };
+}
+
+export async function updateProject(
+  id: number,
+  data: Partial<Omit<InsertProject, "id">>
+) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  if (Object.keys(data).length === 0) {
+    throw new Error("No data provided for update");
+  }
+
+  await db
+    .update(projects)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(projects.id, id));
+
   return { success: true };
 }
 

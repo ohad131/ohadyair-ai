@@ -33,7 +33,17 @@ export default function ProjectDetail() {
     );
   }
 
-  const technologies = project.technologies ? JSON.parse(project.technologies) : [];
+  let technologies: string[] = [];
+  if (project.technologies) {
+    try {
+      const parsed = JSON.parse(project.technologies);
+      if (Array.isArray(parsed)) {
+        technologies = parsed as string[];
+      }
+    } catch {
+      technologies = [];
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
