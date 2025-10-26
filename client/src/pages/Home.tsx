@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
@@ -11,12 +11,72 @@ import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
 import { SplashScreen } from "@/components/SplashScreen";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isHebrew = language === "he";
+  const sectionHeadingClass = isHebrew ? "text-center" : "text-left md:text-left";
+  const sectionActionsJustify = isHebrew ? "justify-center" : "justify-start";
+  const readMoreArrow = `${t.blogReadMore} ${isHebrew ? "←" : "→"}`;
+  const blogDateLocale = isHebrew ? "he-IL" : "en-US";
+  const fallbackProjects = isHebrew
+    ? [
+        {
+          title: "סטאדי באדי",
+          description: "פלטפורמת למידה חכמה המונעת בינה מלאכותית שמסייעת לסטודנטים ללמוד ביעילות",
+          tags: ["בינה מלאכותית", "חינוך"],
+          icon: "📚",
+        },
+        {
+          title: "BuzzAI",
+          description: "כלי אוטומציה לניהול תכנים ברשתות חברתיות וחיסכון בזמן צוותי השיווק",
+          tags: ["בינה מלאכותית", "אוטומציה"],
+          icon: "🤖",
+        },
+      ]
+    : [
+        {
+          title: "Study Buddy",
+          description: "An AI-powered smart learning platform that helps students learn efficiently",
+          tags: ["AI", "Education"],
+          icon: "📚",
+        },
+        {
+          title: "BuzzAI",
+          description: "An automation tool for managing content on social networks",
+          tags: ["AI", "Automation"],
+          icon: "🤖",
+        },
+      ];
+  const fallbackBlogPosts = isHebrew
+    ? [
+        { image: "/blog-ai-business.jpg", title: "איך להתחיל עם AI בעסק שלך", date: "15 אוקטובר 2024" },
+        { image: "/blog-ai-automation.jpg", title: "אוטומציה עם n8n - מדריך למתחילים", date: "10 אוקטובר 2024" },
+        { image: "/blog-ai-future.jpg", title: "5 דרכים שAI יכול לשפר את העסק שלך", date: "5 אוקטובר 2024" },
+      ]
+    : [
+        { image: "/blog-ai-business.jpg", title: "How to Start Using AI in Your Business", date: "October 15, 2024" },
+        { image: "/blog-ai-automation.jpg", title: "Automation with n8n – A Beginner's Guide", date: "October 10, 2024" },
+        { image: "/blog-ai-future.jpg", title: "5 Ways AI Can Level Up Your Business", date: "October 5, 2024" },
+      ];
   const { data: tools = [] } = trpc.aiTools.list.useQuery();
   const { data: blogPosts = [] } = trpc.blog.list.useQuery();
   const { data: projects = [] } = trpc.projects.list.useQuery();
+  const { data: siteCopy } = trpc.siteContent.getByLanguage.useQuery({ language });
+
+  const resolveCopy = (key: string, fallback: string) => {
+    const value = siteCopy?.[key];
+    if (typeof value !== "string") return fallback;
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : fallback;
+  };
+
+  const heroTitle = resolveCopy("heroTitle", t.heroTitle);
+  const heroSubtitle = resolveCopy("heroSubtitle", t.heroSubtitle);
+  const aboutP1 = resolveCopy("aboutP1", t.aboutP1);
+  const aboutP2 = resolveCopy("aboutP2", t.aboutP2);
+  const aboutP3 = resolveCopy("aboutP3", t.aboutP3);
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -98,7 +158,7 @@ export default function Home() {
       <div className="min-h-screen">
       {/* Skip to content link for accessibility */}
       <a href="#main-content" className="skip-to-content">
-        דלג לתוכן הראשי
+        {t.skipToContent}
       </a>
 
       {/* Accessibility Menu */}
@@ -189,15 +249,18 @@ export default function Home() {
               </div>
 
               {/* CTA Button - Desktop */}
-              <Button className="hidden md:flex liquid-button h-12 px-6 rounded-full text-white text-sm font-medium">
-                התחל עכשיו
+              <Button
+                asChild
+                className="hidden md:inline-flex liquid-button h-12 px-6 rounded-full text-white text-sm font-medium"
+              >
+                <a href="#contact">{t.startNow}</a>
               </Button>
 
               {/* Mobile Menu Button */}
               <button
                 className="md:hidden glass-hover p-2 rounded-lg"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="תפריט ניווט"
+                aria-label={t.navMenuLabel}
               >
                 <svg className="w-6 h-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   {mobileMenuOpen ? (
@@ -245,8 +308,11 @@ export default function Home() {
                   <DarkModeToggle />
                 </div>
               </div>
-              <Button className="w-full liquid-button h-12 rounded-full text-white text-sm font-medium mt-4">
-                {t.startNow}
+              <Button
+                asChild
+                className="w-full liquid-button h-12 rounded-full text-white text-sm font-medium mt-4"
+              >
+                <a href="#contact">{t.startNow}</a>
               </Button>
             </div>
           )}
@@ -258,12 +324,12 @@ export default function Home() {
         {/* Hero Section */}
         <section id="home" className="container mx-auto py-8 md:py-12">
           {/* Hero Title and Subtitle - ABOVE animation */}
-          <div className="text-center space-y-4 md:space-y-6 mb-8 md:mb-12">
+          <div className={cn("space-y-4 md:space-y-6 mb-8 md:mb-12", sectionHeadingClass)}>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight px-4 animate-fade-in-up">
-              {t.heroTitle}
+              {heroTitle}
             </h1>
             <p className="text-base md:text-lg text-muted-foreground font-medium px-4 max-w-3xl mx-auto animate-fade-in-up stagger-1">
-              {t.heroSubtitle}
+              {heroSubtitle}
             </p>
             <div className="text-xl md:text-2xl font-bold text-primary mb-4 animate-fade-in-up stagger-2">
               {t.heroHighlight}
@@ -279,7 +345,13 @@ export default function Home() {
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up stagger-5">
+          <div
+            className={cn(
+              "flex flex-col sm:flex-row gap-4 animate-fade-in-up stagger-5",
+              sectionActionsJustify,
+              !isHebrew && "sm:justify-start"
+            )}
+          >
             <a href="#contact">
               <Button className="liquid-button h-12 md:h-14 px-6 md:px-8 rounded-full text-white font-medium text-sm md:text-base button-ripple">
                 <svg className="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="none">
@@ -314,7 +386,7 @@ export default function Home() {
 
         {/* Services Section */}
         <section id="services" className="container mx-auto py-12 md:py-20">
-          <div className="text-center mb-12 md:mb-16">
+          <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.servicesTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               {t.servicesSubtitle}
@@ -378,9 +450,9 @@ export default function Home() {
             <div className="order-2 lg:order-1">
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.aboutTitle}</h2>
               <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed animate-fade-in-left stagger-1">
-                <p>{t.aboutP1}</p>
-                <p>{t.aboutP2}</p>
-                <p>{t.aboutP3}</p>
+                <p>{aboutP1}</p>
+                <p>{aboutP2}</p>
+                <p>{aboutP3}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mt-8">
@@ -389,24 +461,32 @@ export default function Home() {
                   { title: "מכטרוניקה", subtitle: "פרקטי-הנדסאי", titleEn: "Mechatronics", subtitleEn: "Practical Engineer" },
                   { title: "מעצב מכני", subtitle: "צה\"ל (לשעבר)", titleEn: "Mechanical Designer", subtitleEn: "IDF (Former)" },
                   { title: "יזם AI", subtitle: "נוכחי", titleEn: "AI Entrepreneur", subtitleEn: "Current" },
-                ].map((item, index) => (
-                  <div key={index} className={`glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`}>
-                    <div className="text-primary font-bold text-sm mb-1">{item.titleEn || item.title}</div>
-                    <div className="text-muted-foreground text-xs">{item.subtitleEn || item.subtitle}</div>
-                  </div>
-                ))}
+                ].map((item, index) => {
+                  const title = isHebrew ? item.title : item.titleEn;
+                  const subtitle = isHebrew ? item.subtitle : item.subtitleEn;
+
+                  return (
+                    <div
+                      key={index}
+                      className={`glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`}
+                    >
+                      <div className="text-primary font-bold text-sm mb-1">{title}</div>
+                      <div className="text-muted-foreground text-xs">{subtitle}</div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
             <div className="order-1 lg:order-2">
-              <Card className="glass glass-hover w-full rounded-2xl overflow-hidden animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-                <img src="/ohad-professional.svg" alt={t.language === 'he' ? 'אוהד יאיר - מומחה AI ואוטומציה' : 'Ohad Yair - AI & Automation Expert'} className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105" />
-              </Card>
+                <Card className="glass glass-hover w-full rounded-2xl overflow-hidden animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                  <img src="/ohad-professional.svg" alt={isHebrew ? 'אוהד יאיר - מומחה AI ואוטומציה' : 'Ohad Yair - AI & Automation Expert'} className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105" />
+                </Card>
             </div>
           </div>
         </section>
         <section id="projects" className="container mx-auto py-12 md:py-20">
-          <div className="text-center mb-12 md:mb-16">
+          <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.projectsTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               {t.projectsSubtitle}
@@ -449,38 +529,27 @@ export default function Home() {
               ))
             ) : (
               // Fallback to static projects if database is empty
-              <>
-                <Card className="glass glass-hover overflow-hidden group animate-fade-in-left stagger-2 card-hover-effect">
+              fallbackProjects.map((project, index) => (
+                <Card
+                  key={project.title}
+                  className={`glass glass-hover overflow-hidden group animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`}
+                >
                   <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
-                    📚
+                    {project.icon}
                   </div>
                   <div className="p-6 md:p-8">
-                    <h3 className="text-2xl font-bold text-secondary mb-3">Study Buddy</h3>
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                      An AI-powered smart learning platform that helps students learn efficiently
-                    </p>
+                    <h3 className="text-2xl font-bold text-secondary mb-3">{project.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{project.description}</p>
                     <div className="flex flex-wrap gap-2">
-                      <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">AI</span>
-                      <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">Education</span>
+                      {project.tags.map((tag) => (
+                        <span key={tag} className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </Card>
-                <Card className="glass glass-hover overflow-hidden group animate-fade-in-right stagger-3 card-hover-effect">
-                  <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
-                    🤖
-                  </div>
-                  <div className="p-6 md:p-8">
-                    <h3 className="text-2xl font-bold text-secondary mb-3">BuzzAI</h3>
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                      An automation tool for managing content on social networks
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">AI</span>
-                      <span className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">Automation</span>
-                    </div>
-                  </div>
-                </Card>
-              </>
+              ))
             )}
           </div>
         </section>
@@ -489,7 +558,7 @@ export default function Home() {
 
         {/* FAQ Section */}
         <section id="faq" className="container mx-auto py-12 md:py-20">
-          <div className="text-center mb-12 md:mb-16">
+          <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.faqTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground animate-fade-in-up stagger-1">{t.faqSubtitle}</p>
           </div>
@@ -542,7 +611,7 @@ export default function Home() {
 
         {/* Blog Section */}
         <section id="blog" className="container mx-auto py-12 md:py-20">
-          <div className="text-center mb-12 md:mb-16">
+          <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.blogTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               {t.blogSubtitle}
@@ -569,26 +638,25 @@ export default function Home() {
                     </div>
                     <div className="p-6">
                       <div className="text-xs text-primary font-medium mb-2">
-                        {new Date(post.publishedAt).toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        {new Date(post.publishedAt).toLocaleDateString(blogDateLocale, { year: 'numeric', month: 'long', day: 'numeric' })}
                       </div>
                       <h3 className="text-lg font-bold text-secondary mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
                       <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{post.excerpt}</p>
-                      <div className="text-primary text-sm font-medium hover:underline">קרא עוד ←</div>
+                      <div className="text-primary text-sm font-medium hover:underline">{readMoreArrow}</div>
                     </div>
                   </Card>
                 </Link>
               ))
             ) : (
               // Fallback to static blog posts if database is empty
-              [
-                { image: "/blog-ai-business.jpg", title: "איך להתחיל עם AI בעסק שלך", date: "15 אוקטובר 2024" },
-                { image: "/blog-ai-automation.jpg", title: "אוטומציה עם n8n - מדריך למתחילים", date: "10 אוקטובר 2024" },
-                { image: "/blog-ai-future.jpg", title: "5 דרכים שAI יכול לשפר את העסק שלך", date: "5 אוקטובר 2024" },
-              ].map((post, index) => (
-                <Card key={index} className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`}>
+              fallbackBlogPosts.map((post, index) => (
+                <Card
+                  key={`${post.title}-${post.date}`}
+                  className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`}
+                >
                   <div className="h-48 overflow-hidden">
-                    <img 
-                      src={post.image} 
+                    <img
+                      src={post.image}
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
@@ -596,14 +664,14 @@ export default function Home() {
                   <div className="p-6">
                     <div className="text-xs text-primary font-medium mb-2">{post.date}</div>
                     <h3 className="text-lg font-bold text-secondary mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
-                    <div className="text-primary text-sm font-medium hover:underline">קרא עוד ←</div>
+                    <div className="text-primary text-sm font-medium hover:underline">{readMoreArrow}</div>
                   </div>
                 </Card>
               ))
             )}
           </div>
 
-          <div className="text-center mt-8">
+          <div className={cn("mt-8", sectionHeadingClass)}>
             <Link href="/blog">
               <Button variant="outline" className="glass glass-hover border-primary/30 px-8 py-3 rounded-full text-secondary">
                 {t.blogViewAll}
@@ -615,7 +683,7 @@ export default function Home() {
         {/* Contact Section */}
         <section id="contact" className="container mx-auto py-12 md:py-20">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12 md:mb-16">
+            <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.contactTitle}</h2>
               <p className="text-base md:text-lg text-muted-foreground mb-4 animate-fade-in-up stagger-1">
                 {t.contactSubtitle}
@@ -648,7 +716,7 @@ export default function Home() {
                       type="email"
                       required
                       className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary"
-                      placeholder="your@email.com"
+                      placeholder={t.contactEmailPlaceholder}
                     />
                   </div>
                 </div>
@@ -658,7 +726,7 @@ export default function Home() {
                   <input
                     type="tel"
                     className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary"
-                    placeholder="050-1234567"
+                    placeholder={t.contactPhonePlaceholder}
                   />
                 </div>
 
@@ -670,7 +738,7 @@ export default function Home() {
                     required
                     rows={6}
                     className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary resize-none"
-                    placeholder={t.language === 'he' ? "ספר לי על הפרויקט שלך..." : "Tell me about your project..."}
+                    placeholder={t.contactMessagePlaceholder}
                   />
                 </div>
 
@@ -679,8 +747,8 @@ export default function Home() {
                 </Button>
               </form>
 
-              <div className="mt-8 pt-8 border-t border-primary/20 text-center">
-                <p className="text-sm text-muted-foreground mb-2">Or contact directly:</p>
+              <div className={cn("mt-8 pt-8 border-t border-primary/20", sectionHeadingClass)}>
+                <p className="text-sm text-muted-foreground mb-2">{t.contactDirectPrompt}</p>
                 <a href="mailto:ohadyair.ai@gmail.com" className="text-primary font-medium hover:underline">
                   ohadyair.ai@gmail.com
                 </a>
@@ -747,7 +815,7 @@ export default function Home() {
 
           <div className="pt-8 border-t border-white/20">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <p className="text-white/60 text-sm">© 2024 Ohad Yair. All rights reserved.</p>
+              <p className="text-white/60 text-sm">© 2024 Ohad Yair. {t.footerRights}</p>
               <div className="flex gap-4 text-xs">
                 <Link href="/privacy-policy" className="text-white/60 hover:text-white transition-colors">
                   {t.privacyPolicy}
@@ -768,14 +836,12 @@ export default function Home() {
       {showCookieBanner && (
         <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md z-50">
           <div className="glass-dark p-4 md:p-6 rounded-2xl">
-            <p className="text-white text-sm mb-4">
-              {t.language === 'he' ? 'אנחנו משתמשים בעוגיות כדי לשפר את חוויית המשתמש. המשך גלישה מהווה הסכמה לשימוש בעוגיות.' : 'We use cookies to improve your experience. Continuing to browse constitutes agreement to our use of cookies.'}
-            </p>
+            <p className="text-white text-sm mb-4">{t.cookieMessage}</p>
             <Button
               onClick={() => setShowCookieBanner(false)}
               className="w-full liquid-button rounded-full text-white text-sm"
             >
-              {t.language === 'he' ? 'הבנתי' : 'I Understand'}
+              {t.cookieButton}
             </Button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/mysql2";
-import { aiTools } from "../drizzle/schema";
+import { aiTools } from "../src/db/schema";
 
 const db = drizzle(process.env.DATABASE_URL!);
 

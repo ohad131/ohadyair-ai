@@ -1,57 +1,40 @@
-import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Moon, Sun, RotateCcw } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export function DarkModeToggle() {
-  const [isDark, setIsDark] = useState(false);
+  const { theme, toggleTheme, clearOverride, isAuto, switchable } = useTheme();
 
-  useEffect(() => {
-    // Check if user has a preference
-    const savedTheme = localStorage.getItem("theme");
-    
-    if (savedTheme) {
-      const dark = savedTheme === "dark";
-      setIsDark(dark);
-      document.documentElement.classList.toggle("dark", dark);
-    } else {
-      // Auto-detect based on Israel time (18:00-06:00 is dark)
-      const israelTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Jerusalem" });
-      const hour = new Date(israelTime).getHours();
-      const autoDark = hour >= 18 || hour < 6;
-      setIsDark(autoDark);
-      document.documentElement.classList.toggle("dark", autoDark);
-    }
-  }, []);
+  if (!switchable || !toggleTheme) {
+    return null;
+  }
 
-  const toggle = () => {
-    // Check actual DOM state instead of React state
-    const currentlyDark = document.documentElement.classList.contains("dark");
-    const newDark = !currentlyDark;
-    
-    setIsDark(newDark);
-    
-    // Force remove and add class to ensure it works
-    if (newDark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    
-    localStorage.setItem("theme", newDark ? "dark" : "light");
-  };
+  const isDark = theme === "dark";
 
   return (
-    <button
-      onClick={toggle}
-      className="p-2 rounded-full glass glass-hover border border-primary/20 transition-all duration-300 hover:scale-110"
-      aria-label={isDark ? "מעבר למצב בהיר" : "מעבר למצב כהה"}
-      title={isDark ? "מעבר למצב בהיר" : "מעבר למצב כהה"}
-    >
-      {isDark ? (
-        <Sun className="w-5 h-5 text-primary" />
-      ) : (
-        <Moon className="w-5 h-5 text-secondary" />
+    <div className="flex items-center gap-2">
+      <button
+        onClick={toggleTheme}
+        className="p-2 rounded-full glass glass-hover border border-primary/20 transition-all duration-300 hover:scale-110"
+        aria-label={isDark ? "מעבר למצב בהיר" : "מעבר למצב כהה"}
+        title={isDark ? "מעבר למצב בהיר" : "מעבר למצב כהה"}
+      >
+        {isDark ? (
+          <Sun className="w-5 h-5 text-primary" />
+        ) : (
+          <Moon className="w-5 h-5 text-secondary" />
+        )}
+      </button>
+      {!isAuto && clearOverride && (
+        <button
+          onClick={clearOverride}
+          className="p-2 rounded-full glass glass-hover border border-primary/20 transition-all duration-300 hover:scale-110"
+          aria-label="חזרה למצב אוטומטי"
+          title="חזרה למצב אוטומטי"
+        >
+          <RotateCcw className="w-4 h-4 text-primary" />
+        </button>
       )}
-    </button>
+    </div>
   );
 }
 

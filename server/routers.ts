@@ -1,7 +1,8 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME, NOT_ADMIN_ERR_MSG, ONE_YEAR_MS } from "@shared/const";
+import { SUPPORTED_LANGUAGE_CODES } from "@shared/language";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import {
   createContactSubmission,
@@ -15,15 +16,69 @@ import {
   updateAITool,
   getSiteContent,
   setSiteContent,
+  getUserByEmail,
+  getSiteContentByLanguage,
+  getAllSiteContent,
+  setSiteContentBatch,
   toggleBlogFeatured,
+  upsertUser,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
+import { sdk } from "./_core/sdk";
+import { TRPCError } from "@trpc/server";
+import { verifyPassword } from "./_core/password";
+
+const languageEnum = z.enum(SUPPORTED_LANGUAGE_CODES);
 
 export const appRouter = router({
   system: systemRouter,
 
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
+    login: publicProcedure
+      .input(
+        z.object({
+          email: z.string().email(),
+          password: z.string().min(8),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        const user = await getUserByEmail(input.email);
+        if (!user || !user.passwordHash) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid credentials" });
+        }
+
+        if (user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: NOT_ADMIN_ERR_MSG });
+        }
+
+        const passwordMatches = verifyPassword(user.passwordHash, input.password);
+        if (!passwordMatches) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid credentials" });
+        }
+
+        const sessionToken = await sdk.createSessionToken(user.id, {
+          name: user.name ?? user.email ?? "",
+          expiresInMs: ONE_YEAR_MS,
+        });
+
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, sessionToken, {
+          ...cookieOptions,
+          maxAge: ONE_YEAR_MS,
+        });
+
+        await upsertUser({
+          id: user.id,
+          lastSignedIn: new Date(),
+          role: user.role,
+          email: user.email,
+          name: user.name,
+          loginMethod: user.loginMethod,
+        });
+
+        return { success: true } as const;
+      }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
@@ -66,7 +121,7 @@ export const appRouter = router({
         }
       }),
 
-    list: publicProcedure.query(async () => {
+    list: adminProcedure.query(async () => {
       return await getAllContactSubmissions();
     }),
   }),
@@ -88,7 +143,7 @@ export const appRouter = router({
         return post;
       }),
 
-    create: publicProcedure
+    create: adminProcedure
       .input(
         z.object({
           title: z.string().min(1),
@@ -103,13 +158,13 @@ export const appRouter = router({
         return await createBlogPost(input);
       }),
 
-    delete: publicProcedure
+    delete: adminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         return await deleteBlogPost(input.id);
       }),
 
-    toggleFeatured: publicProcedure
+    toggleFeatured: adminProcedure
       .input(z.object({ id: z.number(), isFeatured: z.boolean() }))
       .mutation(async ({ input }) => {
         return await toggleBlogFeatured(input.id, input.isFeatured);
@@ -131,7 +186,7 @@ export const appRouter = router({
         }
         return project;
       }),
-    create: publicProcedure
+    create: adminProcedure
       .input(
         z.object({
           title: z.string().min(1),
@@ -148,13 +203,13 @@ export const appRouter = router({
         const db = await import("./db");
         return await db.createProject(input);
       }),
-    delete: publicProcedure
+    delete: adminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         const db = await import("./db");
         return await db.deleteProject(input.id);
       }),
-    toggleFeatured: publicProcedure
+    toggleFeatured: adminProcedure
       .input(z.object({ id: z.number(), isFeatured: z.boolean() }))
       .mutation(async ({ input }) => {
         const db = await import("./db");
@@ -168,7 +223,7 @@ export const appRouter = router({
         return await getAllAITools();
       }),
 
-    update: publicProcedure
+    update: adminProcedure
       .input(
         z.object({
           id: z.number(),
@@ -187,15 +242,41 @@ export const appRouter = router({
 
   siteContent: router({
     get: publicProcedure
-      .input(z.object({ key: z.string() }))
+      .input(z.object({ key: z.string(), language: languageEnum }))
       .query(async ({ input }) => {
-        return await getSiteContent(input.key);
+        return await getSiteContent(input.key, input.language);
       }),
 
-    set: publicProcedure
-      .input(z.object({ key: z.string(), value: z.string() }))
+    getByLanguage: publicProcedure
+      .input(z.object({ language: languageEnum }))
+      .query(async ({ input }) => {
+        return await getSiteContentByLanguage(input.language);
+      }),
+
+    list: adminProcedure
+      .input(z.object({ language: languageEnum.optional() }).optional())
+      .query(async ({ input }) => {
+        if (input?.language) {
+          return await getSiteContentByLanguage(input.language);
+        }
+        return await getAllSiteContent();
+      }),
+
+    set: adminProcedure
+      .input(z.object({ key: z.string(), language: languageEnum, value: z.string() }))
       .mutation(async ({ input }) => {
-        return await setSiteContent(input.key, input.value);
+        return await setSiteContent(input.key, input.language, input.value);
+      }),
+
+    setMany: adminProcedure
+      .input(
+        z.object({
+          language: languageEnum,
+          entries: z.array(z.object({ key: z.string(), value: z.string() })),
+        })
+      )
+      .mutation(async ({ input }) => {
+        return await setSiteContentBatch(input.language, input.entries);
       }),
   }),
 });

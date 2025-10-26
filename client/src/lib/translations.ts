@@ -1,3 +1,5 @@
+import type { LanguageCode } from "@shared/language";
+
 export const translations = {
   he: {
     // Navigation
@@ -84,6 +86,10 @@ export const translations = {
     contactButton: "שלח הודעה",
     contactSuccess: "ההודעה נשלחה בהצלחה!",
     contactError: "אירעה שגיאה. אנא נסה שוב.",
+    contactEmailPlaceholder: "name@business.co.il",
+    contactPhonePlaceholder: "050-1234567",
+    contactMessagePlaceholder: "ספר לי על הפרויקט שלך...",
+    contactDirectPrompt: "או צרו קשר ישירות:",
 
     // Footer
     footerAbout: "אודות אוהד יאיר",
@@ -102,6 +108,10 @@ export const translations = {
     privacyPolicy: "מדיניות פרטיות",
     termsOfService: "תקנון שימוש",
     accessibilityStatement: "הצהרת נגישות",
+    cookieMessage: "אנחנו משתמשים בעוגיות כדי לשפר את חוויית המשתמש. המשך גלישה מהווה הסכמה לשימוש בעוגיות.",
+    cookieButton: "הבנתי",
+    skipToContent: "דלג לתוכן הראשי",
+    navMenuLabel: "תפריט ניווט",
   },
   en: {
     // Navigation
@@ -188,6 +198,10 @@ export const translations = {
     contactButton: "Send Message",
     contactSuccess: "Message sent successfully!",
     contactError: "An error occurred. Please try again.",
+    contactEmailPlaceholder: "name@business.com",
+    contactPhonePlaceholder: "(555) 123-4567",
+    contactMessagePlaceholder: "Tell me about your project...",
+    contactDirectPrompt: "Or contact directly:",
 
     // Footer
     footerAbout: "About Ohad Yair",
@@ -206,10 +220,14 @@ export const translations = {
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
     accessibilityStatement: "Accessibility Statement",
+    cookieMessage: "We use cookies to improve your experience. Continuing to browse constitutes agreement to our use of cookies.",
+    cookieButton: "I Understand",
+    skipToContent: "Skip to main content",
+    navMenuLabel: "Navigation menu",
   },
 };
 
-export type Language = "he" | "en";
+export type Language = LanguageCode;
 
 export function useTranslation() {
   const [language, setLanguage] = React.useState<Language>("he");
