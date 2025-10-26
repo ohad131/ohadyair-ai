@@ -30,7 +30,7 @@ export async function getDb() {
       if (!pool) {
         pool = mysql.createPool(process.env.DATABASE_URL);
       }
-      _db = drizzle(pool);
+      _db = drizzle(pool as any);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -151,6 +151,18 @@ export async function getAllBlogPosts() {
     .orderBy(desc(blogPosts.publishedAt));
 }
 
+export async function getAllBlogPostsAdmin() {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  return await db
+    .select()
+    .from(blogPosts)
+    .orderBy(desc(blogPosts.updatedAt));
+}
+
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
   const db = await getDb();
   if (!db) {
@@ -187,8 +199,17 @@ export async function createBlogPost(post: InsertBlogPost) {
     throw new Error("Database not available");
   }
 
-  const result = await db.insert(blogPosts).values(post);
-  return result;
+  const now = new Date();
+  const values: InsertBlogPost = {
+    ...post,
+    coverImage: post.coverImage ?? null,
+    publishedAt: post.publishedAt ?? now,
+    updatedAt: now,
+  };
+
+  await db.insert(blogPosts).values(values);
+
+  return await getBlogPostBySlug(post.slug);
 }
 
 
@@ -200,6 +221,61 @@ export async function deleteBlogPost(id: number) {
 
   await db.delete(blogPosts).where(eq(blogPosts.id, id));
   return { success: true };
+}
+
+export async function updateBlogPost(
+  id: number,
+  data: Partial<InsertBlogPost>
+) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const updateSet: Partial<InsertBlogPost> = {};
+
+  if (data.title !== undefined) {
+    updateSet.title = data.title;
+  }
+  if (data.slug !== undefined) {
+    updateSet.slug = data.slug;
+  }
+  if (data.excerpt !== undefined) {
+    updateSet.excerpt = data.excerpt;
+  }
+  if (data.content !== undefined) {
+    updateSet.content = data.content;
+  }
+  if (data.coverImage !== undefined) {
+    updateSet.coverImage = data.coverImage ?? null;
+  }
+  if (data.author !== undefined) {
+    updateSet.author = data.author;
+  }
+  if (data.isPublished !== undefined) {
+    updateSet.isPublished = data.isPublished;
+  }
+  if (data.publishedAt !== undefined) {
+    updateSet.publishedAt = data.publishedAt;
+  }
+  if (data.isFeatured !== undefined) {
+    updateSet.isFeatured = data.isFeatured;
+  }
+  if (data.views !== undefined) {
+    updateSet.views = data.views;
+  }
+
+  updateSet.updatedAt = new Date();
+
+  await db.update(blogPosts).set(updateSet).where(eq(blogPosts.id, id));
+
+  const result = await db
+    .select()
+    .from(blogPosts)
+    .where(eq(blogPosts.id, id))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
 }
 
 

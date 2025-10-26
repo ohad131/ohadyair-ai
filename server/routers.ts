@@ -4,14 +4,17 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
+import type { InsertBlogPost } from "../src/db/schema";
 import {
   createContactSubmission,
   getAllContactSubmissions,
   getAllBlogPosts,
+  getAllBlogPostsAdmin,
   getBlogPostBySlug,
   incrementBlogPostViews,
   createBlogPost,
   deleteBlogPost,
+  updateBlogPost,
   getAllAITools,
   updateAITool,
   getSiteContent,
@@ -29,6 +32,45 @@ import { TRPCError } from "@trpc/server";
 import { verifyPassword } from "./_core/password";
 
 const languageEnum = z.enum(SUPPORTED_LANGUAGE_CODES);
+
+const slugSchema = z
+  .string()
+  .trim()
+  .min(1, "Slug is required")
+  .max(255, "Slug must be 255 characters or fewer")
+  .regex(/^[a-z0-9-]+$/i, "Slug may only include letters, numbers, and hyphens.");
+
+const blogPostBaseFields = {
+  title: z.string().trim().min(1, "Title is required").max(500),
+  slug: slugSchema,
+  excerpt: z.string().trim().min(1, "Excerpt is required"),
+  content: z.string().trim().min(1, "Content is required"),
+  author: z.string().trim().min(1, "Author is required").max(255),
+  coverImage: z.string().trim().max(500).optional(),
+  isPublished: z.boolean().optional(),
+  isFeatured: z.boolean().optional(),
+  publishedAt: z.coerce.date().optional(),
+  views: z.number().int().nonnegative().optional(),
+} as const;
+
+const blogPostCreateInput = z.object({
+  title: blogPostBaseFields.title,
+  slug: blogPostBaseFields.slug,
+  excerpt: blogPostBaseFields.excerpt,
+  content: blogPostBaseFields.content,
+  author: blogPostBaseFields.author,
+  coverImage: blogPostBaseFields.coverImage,
+  isPublished: blogPostBaseFields.isPublished,
+  isFeatured: blogPostBaseFields.isFeatured,
+  publishedAt: blogPostBaseFields.publishedAt,
+});
+
+const blogPostUpdateInput = z
+  .object(blogPostBaseFields)
+  .partial()
+  .refine(data => Object.keys(data).length > 0, {
+    message: "At least one field must be provided for update.",
+  });
 
 export const appRouter = router({
   system: systemRouter,
@@ -131,6 +173,10 @@ export const appRouter = router({
       return await getAllBlogPosts();
     }),
 
+    adminList: adminProcedure.query(async () => {
+      return await getAllBlogPostsAdmin();
+    }),
+
     getBySlug: publicProcedure
       .input(z.object({ slug: z.string() }))
       .query(async ({ input }) => {
@@ -144,28 +190,70 @@ export const appRouter = router({
       }),
 
     create: adminProcedure
+      .input(blogPostCreateInput)
+      .mutation(async ({ input }) => {
+        const sanitizedCoverImage = input.coverImage?.trim();
+        const created = await createBlogPost({
+          title: input.title,
+          slug: input.slug.toLowerCase(),
+          excerpt: input.excerpt,
+          content: input.content,
+          author: input.author,
+          coverImage: sanitizedCoverImage && sanitizedCoverImage.length > 0 ? sanitizedCoverImage : null,
+          isPublished: input.isPublished ?? true,
+          isFeatured: input.isFeatured ?? false,
+          publishedAt: input.publishedAt,
+        });
+
+        if (!created) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create blog post" });
+        }
+
+        return created;
+      }),
+
+    update: adminProcedure
       .input(
         z.object({
-          title: z.string().min(1),
-          slug: z.string().min(1),
-          excerpt: z.string().min(1),
-          content: z.string().min(1),
-          author: z.string().min(1),
-          coverImage: z.string().optional(),
+          id: z.number().int().positive(),
+          data: blogPostUpdateInput,
         })
       )
       .mutation(async ({ input }) => {
-        return await createBlogPost(input);
+        const sanitizedData: Partial<InsertBlogPost> = {};
+        const { data } = input;
+
+        if (data.title !== undefined) sanitizedData.title = data.title;
+        if (data.slug !== undefined) sanitizedData.slug = data.slug.toLowerCase();
+        if (data.excerpt !== undefined) sanitizedData.excerpt = data.excerpt;
+        if (data.content !== undefined) sanitizedData.content = data.content;
+        if (data.author !== undefined) sanitizedData.author = data.author;
+        if (data.coverImage !== undefined) {
+          const trimmed = data.coverImage?.trim();
+          sanitizedData.coverImage = trimmed && trimmed.length > 0 ? trimmed : null;
+        }
+        if (data.isPublished !== undefined) sanitizedData.isPublished = data.isPublished;
+        if (data.isFeatured !== undefined) sanitizedData.isFeatured = data.isFeatured;
+        if (data.publishedAt !== undefined) sanitizedData.publishedAt = data.publishedAt;
+        if (data.views !== undefined) sanitizedData.views = data.views;
+
+        const updated = await updateBlogPost(input.id, sanitizedData);
+
+        if (!updated) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+        }
+
+        return updated;
       }),
 
     delete: adminProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number().int().positive() }))
       .mutation(async ({ input }) => {
         return await deleteBlogPost(input.id);
       }),
 
     toggleFeatured: adminProcedure
-      .input(z.object({ id: z.number(), isFeatured: z.boolean() }))
+      .input(z.object({ id: z.number().int().positive(), isFeatured: z.boolean() }))
       .mutation(async ({ input }) => {
         return await toggleBlogFeatured(input.id, input.isFeatured);
       }),
