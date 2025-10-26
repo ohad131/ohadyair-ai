@@ -4,7 +4,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import type { InsertBlogPost } from "../src/db/schema";
+import type { InsertBlogPost, InsertProject } from "../src/db/schema";
 import {
   createContactSubmission,
   getAllContactSubmissions,
@@ -25,10 +25,6 @@ import {
   setSiteContentBatch,
   toggleBlogFeatured,
   upsertUser,
-  createImageRecord,
-  getImageRecord,
-  listImageRecords,
-  deleteImageRecord,
   getAllProjectsAdmin,
   updateProject,
 } from "./db";
@@ -73,6 +69,37 @@ const blogPostCreateInput = z.object({
 
 const blogPostUpdateInput = z
   .object(blogPostBaseFields)
+  .partial()
+  .refine(data => Object.keys(data).length > 0, {
+    message: "At least one field must be provided for update.",
+  });
+
+const projectBaseInput = {
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  excerpt: z.string().min(1).optional(),
+  content: z.string().optional(),
+  description: z.string().optional(),
+  fullDescription: z.string().optional(),
+  coverImage: z.string().optional(),
+  coverFileId: z.string().optional(),
+  technologies: z.string().optional(),
+  projectUrl: z.string().optional(),
+  githubUrl: z.string().optional(),
+  displayOrder: z.number().optional(),
+  isPublished: z.boolean().optional(),
+  isFeatured: z.boolean().optional(),
+} as const;
+
+const projectCreateInput = z
+  .object(projectBaseInput)
+  .refine(data => Boolean(data.excerpt ?? data.description), {
+    message: "Excerpt is required",
+    path: ["excerpt"],
+  });
+
+const projectUpdateInput = z
+  .object(projectBaseInput)
   .partial()
   .refine(data => Object.keys(data).length > 0, {
     message: "At least one field must be provided for update.",
@@ -284,50 +311,58 @@ export const appRouter = router({
         return project;
       }),
     create: adminProcedure
-      .input(
-        z.object({
-          title: z.string().min(1),
-          slug: z.string().min(1),
-          description: z.string().min(1),
-          fullDescription: z.string().optional(),
-          coverImage: z.string().optional(),
-          technologies: z.string().optional(),
-          projectUrl: z.string().optional(),
-          githubUrl: z.string().optional(),
-          displayOrder: z.number().optional(),
-          isPublished: z.boolean().optional(),
-          isFeatured: z.boolean().optional(),
-        })
-      )
+      .input(projectCreateInput)
       .mutation(async ({ input }) => {
         const db = await import("./db");
-        return await db.createProject(input);
+        const payload: InsertProject = {
+          title: input.title,
+          slug: input.slug.toLowerCase(),
+          excerpt: input.excerpt ?? input.description ?? null,
+          content: input.content ?? input.fullDescription ?? null,
+          coverImage: input.coverImage ?? null,
+          coverFileId: input.coverFileId ?? null,
+          technologies: input.technologies ?? null,
+          projectUrl: input.projectUrl ?? null,
+          githubUrl: input.githubUrl ?? null,
+          displayOrder: input.displayOrder ?? 0,
+          isPublished: input.isPublished ?? false,
+          isFeatured: input.isFeatured ?? false,
+        };
+        return await db.createProject(payload);
       }),
     update: adminProcedure
       .input(
         z.object({
           id: z.number(),
-          data: z
-            .object({
-              title: z.string().min(1).optional(),
-              slug: z.string().min(1).optional(),
-              description: z.string().min(1).optional(),
-              fullDescription: z.string().optional(),
-              coverImage: z.string().optional(),
-              technologies: z.string().optional(),
-              projectUrl: z.string().optional(),
-              githubUrl: z.string().optional(),
-              displayOrder: z.number().optional(),
-              isPublished: z.boolean().optional(),
-              isFeatured: z.boolean().optional(),
-            })
-            .refine(data => Object.keys(data).length > 0, {
-              message: "At least one field must be provided for update.",
-            }),
+          data: projectUpdateInput,
         })
       )
       .mutation(async ({ input }) => {
-        await updateProject(input.id, input.data);
+        const sanitized: Partial<InsertProject> = {};
+        const data = input.data;
+
+        if (data.title !== undefined) sanitized.title = data.title;
+        if (data.slug !== undefined) sanitized.slug = data.slug.toLowerCase();
+        if (data.excerpt !== undefined || data.description !== undefined) {
+          sanitized.excerpt = data.excerpt ?? data.description ?? null;
+        }
+        if (data.content !== undefined || data.fullDescription !== undefined) {
+          sanitized.content = data.content ?? data.fullDescription ?? null;
+        }
+        if (data.coverImage !== undefined) {
+          sanitized.coverImage = data.coverImage ?? null;
+        }
+        if (data.coverFileId !== undefined) {
+          sanitized.coverFileId = data.coverFileId ?? null;
+        }
+        if (data.technologies !== undefined) sanitized.technologies = data.technologies ?? null;
+        if (data.projectUrl !== undefined) sanitized.projectUrl = data.projectUrl ?? null;
+        if (data.githubUrl !== undefined) sanitized.githubUrl = data.githubUrl ?? null;
+        if (data.displayOrder !== undefined) sanitized.displayOrder = data.displayOrder;
+        if (data.isPublished !== undefined) sanitized.isPublished = data.isPublished;
+        if (data.isFeatured !== undefined) sanitized.isFeatured = data.isFeatured;
+
+        await updateProject(input.id, sanitized);
         return { success: true } as const;
       }),
     delete: adminProcedure
@@ -407,47 +442,6 @@ export const appRouter = router({
       }),
   }),
 
-  images: router({
-    upload: adminProcedure
-      .input(
-        z.object({
-          fileName: z.string().min(1),
-          mimeType: z.string().min(1),
-          base64Data: z.string().min(1),
-        })
-      )
-      .mutation(async ({ input }) => {
-        const { id } = await createImageRecord(input);
-        return { id, url: `/api/images/${id}` } as const;
-      }),
-    list: adminProcedure.query(async () => {
-      const items = await listImageRecords();
-      return items.map(item => ({
-        ...item,
-        url: `/api/images/${item.id}`,
-      }));
-    }),
-    delete: adminProcedure
-      .input(z.object({ id: z.number() }))
-      .mutation(async ({ input }) => {
-        await deleteImageRecord(input.id);
-        return { success: true } as const;
-      }),
-    get: publicProcedure
-      .input(z.object({ id: z.number() }))
-      .query(async ({ input }) => {
-        const record = await getImageRecord(input.id);
-        if (!record) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Image not found" });
-        }
-        return {
-          id: record.id,
-          fileName: record.fileName,
-          mimeType: record.mimeType,
-          url: `/api/images/${record.id}`,
-        } as const;
-      }),
-  }),
 });
 
 export type AppRouter = typeof appRouter;

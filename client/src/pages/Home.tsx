@@ -516,18 +516,20 @@ export default function Home() {
             {projects.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                  {projects.slice(0, 4).map((project: any, index: number) => (
-                    <Card
+                  {projects.slice(0, 4).map((project: any, index: number) => {
+                    const projectCover = project.coverFileId ? `/api/files/${project.coverFileId}` : project.coverImage;
+                    return (
+                      <Card
                       key={project.id}
                       className={cn(
                         `glass glass-hover overflow-hidden group animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`,
                         cardBodyAlignmentClass
                       )}
                     >
-                      {project.coverImage ? (
+                      {projectCover ? (
                         <div className="h-48 overflow-hidden">
                           <img
-                            src={project.coverImage}
+                            src={projectCover}
                             alt={project.title}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                           />
@@ -540,7 +542,7 @@ export default function Home() {
                       <div className={cn("p-6 md:p-8 flex flex-col h-full", cardBodyAlignmentClass)}>
                         <h3 className="text-2xl font-bold text-secondary mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
                         <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                          {project.description}
+                          {project.excerpt ?? project.description}
                         </p>
                         {parseTechList(project.technologies).length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-6">
@@ -558,8 +560,9 @@ export default function Home() {
                           <span className="text-2xl text-primary">{isHebrew ? "←" : "→"}</span>
                         </div>
                       </div>
-                    </Card>
-                  ))}
+                      </Card>
+                    );
+                  })}
                 </div>
                 <div className="flex justify-center">
                   <Link href="/projects">
@@ -677,7 +680,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogPosts.length > 0 ? (
-              blogPosts.slice(0, 3).map((post: any, index: number) => (
+              blogPosts.slice(0, 3).map((post: any, index: number) => {
+                const coverUrl = post.coverFileId ? `/api/files/${post.coverFileId}` : post.coverImage;
+                return (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                   <Card
                     className={cn(
@@ -686,9 +691,9 @@ export default function Home() {
                     )}
                   >
                     <div className="h-48 overflow-hidden">
-                      {post.coverImage ? (
-                        <img 
-                          src={post.coverImage} 
+                      {coverUrl ? (
+                        <img
+                          src={coverUrl}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
@@ -708,7 +713,8 @@ export default function Home() {
                     </div>
                   </Card>
                 </Link>
-              ))
+              );
+              })
             ) : (
               // Fallback to static blog posts if database is empty
               fallbackBlogPosts.map((post, index) => (

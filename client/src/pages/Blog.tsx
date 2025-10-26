@@ -42,16 +42,20 @@ export default function Blog() {
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts?.map((post) => (
-            <Link key={post.id} href={`/blog/${post.slug}`}>
-              <Card className="glass glass-hover h-full cursor-pointer overflow-hidden">
-                <div className="h-48 liquid-gradient flex items-center justify-center">
-                  <div className="text-6xl">
-                    {post.slug.includes('getting-started') && '📝'}
-                    {post.slug.includes('n8n') && '⚡'}
-                    {post.slug.includes('business') && '💡'}
+          {posts?.map(post => {
+            const coverUrl = post.coverFileId ? `/api/files/${post.coverFileId}` : post.coverImage;
+            return (
+              <Link key={post.id} href={`/blog/${post.slug}`}>
+                <Card className="glass glass-hover h-full cursor-pointer overflow-hidden">
+                  <div className="h-48 overflow-hidden">
+                    {coverUrl ? (
+                      <img src={coverUrl} alt={post.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full liquid-gradient flex items-center justify-center text-5xl">
+                        📝
+                      </div>
+                    )}
                   </div>
-                </div>
                 <div className="p-6">
                   <div className="text-xs text-primary font-medium mb-2">
                     {new Date(post.publishedAt).toLocaleDateString('he-IL', {
@@ -68,7 +72,8 @@ export default function Blog() {
                 </div>
               </Card>
             </Link>
-          ))}
+            );
+          })}
         </div>
 
         {posts?.length === 0 && (

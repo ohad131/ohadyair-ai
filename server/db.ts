@@ -16,17 +16,17 @@ import {
   projects,
   Project,
   InsertProject,
-  images,
-  Image,
-  InsertImage,
+  files,
+  MediaFile,
+  InsertMediaFile,
+  blogPostFiles,
+  projectFiles,
 } from "../src/db/schema";
 import { type LanguageCode } from "@shared/language";
 import { ENV } from './_core/env';
 
 let pool: mysql.Pool | null = null;
 let _db: ReturnType<typeof drizzle> | null = null;
-
-const BASE64_HEADER_PATTERN = /^data:[^;]+;base64,/i;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
@@ -183,6 +183,16 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefi
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function getBlogPostById(id: number): Promise<BlogPost | null> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const rows = await db.select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
 export async function incrementBlogPostViews(slug: string) {
   const db = await getDb();
   if (!db) {
@@ -208,6 +218,7 @@ export async function createBlogPost(post: InsertBlogPost) {
   const values: InsertBlogPost = {
     ...post,
     coverImage: post.coverImage ?? null,
+    coverFileId: post.coverFileId ?? null,
     publishedAt: post.publishedAt ?? now,
     updatedAt: now,
   };
@@ -253,6 +264,9 @@ export async function updateBlogPost(
   }
   if (data.coverImage !== undefined) {
     updateSet.coverImage = data.coverImage ?? null;
+  }
+  if (data.coverFileId !== undefined) {
+    updateSet.coverFileId = data.coverFileId ?? null;
   }
   if (data.author !== undefined) {
     updateSet.author = data.author;
@@ -408,91 +422,135 @@ export async function toggleBlogFeatured(id: number, isFeatured: boolean) {
   return { success: true };
 }
 
+// Files & attachments
 
-// Images / Media Library
+type FileMetadataRow = Pick<MediaFile, "id" | "filename" | "mimeType" | "size" | "sha256" | "uploadedBy" | "createdAt">;
 
-function normalizeBase64Data(value: string): string {
-  const trimmed = value.trim();
-  if (trimmed.length === 0) {
-    throw new Error("Image data is empty");
-  }
-  return trimmed.replace(BASE64_HEADER_PATTERN, "");
+function fileMetadataSelection() {
+  return {
+    id: files.id,
+    filename: files.filename,
+    mimeType: files.mimeType,
+    size: files.size,
+    sha256: files.sha256,
+    uploadedBy: files.uploadedBy,
+    createdAt: files.createdAt,
+  };
 }
 
-export async function createImageRecord(
-  input: Pick<InsertImage, "fileName" | "mimeType"> & { base64Data: string }
-): Promise<{ id: number }> {
+export async function getFileRecord(id: string) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  const data = normalizeBase64Data(input.base64Data);
-
-  const result = await db.insert(images).values({
-    fileName: input.fileName,
-    mimeType: input.mimeType,
-    data,
-  });
-
-  const insertId = Number((result as mysql.ResultSetHeader).insertId ?? 0);
-  if (!insertId) {
-    const latest = await db
-      .select({ id: images.id })
-      .from(images)
-      .orderBy(desc(images.id))
-      .limit(1);
-    if (!latest[0]) {
-      throw new Error("Failed to determine new image ID");
-    }
-    return { id: Number(latest[0]!.id) };
-  }
-
-  return { id: insertId };
+  const rows = await db.select().from(files).where(eq(files.id, id)).limit(1);
+  return rows[0] ?? null;
 }
 
-export async function getImageRecord(id: number): Promise<Image | null> {
+export async function findFileByHash(hash: string) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  const rows = await db.select().from(images).where(eq(images.id, id)).limit(1);
-  return rows.length > 0 ? rows[0] : null;
+  const rows = await db.select().from(files).where(eq(files.sha256, hash)).limit(1);
+  return rows[0] ?? null;
 }
 
-export async function listImageRecords(): Promise<Array<Omit<Image, "data">>> {
+export async function insertFileRecord(record: InsertMediaFile) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  const rows = await db
-    .select({
-      id: images.id,
-      fileName: images.fileName,
-      mimeType: images.mimeType,
-      createdAt: images.createdAt,
-    })
-    .from(images)
-    .orderBy(desc(images.createdAt));
-
-  return rows.map(row => ({
-    ...row,
-  }));
+  await db.insert(files).values(record);
 }
 
-export async function deleteImageRecord(id: number) {
+export async function listStoredFiles(): Promise<FileMetadataRow[]> {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  return await db.select(fileMetadataSelection()).from(files).orderBy(desc(files.createdAt));
+}
+
+export async function listFilesForBlogPost(blogPostId: number): Promise<FileMetadataRow[]> {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  return await db
+    .select(fileMetadataSelection())
+    .from(blogPostFiles)
+    .innerJoin(files, eq(blogPostFiles.fileId, files.id))
+    .where(eq(blogPostFiles.blogPostId, blogPostId))
+    .orderBy(desc(files.createdAt));
+}
+
+export async function listFilesForProject(projectId: number): Promise<FileMetadataRow[]> {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  return await db
+    .select(fileMetadataSelection())
+    .from(projectFiles)
+    .innerJoin(files, eq(projectFiles.fileId, files.id))
+    .where(eq(projectFiles.projectId, projectId))
+    .orderBy(desc(files.createdAt));
+}
+
+export async function attachFileToBlogPost(blogPostId: number, fileId: string) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  await db.delete(images).where(eq(images.id, id));
-  return { success: true };
+  await db
+    .insert(blogPostFiles)
+    .values({ blogPostId, fileId })
+    .onDuplicateKeyUpdate({ set: { fileId } });
 }
 
+export async function attachFileToProject(projectId: number, fileId: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
 
+  await db
+    .insert(projectFiles)
+    .values({ projectId, fileId })
+    .onDuplicateKeyUpdate({ set: { fileId } });
+}
+
+export async function setBlogPostCoverFile(blogPostId: number, fileId: string | null) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db
+    .update(blogPosts)
+    .set({ coverFileId: fileId ?? null, updatedAt: new Date() })
+    .where(eq(blogPosts.id, blogPostId));
+}
+
+export async function setProjectCoverFile(projectId: number, fileId: string | null) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db
+    .update(projects)
+    .set({ coverFileId: fileId ?? null, updatedAt: new Date() })
+    .where(eq(projects.id, projectId));
+}
 
 // Projects
 export async function getAllProjects(): Promise<Project[]> {
@@ -530,6 +588,16 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     .where(eq(projects.slug, slug))
     .limit(1);
   return result.length > 0 ? result[0] : null;
+}
+
+export async function getProjectById(id: number): Promise<Project | null> {
+  const db = await getDb();
+  if (!db) {
+    return null;
+  }
+
+  const rows = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  return rows[0] ?? null;
 }
 
 export async function createProject(data: InsertProject) {

@@ -45,6 +45,9 @@ export default function ProjectsPage() {
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map(project => {
+            const coverUrl = project.coverFileId ? `/api/files/${project.coverFileId}` : project.coverImage;
+            const summary =
+              project.excerpt ?? project.content?.replace(/<[^>]+>/g, "").trim() ?? "";
             let technologies: string[] = [];
             if (project.technologies) {
               try {
@@ -58,10 +61,10 @@ export default function ProjectsPage() {
             }
             return (
               <Card key={project.id} className="glass glass-hover overflow-hidden flex flex-col">
-                {project.coverImage && (
+                {coverUrl && (
                   <div className="h-52 overflow-hidden">
                     <img
-                      src={project.coverImage}
+                      src={coverUrl}
                       alt={project.title}
                       className="w-full h-full object-cover hover:scale-105 transition-transform"
                     />
@@ -79,7 +82,7 @@ export default function ProjectsPage() {
                   </div>
 
                   <p className="text-muted-foreground mb-4 leading-relaxed">
-                    {project.description}
+                    {summary}
                   </p>
 
                   {technologies.length > 0 && (

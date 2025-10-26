@@ -1,13 +1,36 @@
+import { useMemo } from "react";
 import { useParams, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+
+interface AttachmentMetadata {
+  id: string;
+  filename: string;
+  mimeType: string;
+  size: number;
+  sha256: string;
+  url: string;
+}
 
 export default function ProjectDetail() {
   const params = useParams();
   const slug = params.slug || "";
   
   const { data: project, isLoading } = trpc.projects.getBySlug.useQuery({ slug });
+
+  const attachmentsQuery = useQuery({
+    queryKey: ["project-files", project?.id],
+    enabled: Boolean(project?.id),
+    queryFn: async () => {
+      const response = await fetch(`/api/projects/${project!.id}/files`);
+      if (!response.ok) {
+        throw new Error("Failed to load project media");
+      }
+      return (await response.json()) as AttachmentMetadata[];
+    },
+  });
 
   if (isLoading) {
     return (
@@ -45,6 +68,15 @@ export default function ProjectDetail() {
     }
   }
 
+  const coverUrl = useMemo(() => {
+    if (!project) return null;
+    if (project.coverFileId) return `/api/files/${project.coverFileId}`;
+    return project.coverImage ?? null;
+  }, [project]);
+
+  const excerpt = project.excerpt ?? project.content ?? "";
+  const richContent = project.content ?? "";
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -67,10 +99,10 @@ export default function ProjectDetail() {
       {/* Project */}
       <article className="container mx-auto px-4 py-12 max-w-4xl">
         {/* Cover Image */}
-        {project.coverImage && (
+        {coverUrl && (
           <div className="mb-8 rounded-2xl overflow-hidden glass">
-            <img 
-              src={project.coverImage} 
+            <img
+              src={coverUrl}
               alt={project.title}
               className="w-full h-auto object-cover"
             />
@@ -84,7 +116,7 @@ export default function ProjectDetail() {
 
         {/* Description */}
         <p className="text-xl text-muted-foreground mb-6">
-          {project.description}
+          {excerpt}
         </p>
 
         {/* Technologies */}
@@ -122,11 +154,37 @@ export default function ProjectDetail() {
         </div>
 
         {/* Full Description */}
-        {project.fullDescription && (
-          <div 
+        {richContent && (
+          <div
             className="prose prose-lg max-w-none text-secondary"
-            dangerouslySetInnerHTML={{ __html: project.fullDescription }}
+            dangerouslySetInnerHTML={{ __html: richContent ?? "" }}
           />
+        )}
+
+        {attachmentsQuery.data && attachmentsQuery.data.length > 0 && (
+          <section className="mt-12 space-y-6">
+            <h2 className="text-2xl font-semibold text-secondary">מדיה מהפרויקט</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {attachmentsQuery.data.map(file => {
+                const isImage = file.mimeType.startsWith("image/");
+                const isVideo = file.mimeType.startsWith("video/");
+                return (
+                  <div key={file.id} className="rounded-xl border border-border overflow-hidden">
+                    {isImage ? (
+                      <img src={file.url} alt={file.filename} className="w-full h-full object-cover" />
+                    ) : isVideo ? (
+                      <video src={file.url} controls className="w-full h-full" preload="metadata" />
+                    ) : (
+                      <div className="p-6">
+                        <p className="text-sm text-muted-foreground">{file.filename}</p>
+                        <p className="text-xs text-muted-foreground">{file.mimeType}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
         )}
       </article>
     </div>

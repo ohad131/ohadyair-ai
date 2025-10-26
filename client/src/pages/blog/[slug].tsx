@@ -1,13 +1,42 @@
+import { useMemo } from "react";
 import { useParams, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+
+interface AttachmentMetadata {
+  id: string;
+  filename: string;
+  mimeType: string;
+  size: number;
+  sha256: string;
+  url: string;
+}
 
 export default function BlogPost() {
   const params = useParams();
   const slug = params.slug || "";
   
   const { data: post, isLoading } = trpc.blog.getBySlug.useQuery({ slug });
+
+  const attachmentsQuery = useQuery({
+    queryKey: ["blog-post-files", post?.id],
+    enabled: Boolean(post?.id),
+    queryFn: async () => {
+      const response = await fetch(`/api/blog-posts/${post!.id}/files`);
+      if (!response.ok) {
+        throw new Error("Failed to load attachments");
+      }
+      return (await response.json()) as AttachmentMetadata[];
+    },
+  });
+
+  const coverUrl = useMemo(() => {
+    if (!post) return null;
+    if (post.coverFileId) return `/api/files/${post.coverFileId}`;
+    return post.coverImage ?? null;
+  }, [post]);
 
   if (isLoading) {
     return (
@@ -55,10 +84,10 @@ export default function BlogPost() {
       {/* Article */}
       <article className="container mx-auto px-4 py-12 max-w-4xl">
         {/* Cover Image */}
-        {post.coverImage && (
+        {coverUrl && (
           <div className="mb-8 rounded-2xl overflow-hidden">
-            <img 
-              src={post.coverImage} 
+            <img
+              src={coverUrl}
               alt={post.title}
               className="w-full h-auto object-cover"
             />
@@ -80,10 +109,36 @@ export default function BlogPost() {
         </div>
 
         {/* Content */}
-        <div 
+        <div
           className="prose prose-lg max-w-none text-secondary"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        {attachmentsQuery.data && attachmentsQuery.data.length > 0 && (
+          <section className="mt-12 space-y-6">
+            <h2 className="text-2xl font-semibold text-secondary">תוכן מצורף</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {attachmentsQuery.data.map(file => {
+                const isImage = file.mimeType.startsWith("image/");
+                const isVideo = file.mimeType.startsWith("video/");
+                return (
+                  <div key={file.id} className="rounded-xl border border-border overflow-hidden">
+                    {isImage ? (
+                      <img src={file.url} alt={file.filename} className="w-full h-full object-cover" />
+                    ) : isVideo ? (
+                      <video src={file.url} controls className="w-full h-full" preload="metadata" />
+                    ) : (
+                      <div className="p-6">
+                        <p className="text-sm text-muted-foreground">{file.filename}</p>
+                        <p className="text-xs text-muted-foreground">{file.mimeType}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
       </article>
     </div>
   );

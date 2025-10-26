@@ -1,9 +1,12 @@
 import {
+  bigint,
   boolean,
+  customType,
   int,
   longtext,
   mysqlEnum,
   mysqlTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -51,6 +54,46 @@ export type InsertContactSubmission = typeof contactSubmissions.$inferInsert;
 /**
  * Blog posts table
  */
+const toBuffer = (value: Buffer | Uint8Array | ArrayBuffer): Buffer => {
+  if (Buffer.isBuffer(value)) return value;
+  if (value instanceof Uint8Array) {
+    return Buffer.from(value);
+  }
+  return Buffer.from(new Uint8Array(value));
+};
+
+const longBlob = customType<{ data: Buffer; driverData: Buffer | Uint8Array | ArrayBuffer }>({
+  dataType() {
+    return "longblob";
+  },
+  toDriver(value) {
+    return toBuffer(value);
+  },
+  fromDriver(value) {
+    return toBuffer(value);
+  },
+});
+
+export const files = mysqlTable(
+  "files",
+  {
+    id: varchar("id", { length: 26 }).primaryKey(),
+    filename: varchar("filename", { length: 255 }).notNull(),
+    mimeType: varchar("mimeType", { length: 128 }).notNull(),
+    size: bigint("size", { mode: "number" }).notNull(),
+    bytes: longBlob("bytes").notNull(),
+    sha256: varchar("sha256", { length: 64 }).notNull(),
+    uploadedBy: varchar("uploadedBy", { length: 191 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  table => ({
+    sha256Idx: uniqueIndex("files_sha256_unique").on(table.sha256),
+  })
+);
+
+export type MediaFile = typeof files.$inferSelect;
+export type InsertMediaFile = typeof files.$inferInsert;
+
 export const blogPosts = mysqlTable("blogPosts", {
   id: int("id").primaryKey().autoincrement(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
@@ -58,6 +101,9 @@ export const blogPosts = mysqlTable("blogPosts", {
   excerpt: text("excerpt").notNull(),
   content: text("content").notNull(),
   coverImage: varchar("coverImage", { length: 500 }),
+  coverFileId: varchar("coverFileId", { length: 26 }).references(() => files.id, {
+    onDelete: "set null",
+  }),
   author: varchar("author", { length: 255 }).notNull(),
   publishedAt: timestamp("publishedAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
@@ -112,17 +158,20 @@ export type InsertSiteContent = typeof siteContent.$inferInsert;
  */
 export const projects = mysqlTable("projects", {
   id: int("id").primaryKey().autoincrement(),
-  slug: varchar("slug", { length: 255 }).notNull().unique(),
-  title: varchar("title", { length: 500 }).notNull(),
-  description: text("description").notNull(),
-  fullDescription: text("fullDescription"),
+  slug: varchar("slug", { length: 191 }).notNull().unique(),
+  title: varchar("title", { length: 191 }).notNull(),
+  excerpt: text("excerpt"),
+  content: longtext("content"),
+  isPublished: boolean("isPublished").default(false).notNull(),
+  isFeatured: boolean("isFeatured").default(false).notNull(),
   coverImage: varchar("coverImage", { length: 500 }),
+  coverFileId: varchar("coverFileId", { length: 26 }).references(() => files.id, {
+    onDelete: "set null",
+  }),
   technologies: text("technologies"), // JSON array of tech tags
   projectUrl: varchar("projectUrl", { length: 500 }),
   githubUrl: varchar("githubUrl", { length: 500 }),
   displayOrder: int("displayOrder").default(0).notNull(),
-  isPublished: boolean("isPublished").default(true).notNull(),
-  isFeatured: boolean("isFeatured").default(false).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
@@ -130,17 +179,39 @@ export const projects = mysqlTable("projects", {
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = typeof projects.$inferInsert;
 
-/**
- * Media library images table
- */
-export const images = mysqlTable("images", {
-  id: int("id").primaryKey().autoincrement(),
-  fileName: varchar("fileName", { length: 255 }).notNull(),
-  mimeType: varchar("mimeType", { length: 100 }).notNull(),
-  data: longtext("data").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+export const blogPostFiles = mysqlTable(
+  "blog_post_files",
+  {
+    blogPostId: int("blogPostId")
+      .notNull()
+      .references(() => blogPosts.id, { onDelete: "cascade" }),
+    fileId: varchar("fileId", { length: 26 })
+      .notNull()
+      .references(() => files.id, { onDelete: "cascade" }),
+  },
+  table => ({
+    pk: primaryKey({ columns: [table.blogPostId, table.fileId] }),
+  })
+);
 
-export type Image = typeof images.$inferSelect;
-export type InsertImage = typeof images.$inferInsert;
+export type BlogPostFile = typeof blogPostFiles.$inferSelect;
+export type InsertBlogPostFile = typeof blogPostFiles.$inferInsert;
+
+export const projectFiles = mysqlTable(
+  "project_files",
+  {
+    projectId: int("projectId")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    fileId: varchar("fileId", { length: 26 })
+      .notNull()
+      .references(() => files.id, { onDelete: "cascade" }),
+  },
+  table => ({
+    pk: primaryKey({ columns: [table.projectId, table.fileId] }),
+  })
+);
+
+export type ProjectFile = typeof projectFiles.$inferSelect;
+export type InsertProjectFile = typeof projectFiles.$inferInsert;
 
