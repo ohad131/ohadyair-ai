@@ -65,6 +65,16 @@ export default function Home() {
   const { data: projects = [] } = trpc.projects.list.useQuery();
   const { data: siteCopy } = trpc.siteContent.getByLanguage.useQuery({ language });
 
+  const parseTechList = (value?: string | null) => {
+    if (!value) return [] as string[];
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? (parsed as string[]) : [];
+    } catch {
+      return [] as string[];
+    }
+  };
+
   const resolveCopy = (key: string, fallback: string) => {
     const value = siteCopy?.[key];
     if (typeof value !== "string") return fallback;
@@ -93,13 +103,11 @@ export default function Home() {
     }
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // Add visible when entering, remove when leaving (bidirectional)
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-          } else {
-            entry.target.classList.remove('visible');
+            observer.unobserve(entry.target);
           }
         });
       },
@@ -114,7 +122,7 @@ export default function Home() {
       '.animate-fade-in-up, .animate-fade-in-left, .animate-fade-in-right, .animate-scale-in, .animate-bounce-in, .animate-slide-in-bottom'
     );
 
-    animatedElements.forEach((el) => {
+    animatedElements.forEach(el => {
       // Skip hero section elements
       if (!heroSection?.contains(el)) {
         observer.observe(el);
@@ -122,10 +130,8 @@ export default function Home() {
     });
 
     return () => {
-      animatedElements.forEach((el) => {
-        if (!heroSection?.contains(el)) {
-          observer.unobserve(el);
-        }
+      animatedElements.forEach(el => {
+        observer.unobserve(el);
       });
     };
   }, []);
@@ -506,71 +512,90 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
+          <div className="space-y-8 max-w-5xl mx-auto">
             {projects.length > 0 ? (
-              projects.slice(0, 4).map((project: any, index: number) => (
-                <Link key={project.id} href={`/projects/${project.slug}`}>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                  {projects.slice(0, 4).map((project: any, index: number) => (
+                    <Card
+                      key={project.id}
+                      className={cn(
+                        `glass glass-hover overflow-hidden group animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`,
+                        cardBodyAlignmentClass
+                      )}
+                    >
+                      {project.coverImage ? (
+                        <div className="h-48 overflow-hidden">
+                          <img
+                            src={project.coverImage}
+                            alt={project.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
+                          🚀
+                        </div>
+                      )}
+                      <div className={cn("p-6 md:p-8 flex flex-col h-full", cardBodyAlignmentClass)}>
+                        <h3 className="text-2xl font-bold text-secondary mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
+                        <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                          {project.description}
+                        </p>
+                        {parseTechList(project.technologies).length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-6">
+                            {parseTechList(project.technologies).slice(0, 4).map((tech: string, i: number) => (
+                              <span key={i} className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">{tech}</span>
+                            ))}
+                          </div>
+                        )}
+                        <div className="mt-auto flex items-center justify-between">
+                          <Link href={`/projects/${project.slug}`}>
+                            <Button variant="outline" className="glass text-primary border-primary/30">
+                              {t.projectsReadMore}
+                            </Button>
+                          </Link>
+                          <span className="text-2xl text-primary">{isHebrew ? "←" : "→"}</span>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+                <div className="flex justify-center">
+                  <Link href="/projects">
+                    <Button className="liquid-button px-8 py-3 rounded-full text-white">
+                      {t.projectsViewAll}
+                    </Button>
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                {fallbackProjects.map((project, index) => (
                   <Card
+                    key={project.title}
                     className={cn(
-                      `glass glass-hover overflow-hidden group cursor-pointer animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`,
+                      `glass glass-hover overflow-hidden group animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`,
                       cardBodyAlignmentClass
                     )}
                   >
-                    {project.coverImage ? (
-                      <div className="h-48 overflow-hidden">
-                        <img 
-                          src={project.coverImage} 
-                          alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                        />
-                      </div>
-                    ) : (
-                      <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
-                        🚀
-                      </div>
-                    )}
+                    <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
+                      {project.icon}
+                    </div>
                     <div className={cn("p-6 md:p-8", cardBodyAlignmentClass)}>
-                      <h3 className="text-2xl font-bold text-secondary mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                        {project.description}
-                      </p>
-                      {project.technologies && (
-                        <div className="flex flex-wrap gap-2">
-                          {JSON.parse(project.technologies).slice(0, 3).map((tech: string, i: number) => (
-                            <span key={i} className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">{tech}</span>
-                          ))}
-                        </div>
-                      )}
+                      <h3 className="text-2xl font-bold text-secondary mb-3">{project.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{project.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tags.map(tag => (
+                          <span key={tag} className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </Card>
-                </Link>
-              ))
-            ) : (
-              // Fallback to static projects if database is empty
-              fallbackProjects.map((project, index) => (
-                <Card
-                  key={project.title}
-                  className={cn(
-                    `glass glass-hover overflow-hidden group animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`,
-                    cardBodyAlignmentClass
-                  )}
-                >
-                  <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
-                    {project.icon}
-                  </div>
-                  <div className={cn("p-6 md:p-8", cardBodyAlignmentClass)}>
-                    <h3 className="text-2xl font-bold text-secondary mb-3">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{project.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span key={tag} className="px-3 py-1 glass rounded-full text-xs font-medium text-primary">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </Card>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </section>

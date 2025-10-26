@@ -25,6 +25,12 @@ import {
   setSiteContentBatch,
   toggleBlogFeatured,
   upsertUser,
+  createImageRecord,
+  getImageRecord,
+  listImageRecords,
+  deleteImageRecord,
+  getAllProjectsAdmin,
+  updateProject,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { sdk } from "./_core/sdk";
@@ -264,6 +270,9 @@ export const appRouter = router({
       const db = await import("./db");
       return await db.getAllProjects();
     }),
+    adminList: adminProcedure.query(async () => {
+      return await getAllProjectsAdmin();
+    }),
     getBySlug: publicProcedure
       .input(z.object({ slug: z.string() }))
       .query(async ({ input }) => {
@@ -285,11 +294,41 @@ export const appRouter = router({
           technologies: z.string().optional(),
           projectUrl: z.string().optional(),
           githubUrl: z.string().optional(),
+          displayOrder: z.number().optional(),
+          isPublished: z.boolean().optional(),
+          isFeatured: z.boolean().optional(),
         })
       )
       .mutation(async ({ input }) => {
         const db = await import("./db");
         return await db.createProject(input);
+      }),
+    update: adminProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          data: z
+            .object({
+              title: z.string().min(1).optional(),
+              slug: z.string().min(1).optional(),
+              description: z.string().min(1).optional(),
+              fullDescription: z.string().optional(),
+              coverImage: z.string().optional(),
+              technologies: z.string().optional(),
+              projectUrl: z.string().optional(),
+              githubUrl: z.string().optional(),
+              displayOrder: z.number().optional(),
+              isPublished: z.boolean().optional(),
+              isFeatured: z.boolean().optional(),
+            })
+            .refine(data => Object.keys(data).length > 0, {
+              message: "At least one field must be provided for update.",
+            }),
+        })
+      )
+      .mutation(async ({ input }) => {
+        await updateProject(input.id, input.data);
+        return { success: true } as const;
       }),
     delete: adminProcedure
       .input(z.object({ id: z.number() }))
@@ -365,6 +404,48 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         return await setSiteContentBatch(input.language, input.entries);
+      }),
+  }),
+
+  images: router({
+    upload: adminProcedure
+      .input(
+        z.object({
+          fileName: z.string().min(1),
+          mimeType: z.string().min(1),
+          base64Data: z.string().min(1),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const { id } = await createImageRecord(input);
+        return { id, url: `/api/images/${id}` } as const;
+      }),
+    list: adminProcedure.query(async () => {
+      const items = await listImageRecords();
+      return items.map(item => ({
+        ...item,
+        url: `/api/images/${item.id}`,
+      }));
+    }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteImageRecord(input.id);
+        return { success: true } as const;
+      }),
+    get: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const record = await getImageRecord(input.id);
+        if (!record) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Image not found" });
+        }
+        return {
+          id: record.id,
+          fileName: record.fileName,
+          mimeType: record.mimeType,
+          url: `/api/images/${record.id}`,
+        } as const;
       }),
   }),
 });

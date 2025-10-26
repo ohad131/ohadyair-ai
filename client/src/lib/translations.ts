@@ -51,6 +51,8 @@ export const translations = {
     // Projects
     projectsTitle: "פרויקטים נבחרים",
     projectsSubtitle: "דוגמאות לעבודות שביצעתי בתחומי AI, אוטומציה ופיתוח",
+    projectsReadMore: "קרא עוד",
+    projectsViewAll: "ראה עוד פרויקטים",
 
     // FAQ
     faqTitle: "שאלות נפוצות",
@@ -163,6 +165,8 @@ export const translations = {
     // Projects
     projectsTitle: "Selected Projects",
     projectsSubtitle: "Examples of work I've done in AI, automation, and development",
+    projectsReadMore: "Read More",
+    projectsViewAll: "View all projects",
 
     // FAQ
     faqTitle: "Frequently Asked Questions",

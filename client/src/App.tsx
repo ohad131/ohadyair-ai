@@ -12,6 +12,8 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
+import ProjectsPage from "./pages/Projects";
+import ProjectDetail from "./pages/projects/[slug]";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +25,8 @@ function Router() {
       <Route path={"/accessibility"} component={AccessibilityStatement} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/projects" component={ProjectsPage} />
+      <Route path="/projects/:slug" component={ProjectDetail} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/404"} component={NotFound} />
