@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 export default function Home() {
   const { t, language } = useLanguage();
   const isHebrew = language === "he";
-  const sectionHeadingClass = isHebrew ? "text-center" : "text-left md:text-left";
-  const sectionActionsJustify = isHebrew ? "justify-center" : "justify-start";
+  const centeredSectionClass = "flex flex-col items-center text-center";
+  const cardBodyAlignmentClass = isHebrew ? "text-right" : "text-left";
   const readMoreArrow = `${t.blogReadMore} ${isHebrew ? "←" : "→"}`;
   const blogDateLocale = isHebrew ? "he-IL" : "en-US";
   const fallbackProjects = isHebrew
@@ -324,7 +324,7 @@ export default function Home() {
         {/* Hero Section */}
         <section id="home" className="container mx-auto py-8 md:py-12">
           {/* Hero Title and Subtitle - ABOVE animation */}
-          <div className={cn("space-y-4 md:space-y-6 mb-8 md:mb-12", sectionHeadingClass)}>
+          <div className={cn("space-y-4 md:space-y-6 mb-8 md:mb-12", centeredSectionClass)}>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight px-4 animate-fade-in-up">
               {heroTitle}
             </h1>
@@ -347,9 +347,8 @@ export default function Home() {
           {/* CTA Buttons */}
           <div
             className={cn(
-              "flex flex-col sm:flex-row gap-4 animate-fade-in-up stagger-5",
-              sectionActionsJustify,
-              !isHebrew && "sm:justify-start"
+              "flex flex-col sm:flex-row gap-4 animate-fade-in-up stagger-5 justify-center",
+              centeredSectionClass
             )}
           >
             <a href="#contact">
@@ -386,7 +385,7 @@ export default function Home() {
 
         {/* Services Section */}
         <section id="services" className="container mx-auto py-12 md:py-20">
-          <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
+          <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.servicesTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               {t.servicesSubtitle}
@@ -426,7 +425,13 @@ export default function Home() {
                 description: t.service6Desc,
               },
             ].map((service, index) => (
-              <Card key={index} className={`glass glass-hover p-6 md:p-8 rounded-2xl group relative overflow-hidden animate-fade-in-up card-hover-effect stagger-${index + 1}`}>
+              <Card
+                key={index}
+                className={cn(
+                  `glass glass-hover p-6 md:p-8 rounded-2xl group relative overflow-hidden animate-fade-in-up card-hover-effect stagger-${index + 1}`,
+                  cardBodyAlignmentClass
+                )}
+              >
                 {/* Large monochrome SVG icon in background */}
                 <div className="absolute top-4 left-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pointer-events-none">
                   <svg className="w-32 h-32 md:w-40 md:h-40" viewBox="0 0 24 24" fill="currentColor">
@@ -435,7 +440,7 @@ export default function Home() {
                 </div>
                 
                 {/* Content */}
-                <div className="relative z-10">
+                <div className={cn("relative z-10", cardBodyAlignmentClass)}>
                   <h3 className="text-xl md:text-2xl font-bold text-secondary mb-4 group-hover:text-primary transition-colors">{service.title}</h3>
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{service.description}</p>
                 </div>
@@ -447,15 +452,20 @@ export default function Home() {
         {/* Projects Section */}
         <section id="about" className="container mx-auto py-12 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div className="order-2 lg:order-1">
+            <div className={cn("order-2 lg:order-1", cardBodyAlignmentClass)}>
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.aboutTitle}</h2>
-              <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed animate-fade-in-left stagger-1">
+              <div
+                className={cn(
+                  "space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed animate-fade-in-left stagger-1",
+                  cardBodyAlignmentClass
+                )}
+              >
                 <p>{aboutP1}</p>
                 <p>{aboutP2}</p>
                 <p>{aboutP3}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-8">
+              <div className={cn("grid grid-cols-2 gap-4 mt-8", cardBodyAlignmentClass)}>
                 {[
                   { title: "כלכלה וניהול", subtitle: "סטודנט", titleEn: "Economics & Management", subtitleEn: "Student" },
                   { title: "מכטרוניקה", subtitle: "פרקטי-הנדסאי", titleEn: "Mechatronics", subtitleEn: "Practical Engineer" },
@@ -468,7 +478,10 @@ export default function Home() {
                   return (
                     <div
                       key={index}
-                      className={`glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`}
+                      className={cn(
+                        `glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`,
+                        cardBodyAlignmentClass
+                      )}
                     >
                       <div className="text-primary font-bold text-sm mb-1">{title}</div>
                       <div className="text-muted-foreground text-xs">{subtitle}</div>
@@ -486,7 +499,7 @@ export default function Home() {
           </div>
         </section>
         <section id="projects" className="container mx-auto py-12 md:py-20">
-          <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
+          <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.projectsTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               {t.projectsSubtitle}
@@ -497,7 +510,12 @@ export default function Home() {
             {projects.length > 0 ? (
               projects.slice(0, 4).map((project: any, index: number) => (
                 <Link key={project.id} href={`/projects/${project.slug}`}>
-                  <Card className={`glass glass-hover overflow-hidden group cursor-pointer animate-fade-in-${index % 2 === 0 ? 'left' : 'right'} stagger-${index + 2} card-hover-effect`}>
+                  <Card
+                    className={cn(
+                      `glass glass-hover overflow-hidden group cursor-pointer animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`,
+                      cardBodyAlignmentClass
+                    )}
+                  >
                     {project.coverImage ? (
                       <div className="h-48 overflow-hidden">
                         <img 
@@ -511,7 +529,7 @@ export default function Home() {
                         🚀
                       </div>
                     )}
-                    <div className="p-6 md:p-8">
+                    <div className={cn("p-6 md:p-8", cardBodyAlignmentClass)}>
                       <h3 className="text-2xl font-bold text-secondary mb-3 group-hover:text-primary transition-colors">{project.title}</h3>
                       <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                         {project.description}
@@ -532,12 +550,15 @@ export default function Home() {
               fallbackProjects.map((project, index) => (
                 <Card
                   key={project.title}
-                  className={`glass glass-hover overflow-hidden group animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`}
+                  className={cn(
+                    `glass glass-hover overflow-hidden group animate-fade-in-${index % 2 === 0 ? "left" : "right"} stagger-${index + 2} card-hover-effect`,
+                    cardBodyAlignmentClass
+                  )}
                 >
                   <div className="h-48 liquid-gradient flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
                     {project.icon}
                   </div>
-                  <div className="p-6 md:p-8">
+                  <div className={cn("p-6 md:p-8", cardBodyAlignmentClass)}>
                     <h3 className="text-2xl font-bold text-secondary mb-3">{project.title}</h3>
                     <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{project.description}</p>
                     <div className="flex flex-wrap gap-2">
@@ -558,7 +579,7 @@ export default function Home() {
 
         {/* FAQ Section */}
         <section id="faq" className="container mx-auto py-12 md:py-20">
-          <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
+          <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.faqTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground animate-fade-in-up stagger-1">{t.faqSubtitle}</p>
           </div>
@@ -594,14 +615,25 @@ export default function Home() {
                 a: t.faq7A,
               },
             ].map((faq, index) => (
-              <details key={index} className={`glass glass-hover rounded-xl group animate-slide-in-bottom hover-glow stagger-${Math.min(index + 1, 6)}`}>
-                <summary className="p-4 md:p-6 cursor-pointer text-base md:text-lg font-semibold text-secondary flex items-center justify-between">
+              <details
+                key={index}
+                className={cn(
+                  `glass glass-hover rounded-xl group animate-slide-in-bottom hover-glow stagger-${Math.min(index + 1, 6)}`,
+                  cardBodyAlignmentClass
+                )}
+              >
+                <summary
+                  className={cn(
+                    "p-4 md:p-6 cursor-pointer text-base md:text-lg font-semibold text-secondary flex items-center justify-between",
+                    cardBodyAlignmentClass
+                  )}
+                >
                   <span>{faq.q}</span>
                   <svg className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <div className="px-4 md:px-6 pb-4 md:pb-6 text-sm md:text-base text-muted-foreground leading-relaxed">
+                <div className={cn("px-4 md:px-6 pb-4 md:pb-6 text-sm md:text-base text-muted-foreground leading-relaxed", cardBodyAlignmentClass)}>
                   {faq.a}
                 </div>
               </details>
@@ -611,7 +643,7 @@ export default function Home() {
 
         {/* Blog Section */}
         <section id="blog" className="container mx-auto py-12 md:py-20">
-          <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
+          <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.blogTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
               {t.blogSubtitle}
@@ -622,7 +654,12 @@ export default function Home() {
             {blogPosts.length > 0 ? (
               blogPosts.slice(0, 3).map((post: any, index: number) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
-                  <Card className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`}>
+                  <Card
+                    className={cn(
+                      `glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`,
+                      cardBodyAlignmentClass
+                    )}
+                  >
                     <div className="h-48 overflow-hidden">
                       {post.coverImage ? (
                         <img 
@@ -636,7 +673,7 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-                    <div className="p-6">
+                    <div className={cn("p-6", cardBodyAlignmentClass)}>
                       <div className="text-xs text-primary font-medium mb-2">
                         {new Date(post.publishedAt).toLocaleDateString(blogDateLocale, { year: 'numeric', month: 'long', day: 'numeric' })}
                       </div>
@@ -652,7 +689,10 @@ export default function Home() {
               fallbackBlogPosts.map((post, index) => (
                 <Card
                   key={`${post.title}-${post.date}`}
-                  className={`glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`}
+                  className={cn(
+                    `glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`,
+                    cardBodyAlignmentClass
+                  )}
                 >
                   <div className="h-48 overflow-hidden">
                     <img
@@ -661,7 +701,7 @@ export default function Home() {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                   </div>
-                  <div className="p-6">
+                  <div className={cn("p-6", cardBodyAlignmentClass)}>
                     <div className="text-xs text-primary font-medium mb-2">{post.date}</div>
                     <h3 className="text-lg font-bold text-secondary mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
                     <div className="text-primary text-sm font-medium hover:underline">{readMoreArrow}</div>
@@ -671,7 +711,7 @@ export default function Home() {
             )}
           </div>
 
-          <div className={cn("mt-8", sectionHeadingClass)}>
+          <div className={cn("mt-8", centeredSectionClass)}>
             <Link href="/blog">
               <Button variant="outline" className="glass glass-hover border-primary/30 px-8 py-3 rounded-full text-secondary">
                 {t.blogViewAll}
@@ -683,7 +723,7 @@ export default function Home() {
         {/* Contact Section */}
         <section id="contact" className="container mx-auto py-12 md:py-20">
           <div className="max-w-4xl mx-auto">
-            <div className={cn("mb-12 md:mb-16", sectionHeadingClass)}>
+            <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.contactTitle}</h2>
               <p className="text-base md:text-lg text-muted-foreground mb-4 animate-fade-in-up stagger-1">
                 {t.contactSubtitle}
@@ -694,7 +734,12 @@ export default function Home() {
               </a>
             </div>
 
-            <Card className="glass glass-hover p-6 md:p-8 animate-scale-in stagger-2">
+            <Card
+              className={cn(
+                "glass glass-hover p-6 md:p-8 animate-scale-in stagger-2",
+                cardBodyAlignmentClass
+              )}
+            >
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -747,7 +792,7 @@ export default function Home() {
                 </Button>
               </form>
 
-              <div className={cn("mt-8 pt-8 border-t border-primary/20", sectionHeadingClass)}>
+              <div className={cn("mt-8 pt-8 border-t border-primary/20", cardBodyAlignmentClass)}>
                 <p className="text-sm text-muted-foreground mb-2">{t.contactDirectPrompt}</p>
                 <a href="mailto:ohadyair.ai@gmail.com" className="text-primary font-medium hover:underline">
                   ohadyair.ai@gmail.com
