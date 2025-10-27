@@ -10,7 +10,7 @@
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "drizzle-kit push:mysql",
+    "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate:mysql",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:studio": "drizzle-kit studio",
