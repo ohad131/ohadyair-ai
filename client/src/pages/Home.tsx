@@ -13,6 +13,9 @@ import { SplashScreen } from "@/components/SplashScreen";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
+const CONSENT_KEY = "cookieConsentAt";
+const CONSENT_TTL = 1000 * 60 * 60 * 24 * 30;
+
 export default function Home() {
   const { t, language } = useLanguage();
   const isHebrew = language === "he";
@@ -87,7 +90,7 @@ export default function Home() {
   const aboutP1 = resolveCopy("aboutP1", t.aboutP1);
   const aboutP2 = resolveCopy("aboutP2", t.aboutP2);
   const aboutP3 = resolveCopy("aboutP3", t.aboutP3);
-  const [showCookieBanner, setShowCookieBanner] = useState(true);
+  const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -158,25 +161,64 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const lastConsent = Number(window.localStorage.getItem(CONSENT_KEY) || 0);
+    const needsConsent = Date.now() - lastConsent > CONSENT_TTL;
+    setShowCookieBanner(needsConsent);
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+
+    if (showCookieBanner) {
+      root.classList.add("show-cookie");
+    } else {
+      root.classList.remove("show-cookie");
+    }
+
+    return () => {
+      root.classList.remove("show-cookie");
+    };
+  }, [showCookieBanner]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const body = document.body;
+
+    if (mobileMenuOpen) {
+      body.classList.add("nav-open");
+    } else {
+      body.classList.remove("nav-open");
+    }
+
+    return () => {
+      body.classList.remove("nav-open");
+    };
+  }, [mobileMenuOpen]);
+
+  const acceptCookies = () => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(CONSENT_KEY, String(Date.now()));
+    document.documentElement.classList.remove("show-cookie");
+    document.cookie = `consent=1; Max-Age=${Math.floor(CONSENT_TTL / 1000)}; Path=/; SameSite=Lax`;
+    setShowCookieBanner(false);
+  };
+
   return (
     <>
       <SplashScreen />
-      <div className="min-h-screen">
-      {/* Skip to content link for accessibility */}
-      <a href="#main-content" className="skip-to-content">
-        {t.skipToContent}
-      </a>
-
-      {/* Accessibility Menu */}
-      <AccessibilityMenu />
-
-      {/* Futuristic Background Animations */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Floating particles */}
+      <div
+        aria-hidden="true"
+        id="decor-overlay"
+        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      >
         {[...Array(15)].map((_, i) => (
           <div
             key={`particle-${i}`}
-            className="absolute w-2 h-2 bg-primary/30 rounded-full animate-pulse-glow"
+            className="absolute h-2 w-2 rounded-full bg-primary/30 animate-pulse-glow"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -186,26 +228,34 @@ export default function Home() {
           />
         ))}
 
-        {/* Rotating circuit patterns */}
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 opacity-10">
-          <svg viewBox="0 0 200 200" className="animate-rotate-circuit">
-            <circle cx="100" cy="100" r="80" fill="none" stroke="#00bcd4" strokeWidth="2" />
-            <circle cx="100" cy="100" r="60" fill="none" stroke="#00bcd4" strokeWidth="1" />
-            <circle cx="100" cy="100" r="40" fill="none" stroke="#00bcd4" strokeWidth="1" />
-            <line x1="100" y1="20" x2="100" y2="40" stroke="#00bcd4" strokeWidth="2" />
-            <line x1="100" y1="160" x2="100" y2="180" stroke="#00bcd4" strokeWidth="2" />
-            <line x1="20" y1="100" x2="40" y2="100" stroke="#00bcd4" strokeWidth="2" />
-            <line x1="160" y1="100" x2="180" y2="100" stroke="#00bcd4" strokeWidth="2" />
+        <div className="absolute top-1/4 right-1/4 h-64 w-64 text-primary/10">
+          <svg viewBox="0 0 200 200" className="h-full w-full animate-rotate-circuit">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="2" />
+            <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" strokeWidth="1" />
+            <circle cx="100" cy="100" r="40" fill="none" stroke="currentColor" strokeWidth="1" />
+            <line x1="100" y1="20" x2="100" y2="40" stroke="currentColor" strokeWidth="2" />
+            <line x1="100" y1="160" x2="100" y2="180" stroke="currentColor" strokeWidth="2" />
+            <line x1="20" y1="100" x2="40" y2="100" stroke="currentColor" strokeWidth="2" />
+            <line x1="160" y1="100" x2="180" y2="100" stroke="currentColor" strokeWidth="2" />
           </svg>
         </div>
 
-        {/* Scanning line */}
         <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent animate-scan" />
 
-        {/* Glowing orbs */}
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse-glow" />
-        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-primary/5 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-1/3 left-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl animate-pulse-glow" />
+        <div
+          className="absolute bottom-1/4 right-1/3 h-80 w-80 rounded-full bg-primary/5 blur-3xl animate-pulse-glow"
+          style={{ animationDelay: "1.5s" }}
+        />
       </div>
+      <div className="relative min-h-screen isolation-isolate">
+      {/* Skip to content link for accessibility */}
+      <a href="#main-content" className="skip-to-content">
+        {t.skipToContent}
+      </a>
+
+      {/* Accessibility Menu */}
+      <AccessibilityMenu />
 
       {/* Sticky Header with Glassmorphism */}
       <header className="sticky top-0 z-50 glass border-b border-white/20">
@@ -267,6 +317,7 @@ export default function Home() {
                 className="md:hidden glass-hover p-2 rounded-lg"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label={t.navMenuLabel}
+                aria-expanded={mobileMenuOpen}
               >
                 <svg className="w-6 h-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   {mobileMenuOpen ? (
@@ -281,7 +332,10 @@ export default function Home() {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden mt-4 glass p-4 rounded-2xl space-y-2">
+            <div
+              id="mobile-menu"
+              className="md:hidden mt-4 glass p-4 rounded-2xl space-y-2 z-[1100]"
+            >
               {[
                 { href: "home", label: t.home },
                 { href: "services", label: t.services },
@@ -326,9 +380,9 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main id="main-content" className="relative z-10">
+      <main id="main-content" className="relative z-10 isolation-isolate">
         {/* Hero Section */}
-        <section id="home" className="container mx-auto py-8 md:py-12">
+        <section id="home" className="container relative z-10 isolation-isolate mx-auto py-8 md:py-12">
           {/* Hero Title and Subtitle - ABOVE animation */}
           <div className={cn("space-y-4 md:space-y-6 mb-8 md:mb-12", centeredSectionClass)}>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight px-4 animate-fade-in-up">
@@ -390,7 +444,7 @@ export default function Home() {
         </section>
 
         {/* Services Section */}
-        <section id="services" className="container mx-auto py-12 md:py-20">
+        <section id="services" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
           <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.servicesTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
@@ -439,7 +493,7 @@ export default function Home() {
                 )}
               >
                 {/* Large monochrome SVG icon in background */}
-                <div className="absolute top-4 left-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pointer-events-none">
+                <div className="pointer-events-none absolute top-4 left-4 text-secondary/10 transition-colors duration-300 group-hover:text-secondary/30">
                   <svg className="w-32 h-32 md:w-40 md:h-40" viewBox="0 0 24 24" fill="currentColor">
                     <path d={service.iconPath} />
                   </svg>
@@ -456,7 +510,7 @@ export default function Home() {
         </section>
 
         {/* Projects Section */}
-        <section id="about" className="container mx-auto py-12 md:py-20">
+        <section id="about" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className={cn("order-2 lg:order-1", cardBodyAlignmentClass)}>
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.aboutTitle}</h2>
@@ -504,7 +558,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section id="projects" className="container mx-auto py-12 md:py-20">
+        <section id="projects" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
           <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.projectsTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
@@ -603,7 +657,7 @@ export default function Home() {
         {/* About Section */}
 
         {/* FAQ Section */}
-        <section id="faq" className="container mx-auto py-12 md:py-20">
+        <section id="faq" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
           <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.faqTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground animate-fade-in-up stagger-1">{t.faqSubtitle}</p>
@@ -667,7 +721,7 @@ export default function Home() {
         </section>
 
         {/* Blog Section */}
-        <section id="blog" className="container mx-auto py-12 md:py-20">
+        <section id="blog" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
           <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.blogTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
@@ -746,7 +800,7 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="container mx-auto py-12 md:py-20">
+        <section id="contact" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
           <div className="max-w-4xl mx-auto">
             <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.contactTitle}</h2>
@@ -829,7 +883,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="glass-dark mt-12 md:mt-20">
+      <footer className="glass-dark relative z-10 isolation-isolate mt-12 md:mt-20">
         <div className="container mx-auto py-8 md:py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
@@ -903,19 +957,17 @@ export default function Home() {
       </footer>
 
       {/* Cookie Banner */}
-      {showCookieBanner && (
-        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md z-50">
-          <div className="glass-dark p-4 md:p-6 rounded-2xl">
-            <p className="text-white text-sm mb-4">{t.cookieMessage}</p>
-            <Button
-              onClick={() => setShowCookieBanner(false)}
-              className="w-full liquid-button rounded-full text-white text-sm"
-            >
-              {t.cookieButton}
-            </Button>
-          </div>
+      <div
+        className="cookie-banner fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md z-[1900]"
+        aria-hidden={!showCookieBanner}
+      >
+        <div className="glass-dark rounded-2xl p-4 md:p-6">
+          <p className="mb-4 text-sm text-white">{t.cookieMessage}</p>
+          <Button onClick={acceptCookies} className="w-full text-sm text-white liquid-button rounded-full">
+            {t.cookieButton}
+          </Button>
         </div>
-      )}
+      </div>
 
       {/* WhatsApp Floating Button */}
       <WhatsAppButton />

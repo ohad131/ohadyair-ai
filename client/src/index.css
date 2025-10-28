@@ -1008,3 +1008,27 @@ html {
   animation: slideInBottom 0.8s ease-out forwards;
 }
 
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+}
+
+.show-splash .splash {
+  display: grid;
+  place-items: center;
+}
+
+.cookie-banner {
+  display: none;
+}
+
+.show-cookie .cookie-banner {
+  display: block;
+}
+
+.nav-open #whatsapp-fab {
+  display: none;
+}
+
