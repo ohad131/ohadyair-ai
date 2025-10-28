@@ -43,12 +43,12 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Background gradient effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute w-[467px] h-[765px] right-[20%] top-[15%] opacity-25 bg-gradient-to-b from-[#2bffff]/25 to-[#2bffff]/0 blur-[40px] rotate-[25deg]" />
-        <div className="absolute w-[406px] h-[783px] right-[25%] top-[10%] opacity-30 bg-gradient-to-b from-[#2bffff]/30 to-[#2bffff]/0 blur-[20px] rotate-[25deg]" />
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute w-[467px] h-[765px] right-[20%] top-[15%] bg-gradient-to-b from-[#2bffff]/20 to-[#2bffff]/0 blur-[40px] rotate-[25deg]" />
+        <div className="absolute w-[406px] h-[783px] right-[25%] top-[10%] bg-gradient-to-b from-[#2bffff]/25 to-[#2bffff]/0 blur-[20px] rotate-[25deg]" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-20 py-20">
+      <div className="relative z-10 isolation-isolate container mx-auto px-20 py-20">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h1 className="text-5xl font-bold text-white mb-4">צור קשר</h1>

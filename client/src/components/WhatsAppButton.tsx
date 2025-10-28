@@ -7,7 +7,8 @@ export default function WhatsAppButton() {
       href={`https://wa.me/${phoneNumber}?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 left-6 z-50 w-16 h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 group"
+      id="whatsapp-fab"
+      className="fixed bottom-6 left-6 z-[1000] flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] shadow-lg transition-all duration-300 hover:scale-110 hover:bg-[#20BA5A] hover:shadow-2xl group"
       aria-label="צור קשר בוואטסאפ"
     >
       {/* WhatsApp Icon */}
@@ -20,7 +21,7 @@ export default function WhatsAppButton() {
       </svg>
 
       {/* Pulse animation */}
-      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20"></span>
+      <span className="absolute inset-0 rounded-full bg-[#25D366]/30 animate-ping"></span>
     </a>
   );
 }
