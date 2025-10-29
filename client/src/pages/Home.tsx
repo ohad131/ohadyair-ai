@@ -287,49 +287,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Mobile Menu */}
-          {nav.isOpen && (
-            <div className="md:hidden mt-4 glass p-4 rounded-2xl space-y-2">
-              {[
-                { href: "home", label: t.home },
-                { href: "services", label: t.services },
-                { href: "about", label: t.about },
-                { href: "projects", label: t.projects },
-                { href: "faq", label: t.faq },
-                { href: "blog", label: t.blog },
-                { href: "contact", label: t.contact },
-              ].map((item) => (
-                <a
-                  key={item.href}
-                  href={`#${item.href}`}
-                  onClick={() => nav.close()}
-                  className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    activeSection === item.href
-                      ? "bg-primary text-white"
-                      : "text-secondary hover:bg-primary/10"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ))}
-              <div className="pt-4 mt-4 border-t border-primary/20 space-y-2">
-                <div className="flex items-center justify-between px-4 py-2">
-                  <span className="text-sm font-medium text-secondary">{t.language}</span>
-                  <LanguageToggle />
-                </div>
-                <div className="flex items-center justify-between px-4 py-2">
-                  <span className="text-sm font-medium text-secondary">{t.darkMode}</span>
-                  <DarkModeToggle />
-                </div>
-              </div>
-              <Button
-                asChild
-                className="w-full liquid-button h-12 rounded-full text-white text-sm font-medium mt-4"
-              >
-                <a href="#contact">{t.startNow}</a>
-              </Button>
-            </div>
-          )}
+          {/* Mobile menu is rendered globally via <MobileMenu /> */}
         </nav>
       </header>
 
