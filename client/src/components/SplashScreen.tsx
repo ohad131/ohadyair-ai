@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 
 export function SplashScreen() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Hide splash screen after animation completes
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 5000);
-
+    const root = document.documentElement;
+    const shouldShow = root.classList.contains("show-splash");
+    setIsVisible(shouldShow);
+    if (!shouldShow) return;
+    const timer = setTimeout(() => setIsVisible(false), 5000);
     return () => clearTimeout(timer);
   }, []);
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-primary/10">
+    <div
+      className="fixed inset-0 z-[2000] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-primary/10"
+      onClick={() => setIsVisible(false)}
+      role="button"
+      aria-label="Hide splash"
+    >
       <div className="absolute inset-0 opacity-60">
         <div className="splash-grid" />
       </div>

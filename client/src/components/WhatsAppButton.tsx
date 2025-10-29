@@ -4,10 +4,11 @@ export default function WhatsAppButton() {
 
   return (
     <a
+      id="whatsapp-fab"
       href={`https://wa.me/${phoneNumber}?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 left-6 z-50 w-16 h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 group"
+      className="fixed bottom-6 left-6 w-16 h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 group"
       aria-label="צור קשר בוואטסאפ"
     >
       {/* WhatsApp Icon */}

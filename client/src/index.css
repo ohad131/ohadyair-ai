@@ -1008,3 +1008,16 @@ html {
   animation: slideInBottom 0.8s ease-out forwards;
 }
 
+/* =========================
+   Global UI hooks
+   ========================= */
+.cookie-banner { display: none; }
+.show-cookie .cookie-banner { display: block; }
+
+#mobile-menu { z-index: 1100; }
+#whatsapp-fab { z-index: 1000; }
+@media (max-width: 360px) {
+  .nav-open #whatsapp-fab { display: none; }
+}
+.nav-open.vk-open #whatsapp-fab { display: none; }
+

@@ -9,7 +9,6 @@ import { LanguageToggle } from "@/components/LanguageToggle";
 import { Twitter, Linkedin, Phone } from "lucide-react";
 import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
-import { SplashScreen } from "@/components/SplashScreen";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
@@ -87,7 +86,7 @@ export default function Home() {
   const aboutP1 = resolveCopy("aboutP1", t.aboutP1);
   const aboutP2 = resolveCopy("aboutP2", t.aboutP2);
   const aboutP3 = resolveCopy("aboutP3", t.aboutP3);
-  const [showCookieBanner, setShowCookieBanner] = useState(true);
+  
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -160,7 +159,7 @@ export default function Home() {
 
   return (
     <>
-      <SplashScreen />
+      
       <div className="min-h-screen">
       {/* Skip to content link for accessibility */}
       <a href="#main-content" className="skip-to-content">
@@ -902,20 +901,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Cookie Banner */}
-      {showCookieBanner && (
-        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md z-50">
-          <div className="glass-dark p-4 md:p-6 rounded-2xl">
-            <p className="text-white text-sm mb-4">{t.cookieMessage}</p>
-            <Button
-              onClick={() => setShowCookieBanner(false)}
-              className="w-full liquid-button rounded-full text-white text-sm"
-            >
-              {t.cookieButton}
-            </Button>
-          </div>
-        </div>
-      )}
+      
 
       {/* WhatsApp Floating Button */}
       <WhatsAppButton />

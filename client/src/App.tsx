@@ -14,6 +14,11 @@ import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import ProjectsPage from "./pages/Projects";
 import ProjectDetail from "./pages/projects/[slug]";
+import ClientBootstrap from "./components/ClientBootstrap";
+import { SplashScreen } from "./components/SplashScreen";
+import CookieBanner from "./components/CookieBanner";
+import { NavProvider } from "./contexts/NavContext";
+import MobileMenu from "./components/nav/MobileMenu";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -45,10 +50,16 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" switchable>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <NavProvider>
+          <TooltipProvider>
+            <ClientBootstrap />
+            <SplashScreen />
+            <CookieBanner />
+            <MobileMenu />
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </NavProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
