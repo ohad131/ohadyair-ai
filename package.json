@@ -14,7 +14,7 @@
   "db:generate": "drizzle-kit generate:mysql",
   "db:migrate": "tsx scripts/migrate.ts",
   "db:studio": "drizzle-kit studio",
-  "seed": "tsx scripts/seed-blog.ts",
+    "seed": "tsx scripts/seed-blog.ts && tsx scripts/seed-aitools.ts && tsx scripts/seed-site-content.ts",
   "make:admin": "tsx scripts/make-admin.ts",
   "start:prod": "pnpm db:push && pnpm seed && pnpm start"
 }

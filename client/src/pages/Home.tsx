@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
+import { useNav } from "@/contexts/NavContext";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
@@ -86,9 +87,17 @@ export default function Home() {
   const aboutP1 = resolveCopy("aboutP1", t.aboutP1);
   const aboutP2 = resolveCopy("aboutP2", t.aboutP2);
   const aboutP3 = resolveCopy("aboutP3", t.aboutP3);
+  const aboutCard1Title = resolveCopy("aboutCard1Title", isHebrew ? "כלכלה וניהול" : "Economics & Management");
+  const aboutCard1Subtitle = resolveCopy("aboutCard1Subtitle", isHebrew ? "סטודנט" : "Student");
+  const aboutCard2Title = resolveCopy("aboutCard2Title", isHebrew ? "מכטרוניקה" : "Mechatronics");
+  const aboutCard2Subtitle = resolveCopy("aboutCard2Subtitle", isHebrew ? "פרקטי-הנדסאי" : "Practical Engineer");
+  const aboutCard3Title = resolveCopy("aboutCard3Title", isHebrew ? "מעצב מכני" : "Mechanical Designer");
+  const aboutCard3Subtitle = resolveCopy("aboutCard3Subtitle", isHebrew ? "צה\"ל (לשעבר)" : "IDF (Former)");
+  const aboutCard4Title = resolveCopy("aboutCard4Title", isHebrew ? "יזם AI" : "AI Entrepreneur");
+  const aboutCard4Subtitle = resolveCopy("aboutCard4Subtitle", isHebrew ? "נוכחי" : "Current");
   
   const [activeSection, setActiveSection] = useState("home");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const nav = useNav();
 
   // Scroll animation observer
   useEffect(() => {
@@ -264,11 +273,11 @@ export default function Home() {
               {/* Mobile Menu Button */}
               <button
                 className="md:hidden glass-hover p-2 rounded-lg"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                onClick={() => nav.toggle()}
                 aria-label={t.navMenuLabel}
               >
                 <svg className="w-6 h-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  {mobileMenuOpen ? (
+                  {nav.isOpen ? (
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   ) : (
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -279,7 +288,7 @@ export default function Home() {
           </div>
 
           {/* Mobile Menu */}
-          {mobileMenuOpen && (
+          {nav.isOpen && (
             <div className="md:hidden mt-4 glass p-4 rounded-2xl space-y-2">
               {[
                 { href: "home", label: t.home },
@@ -293,7 +302,7 @@ export default function Home() {
                 <a
                   key={item.href}
                   href={`#${item.href}`}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => nav.close()}
                   className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                     activeSection === item.href
                       ? "bg-primary text-white"
@@ -401,33 +410,33 @@ export default function Home() {
             {[
               {
                 iconPath: "M13 10V3L4 14h7v7l9-11h-7z",
-                title: t.service3Title,
-                description: t.service3Desc,
+                title: resolveCopy("service1Title", t.service3Title),
+                description: resolveCopy("service1Desc", t.service3Desc),
               },
               {
                 iconPath: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z",
-                title: t.service2Title,
-                description: t.service2Desc,
+                title: resolveCopy("service2Title", t.service2Title),
+                description: resolveCopy("service2Desc", t.service2Desc),
               },
               {
                 iconPath: "M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z",
-                title: t.service1Title,
-                description: t.service1Desc,
+                title: resolveCopy("service3Title", t.service1Title),
+                description: resolveCopy("service3Desc", t.service1Desc),
               },
               {
                 iconPath: "M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z",
-                title: t.service4Title,
-                description: t.service4Desc,
+                title: resolveCopy("service4Title", t.service4Title),
+                description: resolveCopy("service4Desc", t.service4Desc),
               },
               {
                 iconPath: "M9 21c0 .5.4 1 1 1h4c.6 0 1-.5 1-1v-1H9v1zm3-19C8.1 2 5 5.1 5 9c0 2.4 1.2 4.5 3 5.7V17c0 .5.4 1 1 1h6c.6 0 1-.5 1-1v-2.3c1.8-1.3 3-3.4 3-5.7 0-3.9-3.1-7-7-7z",
-                title: t.service5Title,
-                description: t.service5Desc,
+                title: resolveCopy("service5Title", t.service5Title),
+                description: resolveCopy("service5Desc", t.service5Desc),
               },
               {
                 iconPath: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z",
-                title: t.service6Title,
-                description: t.service6Desc,
+                title: resolveCopy("service6Title", t.service6Title),
+                description: resolveCopy("service6Desc", t.service6Desc),
               },
             ].map((service, index) => (
               <Card
@@ -472,27 +481,22 @@ export default function Home() {
 
               <div className={cn("grid grid-cols-2 gap-4 mt-8", cardBodyAlignmentClass)}>
                 {[
-                  { title: "כלכלה וניהול", subtitle: "סטודנט", titleEn: "Economics & Management", subtitleEn: "Student" },
-                  { title: "מכטרוניקה", subtitle: "פרקטי-הנדסאי", titleEn: "Mechatronics", subtitleEn: "Practical Engineer" },
-                  { title: "מעצב מכני", subtitle: "צה\"ל (לשעבר)", titleEn: "Mechanical Designer", subtitleEn: "IDF (Former)" },
-                  { title: "יזם AI", subtitle: "נוכחי", titleEn: "AI Entrepreneur", subtitleEn: "Current" },
-                ].map((item, index) => {
-                  const title = isHebrew ? item.title : item.titleEn;
-                  const subtitle = isHebrew ? item.subtitle : item.subtitleEn;
-
-                  return (
-                    <div
-                      key={index}
-                      className={cn(
-                        `glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`,
-                        cardBodyAlignmentClass
-                      )}
-                    >
-                      <div className="text-primary font-bold text-sm mb-1">{title}</div>
-                      <div className="text-muted-foreground text-xs">{subtitle}</div>
-                    </div>
-                  );
-                })}
+                  { title: aboutCard1Title, subtitle: aboutCard1Subtitle },
+                  { title: aboutCard2Title, subtitle: aboutCard2Subtitle },
+                  { title: aboutCard3Title, subtitle: aboutCard3Subtitle },
+                  { title: aboutCard4Title, subtitle: aboutCard4Subtitle },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      `glass glass-hover p-4 rounded-xl animate-scale-in hover-glow stagger-${index + 2}`,
+                      cardBodyAlignmentClass
+                    )}
+                  >
+                    <div className="text-primary font-bold text-sm mb-1">{item.title}</div>
+                    <div className="text-muted-foreground text-xs">{item.subtitle}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
