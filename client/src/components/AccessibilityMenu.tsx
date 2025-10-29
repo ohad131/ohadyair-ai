@@ -52,7 +52,7 @@ export default function AccessibilityMenu() {
       {/* Accessibility Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed left-4 top-1/2 -translate-y-1/2 z-50 w-14 h-14 glass glass-hover rounded-full flex items-center justify-center text-primary hover:scale-110 transition-transform shadow-lg"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 glass glass-hover rounded-full flex items-center justify-center text-primary hover:scale-110 transition-transform shadow-lg"
         aria-label="תפריט נגישות"
         title="תפריט נגישות"
       >

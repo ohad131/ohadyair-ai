@@ -1020,4 +1020,7 @@ html {
   .nav-open #whatsapp-fab { display: none; }
 }
 .nav-open.vk-open #whatsapp-fab { display: none; }
+@media (max-width: 768px) {
+  .nav-open #whatsapp-fab { display: none; }
+}
 
