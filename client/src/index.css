@@ -190,6 +190,19 @@
   input[type="radio"]:not(:disabled) {
     @apply cursor-pointer;
   }
+
+  #decor-root {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  main,
+  section {
+    position: relative;
+    z-index: 0;
+  }
 }
 
 @layer components {

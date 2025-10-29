@@ -10,6 +10,7 @@ import { Twitter, Linkedin, Phone } from "lucide-react";
 import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
 import { SplashScreen } from "@/components/SplashScreen";
+import GlobalDecor from "@/components/GlobalDecor";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
@@ -209,53 +210,16 @@ export default function Home() {
 
   return (
     <>
+      <GlobalDecor />
       <SplashScreen />
-      <div
-        aria-hidden="true"
-        id="decor-overlay"
-        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
-      >
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={`particle-${i}`}
-            className="absolute h-2 w-2 rounded-full bg-primary/30 animate-pulse-glow"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`,
-            }}
-          />
-        ))}
-
-        <div className="absolute top-1/4 right-1/4 h-64 w-64 text-primary/10">
-          <svg viewBox="0 0 200 200" className="h-full w-full animate-rotate-circuit">
-            <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="2" />
-            <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" strokeWidth="1" />
-            <circle cx="100" cy="100" r="40" fill="none" stroke="currentColor" strokeWidth="1" />
-            <line x1="100" y1="20" x2="100" y2="40" stroke="currentColor" strokeWidth="2" />
-            <line x1="100" y1="160" x2="100" y2="180" stroke="currentColor" strokeWidth="2" />
-            <line x1="20" y1="100" x2="40" y2="100" stroke="currentColor" strokeWidth="2" />
-            <line x1="160" y1="100" x2="180" y2="100" stroke="currentColor" strokeWidth="2" />
-          </svg>
-        </div>
-
-        <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent animate-scan" />
-
-        <div className="absolute top-1/3 left-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl animate-pulse-glow" />
-        <div
-          className="absolute bottom-1/4 right-1/3 h-80 w-80 rounded-full bg-primary/5 blur-3xl animate-pulse-glow"
-          style={{ animationDelay: "1.5s" }}
-        />
-      </div>
       <div className="relative min-h-screen isolation-isolate">
-      {/* Skip to content link for accessibility */}
-      <a href="#main-content" className="skip-to-content">
-        {t.skipToContent}
-      </a>
+        {/* Skip to content link for accessibility */}
+        <a href="#main-content" className="skip-to-content">
+          {t.skipToContent}
+        </a>
 
-      {/* Accessibility Menu */}
-      <AccessibilityMenu />
+        {/* Accessibility Menu */}
+        <AccessibilityMenu />
 
       {/* Sticky Header with Glassmorphism */}
       <header className="sticky top-0 z-50 glass border-b border-white/20">
@@ -380,9 +344,9 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main id="main-content" className="relative z-10 isolation-isolate">
+      <main id="main-content" className="relative z-0 isolation-isolate">
         {/* Hero Section */}
-        <section id="home" className="container relative z-10 isolation-isolate mx-auto py-8 md:py-12">
+        <section id="home" className="container relative z-0 isolation-isolate mx-auto py-8 md:py-12">
           {/* Hero Title and Subtitle - ABOVE animation */}
           <div className={cn("space-y-4 md:space-y-6 mb-8 md:mb-12", centeredSectionClass)}>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight px-4 animate-fade-in-up">
@@ -444,7 +408,7 @@ export default function Home() {
         </section>
 
         {/* Services Section */}
-        <section id="services" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
+        <section id="services" className="container relative z-0 isolation-isolate mx-auto py-12 md:py-20">
           <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.servicesTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
@@ -500,7 +464,7 @@ export default function Home() {
                 </div>
                 
                 {/* Content */}
-                <div className={cn("relative z-10", cardBodyAlignmentClass)}>
+                <div className={cn("relative z-0", cardBodyAlignmentClass)}>
                   <h3 className="text-xl md:text-2xl font-bold text-secondary mb-4 group-hover:text-primary transition-colors">{service.title}</h3>
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{service.description}</p>
                 </div>
@@ -510,7 +474,7 @@ export default function Home() {
         </section>
 
         {/* Projects Section */}
-        <section id="about" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
+        <section id="about" className="container relative z-0 isolation-isolate mx-auto py-12 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className={cn("order-2 lg:order-1", cardBodyAlignmentClass)}>
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.aboutTitle}</h2>
@@ -558,7 +522,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section id="projects" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
+        <section id="projects" className="container relative z-0 isolation-isolate mx-auto py-12 md:py-20">
           <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.projectsTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
@@ -657,7 +621,7 @@ export default function Home() {
         {/* About Section */}
 
         {/* FAQ Section */}
-        <section id="faq" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
+        <section id="faq" className="container relative z-0 isolation-isolate mx-auto py-12 md:py-20">
           <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.faqTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground animate-fade-in-up stagger-1">{t.faqSubtitle}</p>
@@ -721,7 +685,7 @@ export default function Home() {
         </section>
 
         {/* Blog Section */}
-        <section id="blog" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
+        <section id="blog" className="container relative z-0 isolation-isolate mx-auto py-12 md:py-20">
           <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
             <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.blogTitle}</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up stagger-1">
@@ -735,7 +699,7 @@ export default function Home() {
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                   <Card
                     className={cn(
-                      `glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`,
+                      `bg-white/80 dark:bg-slate-900/60 border border-white/60 dark:border-white/10 shadow-lg overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`,
                       cardBodyAlignmentClass
                     )}
                   >
@@ -769,7 +733,7 @@ export default function Home() {
                 <Card
                   key={`${post.title}-${post.date}`}
                   className={cn(
-                    `glass glass-hover overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`,
+                    `bg-white/80 dark:bg-slate-900/60 border border-white/60 dark:border-white/10 shadow-lg overflow-hidden group cursor-pointer animate-scale-in card-hover-effect image-hover-zoom stagger-${index + 2}`,
                     cardBodyAlignmentClass
                   )}
                 >
@@ -800,7 +764,7 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="container relative z-10 isolation-isolate mx-auto py-12 md:py-20">
+        <section id="contact" className="container relative z-0 isolation-isolate mx-auto py-12 md:py-20">
           <div className="max-w-4xl mx-auto">
             <div className={cn("mb-12 md:mb-16", centeredSectionClass)}>
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4 animate-fade-in-up">{t.contactTitle}</h2>
@@ -883,7 +847,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="glass-dark relative z-10 isolation-isolate mt-12 md:mt-20">
+      <footer className="glass-dark relative z-0 isolation-isolate mt-12 md:mt-20">
         <div className="container mx-auto py-8 md:py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
