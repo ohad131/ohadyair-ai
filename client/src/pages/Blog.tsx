@@ -44,7 +44,7 @@ export default function Blog() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts?.map((post) => (
             <Link key={post.id} href={`/blog/${post.slug}`}>
-              <Card className="glass glass-hover h-full cursor-pointer overflow-hidden">
+              <Card className="bg-white/80 dark:bg-slate-900/60 border border-white/60 dark:border-white/10 shadow-lg h-full cursor-pointer overflow-hidden card-hover-effect">
                 <div className="h-48 liquid-gradient flex items-center justify-center">
                   <div className="text-6xl">
                     {post.slug.includes('getting-started') && '📝'}
