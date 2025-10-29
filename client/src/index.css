@@ -249,7 +249,7 @@
   
   /* Dark mode glass effects with neon glow */
   .dark .glass {
-    background: rgba(20, 20, 30, 0.4);
+    background: rgba(20, 20, 30, 0.7);
     backdrop-filter: blur(20px) saturate(150%);
     -webkit-backdrop-filter: blur(20px) saturate(150%);
     border: 1px solid rgba(0, 188, 212, 0.2);

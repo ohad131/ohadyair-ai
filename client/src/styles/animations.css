@@ -409,37 +409,37 @@ html {
 
 /* Subtle Exit Animations for Bidirectional Scroll */
 .animate-fade-in-up:not(.visible) {
-  opacity: 0.3;
+  opacity: 0.8;
   transform: translateY(15px);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
 .animate-fade-in-left:not(.visible) {
-  opacity: 0.3;
+  opacity: 0.8;
   transform: translateX(15px);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
 .animate-fade-in-right:not(.visible) {
-  opacity: 0.3;
+  opacity: 0.8;
   transform: translateX(-15px);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
 .animate-scale-in:not(.visible) {
-  opacity: 0.3;
+  opacity: 0.8;
   transform: scale(0.95);
   transition: opacity 0.3s ease-out, transform 0.3s ease-out;
 }
 
 .animate-bounce-in:not(.visible) {
-  opacity: 0.3;
+  opacity: 0.8;
   transform: scale(0.95);
   transition: opacity 0.3s ease-out, transform 0.3s ease-out;
 }
 
 .animate-slide-in-bottom:not(.visible) {
-  opacity: 0.3;
+  opacity: 0.8;
   transform: translateY(-15px);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
