@@ -25,6 +25,12 @@ export const translations = {
     statClients: "לקוחות מרוצים",
     statQuality: "מחויבות לאיכות",
     statYearsExperience: "שנות ניסיון",
+    stats1Value: "5+",
+    stats1Label: "פרויקטים מוצלחים",
+    stats2Value: "10+",
+    stats2Label: "לקוחות מרוצים",
+    stats3Value: "100%",
+    stats3Label: "מחויבות לאיכות",
 
     // Services
     servicesTitle: "שירותים",
@@ -47,6 +53,14 @@ export const translations = {
     aboutP1: "אני אוהד יאיר, סטודנט לכלכלה וניהול ופרקטי-הנדסאי מכטרוניקה. בעבר שירתתי כמעצב מכני ביחידה טכנולוגית בצה\"ל, שם פיתחתי יכולות של פתרון בעיות מורכבות וחשיבה מערכתית.",
     aboutP2: "היום אני מתמחה בבניית מערכות AI ואוטומציה שמייצרות ערך עסקי אמיתי. אני משלב ידע עסקי עם כישורים טכניים מתקדמים כדי ליצור פתרונות שמתאימים בדיוק לצרכי הלקוח.",
     aboutP3: "כיזם AI, אני תמיד מחפש הזדמנויות חדשות ללמוד, לצמוח ולעזור לאחרים להצליח בעידן הדיגיטלי.",
+    aboutCard1Title: "כלכלה וניהול",
+    aboutCard1Subtitle: "סטודנט",
+    aboutCard2Title: "מכטרוניקה",
+    aboutCard2Subtitle: "פרקטי-הנדסאי",
+    aboutCard3Title: "מעצב מכני",
+    aboutCard3Subtitle: "צה\"ל (לשעבר)",
+    aboutCard4Title: "יזם AI",
+    aboutCard4Subtitle: "נוכחי",
 
     // Projects
     projectsTitle: "פרויקטים נבחרים",
@@ -139,6 +153,12 @@ export const translations = {
     statClients: "Happy Clients",
     statQuality: "Commitment to Quality",
     statYearsExperience: "Years Experience",
+    stats1Value: "5+",
+    stats1Label: "Successful Projects",
+    stats2Value: "10+",
+    stats2Label: "Happy Clients",
+    stats3Value: "100%",
+    stats3Label: "Commitment to Quality",
 
     // Services
     servicesTitle: "Services",
@@ -161,6 +181,14 @@ export const translations = {
     aboutP1: "I'm Ohad Yair, a student of Economics and Management and a practical mechatronics engineer. I previously served as a mechanical designer in a technological unit in the IDF, where I developed skills in solving complex problems and systems thinking.",
     aboutP2: "Today I specialize in building AI and automation systems that generate real business value. I combine business knowledge with advanced technical skills to create solutions that precisely fit client needs.",
     aboutP3: "As an AI entrepreneur, I'm always looking for new opportunities to learn, grow, and help others succeed in the digital age.",
+    aboutCard1Title: "Economics & Management",
+    aboutCard1Subtitle: "Student",
+    aboutCard2Title: "Mechatronics",
+    aboutCard2Subtitle: "Practical Engineer",
+    aboutCard3Title: "Mechanical Designer",
+    aboutCard3Subtitle: "IDF (Former)",
+    aboutCard4Title: "AI Entrepreneur",
+    aboutCard4Subtitle: "Current",
 
     // Projects
     projectsTitle: "Selected Projects",

@@ -95,6 +95,12 @@ export default function Home() {
   const aboutCard3Subtitle = resolveCopy("aboutCard3Subtitle", isHebrew ? "צה\"ל (לשעבר)" : "IDF (Former)");
   const aboutCard4Title = resolveCopy("aboutCard4Title", isHebrew ? "יזם AI" : "AI Entrepreneur");
   const aboutCard4Subtitle = resolveCopy("aboutCard4Subtitle", isHebrew ? "נוכחי" : "Current");
+  const stat1Value = resolveCopy("stats1Value", "5+");
+  const stat1Label = resolveCopy("stats1Label", t.statProjects);
+  const stat2Value = resolveCopy("stats2Value", "10+");
+  const stat2Label = resolveCopy("stats2Label", t.statClients);
+  const stat3Value = resolveCopy("stats3Value", "100%");
+  const stat3Label = resolveCopy("stats3Label", t.statQuality);
   
   const [activeSection, setActiveSection] = useState("home");
   const nav = useNav();
@@ -341,16 +347,16 @@ export default function Home() {
           {/* Stats */}
           <div className="mt-8 md:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
             <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-1 hover-glow">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">+5</div>
-              <div className="text-sm text-secondary font-medium">{t.statProjects}</div>
+              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{stat1Value}</div>
+              <div className="text-sm text-secondary font-medium">{stat1Label}</div>
             </div>
             <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-2 hover-glow">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">+10</div>
-              <div className="text-sm text-secondary font-medium">{t.statClients}</div>
+              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{stat2Value}</div>
+              <div className="text-sm text-secondary font-medium">{stat2Label}</div>
             </div>
             <div className="glass glass-hover p-6 rounded-2xl text-center animate-bounce-in stagger-3 hover-glow">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">100%</div>
-              <div className="text-sm text-secondary font-medium">{t.statQuality}</div>
+              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{stat3Value}</div>
+              <div className="text-sm text-secondary font-medium">{stat3Label}</div>
             </div>
           </div>
         </section>
