@@ -156,18 +156,22 @@ export const appRouter = router({
             phone: input.phone || null,
             message: input.message,
           });
-
-          // Notify owner
-          await notifyOwner({
-            title: "טופס יצירת קשר חדש",
-            content: `שם: ${input.name}\nאימייל: ${input.email}\n${input.phone ? `טלפון: ${input.phone}\n` : ""}הודעה: ${input.message}`,
-          });
-
-          return { success: true };
         } catch (error) {
           console.error("Failed to submit contact form:", error);
           throw new Error("Failed to submit contact form");
         }
+
+        try {
+          // Notify owner (best effort - do not block the response)
+          await notifyOwner({
+            title: "טופס יצירת קשר חדש",
+            content: `שם: ${input.name}\nאימייל: ${input.email}\n${input.phone ? `טלפון: ${input.phone}\n` : ""}הודעה: ${input.message}`,
+          });
+        } catch (error) {
+          console.error("Failed to send contact notification:", error);
+        }
+
+        return { success: true };
       }),
 
     list: adminProcedure.query(async () => {
