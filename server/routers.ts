@@ -8,6 +8,7 @@ import type { InsertBlogPost } from "../src/db/schema";
 import {
   createContactSubmission,
   getAllContactSubmissions,
+  setContactSubmissionReadStatus,
   getAllBlogPosts,
   getAllBlogPostsAdmin,
   getBlogPostBySlug,
@@ -172,6 +173,13 @@ export const appRouter = router({
     list: adminProcedure.query(async () => {
       return await getAllContactSubmissions();
     }),
+
+    markRead: adminProcedure
+      .input(z.object({ id: z.number().int().positive(), isRead: z.boolean().optional() }))
+      .mutation(async ({ input }) => {
+        await setContactSubmissionReadStatus(input.id, input.isRead ?? true);
+        return { success: true } as const;
+      }),
   }),
 
   blog: router({

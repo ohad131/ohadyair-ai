@@ -142,6 +142,18 @@ export async function getAllContactSubmissions() {
   return await db.select().from(contactSubmissions).orderBy(desc(contactSubmissions.createdAt));
 }
 
+export async function setContactSubmissionReadStatus(id: number, isRead: boolean) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db
+    .update(contactSubmissions)
+    .set({ isRead })
+    .where(eq(contactSubmissions.id, id));
+}
+
 // Blog posts
 export async function getAllBlogPosts() {
   const db = await getDb();

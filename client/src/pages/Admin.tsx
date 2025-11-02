@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import {
   Tabs,
   TabsContent,
@@ -24,6 +25,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAdminToken } from "@/hooks/useAdminToken";
 import { trpc, type RouterOutputs } from "@/lib/trpc";
 import { translations } from "@/lib/translations";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const SUPPORTED_LANGUAGES: LanguageCode[] = ["he", "en"];
@@ -33,6 +35,7 @@ const BASE_IMAGE_URL_REGEX = /\/api\/images\/(\d+)/;
 type AdminBlogPost = RouterOutputs["blog"]["adminList"][number];
 type AdminProject = RouterOutputs["projects"]["adminList"][number];
 type MediaItem = RouterOutputs["images"]["list"][number];
+type ContactSubmission = RouterOutputs["contact"]["list"][number];
 
 type BlogPostFormState = {
   title: string;
@@ -282,6 +285,7 @@ export default function Admin() {
 
   const [siteContentLanguage, setSiteContentLanguage] = useState<LanguageCode>("he");
   const [siteContentDraft, setSiteContentDraft] = useState<Record<string, string>>({});
+  const [leadFilter, setLeadFilter] = useState<"unread" | "all">("unread");
 
   const blogCoverInputRef = useRef<HTMLInputElement>(null);
   const projectCoverInputRef = useRef<HTMLInputElement>(null);
@@ -295,6 +299,11 @@ export default function Admin() {
   });
 
   const projectQuery = trpc.projects.adminList.useQuery(undefined, {
+    enabled: isAuthenticated,
+    retry: false,
+  });
+
+  const leadsQuery = trpc.contact.list.useQuery(undefined, {
     enabled: isAuthenticated,
     retry: false,
   });
@@ -365,6 +374,16 @@ export default function Admin() {
     },
     onError: error => {
       toast.error(error.message || "עדכון הפרויקט נכשל");
+    },
+  });
+
+  const leadStatusMutation = trpc.contact.markRead.useMutation({
+    onSuccess: () => {
+      toast.success("סטטוס הליד עודכן");
+      utils.contact.list.invalidate();
+    },
+    onError: error => {
+      toast.error(error.message || "עדכון הסטטוס נכשל");
     },
   });
 
@@ -442,7 +461,7 @@ export default function Admin() {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    const error = blogQuery.error || projectQuery.error;
+    const error = blogQuery.error || projectQuery.error || leadsQuery.error;
     if (!error) {
       setAuthError(null);
       return;
@@ -456,11 +475,19 @@ export default function Admin() {
     } else {
       setAuthError(error.message ?? "אירעה שגיאה");
     }
-  }, [blogQuery.error, projectQuery.error, clearToken, isAuthenticated]);
+  }, [blogQuery.error, projectQuery.error, leadsQuery.error, clearToken, isAuthenticated]);
 
   const posts = useMemo(() => blogQuery.data ?? [], [blogQuery.data]);
   const projects = useMemo(() => projectQuery.data ?? [], [projectQuery.data]);
   const mediaItems = useMemo(() => mediaQuery.data ?? [], [mediaQuery.data]);
+  const leads = useMemo(() => leadsQuery.data ?? [], [leadsQuery.data]);
+  const unreadLeadsCount = useMemo(() => leads.filter(lead => !lead.isRead).length, [leads]);
+  const filteredLeads = useMemo(() => {
+    if (leadFilter === "all") {
+      return leads;
+    }
+    return leads.filter(lead => !lead.isRead);
+  }, [leadFilter, leads]);
 
   const isUploadingImage = uploadImageMutation.isPending;
 
@@ -486,6 +513,7 @@ export default function Admin() {
     await Promise.all([
       blogQuery.refetch(),
       projectQuery.refetch(),
+      leadsQuery.refetch(),
       siteContentQuery.refetch(),
       mediaQuery.refetch(),
     ]);
@@ -501,6 +529,10 @@ export default function Admin() {
     });
     toast.success("התמונה הועלתה בהצלחה");
     return result;
+  }
+
+  function handleToggleLeadStatus(lead: ContactSubmission) {
+    leadStatusMutation.mutate({ id: lead.id, isRead: !lead.isRead });
   }
 
   function handleEditPost(post: AdminBlogPost) {
@@ -642,7 +674,7 @@ export default function Admin() {
           <div>
             <h1 className="text-3xl font-bold text-secondary">ממשק הניהול</h1>
             <p className="text-muted-foreground">
-              עריכת תכני האתר, פרויקטים, פוסטים וספריית המדיה
+              עריכת תכני האתר, פרויקטים, פוסטים, ספריית המדיה ומעקב אחר לידים חדשים
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -660,6 +692,14 @@ export default function Admin() {
           <TabsList className="flex flex-wrap">
             <TabsTrigger value="blog">ניהול בלוג</TabsTrigger>
             <TabsTrigger value="projects">ניהול פרויקטים</TabsTrigger>
+            <TabsTrigger value="leads" className="flex items-center gap-2">
+              לידים חדשים
+              {unreadLeadsCount > 0 && (
+                <Badge variant="destructive">
+                  {unreadLeadsCount}
+                </Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="content">תוכן האתר</TabsTrigger>
             <TabsTrigger value="media">ספריית מדיה</TabsTrigger>
           </TabsList>
@@ -1109,6 +1149,111 @@ export default function Admin() {
                 </ScrollArea>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="leads" className="space-y-6">
+            <Card className="p-6 space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-semibold text-secondary">מעקב לידים</h2>
+                  <p className="text-muted-foreground text-sm">
+                    צפייה בפניות שהתקבלו דרך טופס &quot;צור קשר&quot; וסימון סטטוס הטיפול
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Select value={leadFilter} onValueChange={value => setLeadFilter(value as "unread" | "all")}>
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="סינון" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unread">לידים שלא טופלו</SelectItem>
+                      <SelectItem value="all">כל הלידים</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="outline"
+                    onClick={() => leadsQuery.refetch()}
+                    disabled={leadsQuery.isFetching}
+                  >
+                    {leadsQuery.isFetching ? "מרענן..." : "רענן"}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {leadsQuery.isLoading ? (
+                  <p className="text-sm text-muted-foreground">טוען לידים...</p>
+                ) : filteredLeads.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    {leadFilter === "unread" ? "אין לידים חדשים כרגע" : "אין לידים להצגה"}
+                  </p>
+                ) : (
+                  filteredLeads.map(lead => {
+                    const createdAt =
+                      lead.createdAt instanceof Date ? lead.createdAt : new Date(lead.createdAt ?? "");
+                    const formattedDate = Number.isNaN(createdAt.getTime())
+                      ? ""
+                      : createdAt.toLocaleString("he-IL", {
+                          dateStyle: "short",
+                          timeStyle: "short",
+                        });
+                    const isUpdating =
+                      leadStatusMutation.isPending && leadStatusMutation.variables?.id === lead.id;
+
+                    return (
+                      <div
+                        key={lead.id}
+                        className={cn(
+                          "rounded-2xl border p-4 md:p-5 space-y-3 transition-colors",
+                          lead.isRead
+                            ? "border-border/60 bg-background/60"
+                            : "border-primary/40 bg-primary/5 shadow-lg shadow-primary/10"
+                        )}
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-lg font-semibold text-secondary">{lead.name}</h3>
+                              {!lead.isRead && <Badge variant="secondary">חדש</Badge>}
+                            </div>
+                            <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                              <a
+                                href={`mailto:${lead.email}`}
+                                className="hover:text-primary transition-colors"
+                              >
+                                {lead.email}
+                              </a>
+                              {lead.phone && (
+                                <a
+                                  href={`tel:${lead.phone}`}
+                                  className="hover:text-primary transition-colors"
+                                >
+                                  {lead.phone}
+                                </a>
+                              )}
+                              {formattedDate && <span>{formattedDate}</span>}
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end gap-2">
+                            <Button
+                              size="sm"
+                              variant={lead.isRead ? "outline" : "default"}
+                              onClick={() => handleToggleLeadStatus(lead)}
+                              disabled={isUpdating}
+                            >
+                              {lead.isRead ? "סמן כחדש" : "סמן כטופל"}
+                            </Button>
+                          </div>
+                        </div>
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap text-secondary/90">
+                          {lead.message}
+                        </p>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="content" className="space-y-6">

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
+import type { FormEvent } from "react";
 import { useNav } from "@/contexts/NavContext";
 import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -12,6 +13,16 @@ import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+
+function createEmptyContactForm() {
+  return {
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  };
+}
 
 export default function Home() {
   const { t, language } = useLanguage();
@@ -64,6 +75,21 @@ export default function Home() {
   const { data: blogPosts = [] } = trpc.blog.list.useQuery();
   const { data: projects = [] } = trpc.projects.list.useQuery();
   const { data: siteCopy } = trpc.siteContent.getByLanguage.useQuery({ language });
+  const [contactFormState, setContactFormState] = useState(createEmptyContactForm);
+  const [contactFeedback, setContactFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  const contactSubmitMutation = trpc.contact.submit.useMutation({
+    onSuccess: () => {
+      toast.success(t.contactSuccess);
+      setContactFormState(createEmptyContactForm());
+      setContactFeedback({ type: "success", message: t.contactSuccess });
+    },
+    onError: error => {
+      const message = error.message || t.contactError;
+      toast.error(message);
+      setContactFeedback({ type: "error", message });
+    },
+  });
 
   const parseTechList = (value?: string | null) => {
     if (!value) return [] as string[];
@@ -101,6 +127,42 @@ export default function Home() {
   const stat2Label = resolveCopy("stats2Label", t.statClients);
   const stat3Value = resolveCopy("stats3Value", "100%");
   const stat3Label = resolveCopy("stats3Label", t.statQuality);
+
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setContactFeedback(null);
+
+    const payload = {
+      name: contactFormState.name.trim(),
+      email: contactFormState.email.trim(),
+      phone: contactFormState.phone.trim(),
+      message: contactFormState.message.trim(),
+    };
+
+    if (!payload.name || !payload.email || payload.message.length < 10) {
+      const message =
+        payload.message.length < 10
+          ? isHebrew
+            ? "נא לכתוב הודעה מפורטת יותר (לפחות 10 תווים)."
+            : "Please add a more detailed message (minimum 10 characters)."
+          : isHebrew
+            ? "נא למלא שם ואימייל תקינים."
+            : "Please provide a valid name and email.";
+      setContactFeedback({ type: "error", message });
+      return;
+    }
+
+    try {
+      await contactSubmitMutation.mutateAsync({
+        name: payload.name,
+        email: payload.email,
+        phone: payload.phone || undefined,
+        message: payload.message,
+      });
+    } catch {
+      // Error handled via onError toast & feedback.
+    }
+  };
   
   const [activeSection, setActiveSection] = useState("home");
   const nav = useNav();
@@ -732,7 +794,7 @@ export default function Home() {
                 cardBodyAlignmentClass
               )}
             >
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleContactSubmit} noValidate>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-secondary mb-2">
@@ -741,6 +803,10 @@ export default function Home() {
                     <input
                       type="text"
                       required
+                      value={contactFormState.name}
+                      onChange={event =>
+                        setContactFormState(prev => ({ ...prev, name: event.target.value }))
+                      }
                       className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary"
                       placeholder={t.contactName}
                     />
@@ -752,6 +818,10 @@ export default function Home() {
                     <input
                       type="email"
                       required
+                      value={contactFormState.email}
+                      onChange={event =>
+                        setContactFormState(prev => ({ ...prev, email: event.target.value }))
+                      }
                       className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary"
                       placeholder={t.contactEmailPlaceholder}
                     />
@@ -762,6 +832,10 @@ export default function Home() {
                   <label className="block text-sm font-medium text-secondary mb-2">{t.contactPhone}</label>
                   <input
                     type="tel"
+                    value={contactFormState.phone}
+                    onChange={event =>
+                      setContactFormState(prev => ({ ...prev, phone: event.target.value }))
+                    }
                     className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary"
                     placeholder={t.contactPhonePlaceholder}
                   />
@@ -774,14 +848,39 @@ export default function Home() {
                   <textarea
                     required
                     rows={6}
+                    minLength={10}
+                    value={contactFormState.message}
+                    onChange={event =>
+                      setContactFormState(prev => ({ ...prev, message: event.target.value }))
+                    }
                     className="w-full px-4 py-3 glass rounded-xl border border-primary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-secondary resize-none"
                     placeholder={t.contactMessagePlaceholder}
                   />
                 </div>
 
-                <Button type="submit" className="w-full liquid-button h-14 rounded-full text-white font-medium text-base">
-                  {t.contactButton}
+                <Button
+                  type="submit"
+                  disabled={contactSubmitMutation.isPending}
+                  className="w-full liquid-button h-14 rounded-full text-white font-medium text-base"
+                >
+                  {contactSubmitMutation.isPending
+                    ? isHebrew
+                      ? "שולח..."
+                      : "Sending..."
+                    : t.contactButton}
                 </Button>
+                <div aria-live="polite">
+                  {contactFeedback && (
+                    <p
+                      className={cn(
+                        "text-sm",
+                        contactFeedback.type === "success" ? "text-emerald-500" : "text-destructive"
+                      )}
+                    >
+                      {contactFeedback.message}
+                    </p>
+                  )}
+                </div>
               </form>
 
               <div className={cn("mt-8 pt-8 border-t border-primary/20", cardBodyAlignmentClass)}>
