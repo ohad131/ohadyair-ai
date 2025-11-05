@@ -127,6 +127,7 @@ ohadyair-ai/
    ```
    - הערך ישמר בעמודה `value` תחת המפתח `forgeApiKey`. ניתן לעדכן אותו באותו פקודה בעתיד.
 3. לחלופין, אפשר להשתמש במשתנה סביבה `BUILT_IN_FORGE_API_KEY` (משמש כגיבוי אם לא נמצא ערך במסד הנתונים).
+4. כברירת מחדל הבקשות נשלחות אל Google Gemini (`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`). אם תרצה להשתמש ב-gateway אחר, הגדר את `BUILT_IN_FORGE_API_URL` לכתובת המתאימה (גישה בסגנון OpenAI).
 4. הפעל את השרת כרגיל (`pnpm dev` או `pnpm start`). הצ'אט יופיע ככפתור צף בכל עמוד באתר.
 
 ### איך זה עובד

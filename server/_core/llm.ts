@@ -209,10 +209,15 @@ const normalizeToolChoice = (
   return toolChoice;
 };
 
-const resolveApiUrl = () =>
-  ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
-    ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
-    : "https://forge.manus.im/v1/chat/completions";
+const DEFAULT_GOOGLE_GEMINI_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+
+const resolveApiUrl = () => {
+  if (ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0) {
+    return ENV.forgeApiUrl.trim();
+  }
+  return DEFAULT_GOOGLE_GEMINI_URL;
+};
 
 const assertApiKey = (apiKey?: string) => {
   if (!apiKey) {
@@ -276,6 +281,23 @@ export async function invokeLLM(
   const apiKey = options?.apiKey ?? ENV.forgeApiKey;
   assertApiKey(apiKey);
 
+  const apiUrl = resolveApiUrl();
+  if (isGoogleGeminiUrl(apiUrl)) {
+    return await invokeGoogleGemini(apiUrl, apiKey, params);
+  }
+
+  return await invokeOpenAIStyle(apiUrl, apiKey, params);
+}
+
+function isGoogleGeminiUrl(url: string): boolean {
+  return /generativelanguage\.googleapis\.com/i.test(url);
+}
+
+async function invokeOpenAIStyle(
+  apiUrl: string,
+  apiKey: string,
+  params: InvokeParams
+): Promise<InvokeResult> {
   const {
     messages,
     tools,
@@ -326,7 +348,7 @@ export async function invokeLLM(
     payload.response_format = normalizedResponseFormat;
   }
 
-  const response = await fetch(resolveApiUrl(), {
+  const response = await fetch(`${apiUrl.replace(/\/$/, "")}/v1/chat/completions`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -343,4 +365,168 @@ export async function invokeLLM(
   }
 
   return (await response.json()) as InvokeResult;
+}
+
+type GoogleContentPart = { text?: string };
+
+type GoogleGenerateContentRequest = {
+  contents: Array<{
+    role: "user" | "model";
+    parts: GoogleContentPart[];
+  }>;
+  systemInstruction?: {
+    role: "system";
+    parts: GoogleContentPart[];
+  };
+  tools?: unknown[];
+  safetySettings?: unknown[];
+  generationConfig?: {
+    maxOutputTokens?: number;
+  };
+};
+
+type GoogleGenerateContentResponse = {
+  responseId?: string;
+  candidates?: Array<{
+    finishReason?: string;
+    index?: number;
+    content?: {
+      role?: string;
+      parts?: Array<GoogleContentPart>;
+    };
+  }>;
+  usageMetadata?: {
+    promptTokenCount?: number;
+    candidatesTokenCount?: number;
+    totalTokenCount?: number;
+  };
+  modelVersion?: string;
+};
+
+async function invokeGoogleGemini(
+  apiUrl: string,
+  apiKey: string,
+  params: InvokeParams
+): Promise<InvokeResult> {
+  const { systemInstruction, contents } = convertMessagesToGoogleFormat(
+    params.messages
+  );
+
+  const payload: GoogleGenerateContentRequest = {
+    contents,
+    ...(systemInstruction ? { systemInstruction } : {}),
+  };
+
+  const maxTokens =
+    typeof params.maxTokens === "number"
+      ? params.maxTokens
+      : typeof params.max_tokens === "number"
+        ? params.max_tokens
+        : undefined;
+
+  if (typeof maxTokens === "number") {
+    payload.generationConfig = {
+      maxOutputTokens: maxTokens,
+    };
+  }
+
+  const url = new URL(apiUrl);
+  url.searchParams.set("key", apiKey);
+
+  const response = await fetch(url.toString(), {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `LLM invoke failed: ${response.status} ${response.statusText} – ${errorText}`
+    );
+  }
+
+  const json = (await response.json()) as GoogleGenerateContentResponse;
+
+  if (!json.candidates || json.candidates.length === 0 || !json.candidates[0]) {
+    throw new Error("LLM invoke failed: no candidates returned");
+  }
+
+  const candidate = json.candidates[0]!;
+  const parts = candidate.content?.parts ?? [];
+  const assistantContent = parts
+    .map(part => part.text ?? "")
+    .filter(Boolean)
+    .join("\n")
+    .trim();
+
+  return {
+    id: json.responseId ?? `response_${Date.now()}`,
+    created: Math.floor(Date.now() / 1000),
+    model: "gemini-2.5-flash",
+    choices: [
+      {
+        index: 0,
+        message: {
+          role: "assistant",
+          content: assistantContent,
+        },
+        finish_reason: candidate.finishReason ?? null,
+      },
+    ],
+    usage: json.usageMetadata
+      ? {
+          prompt_tokens: json.usageMetadata.promptTokenCount ?? 0,
+          completion_tokens: json.usageMetadata.candidatesTokenCount ?? 0,
+          total_tokens: json.usageMetadata.totalTokenCount ?? 0,
+        }
+      : undefined,
+  };
+}
+
+function convertMessagesToGoogleFormat(messages: Message[]): {
+  systemInstruction?: { role: "system"; parts: GoogleContentPart[] };
+  contents: Array<{ role: "user" | "model"; parts: GoogleContentPart[] }>;
+} {
+  let systemInstruction: { role: "system"; parts: GoogleContentPart[] } | undefined;
+  const contents: Array<{ role: "user" | "model"; parts: GoogleContentPart[] }> = [];
+
+  for (const message of messages) {
+    const parts = ensureArray(message.content).map(normalizeContentPart);
+    const textParts = parts
+      .map(part => {
+        if (part.type === "text") {
+          return part.text;
+        }
+
+        // Fall back to JSON string for unsupported content types
+        return JSON.stringify(part);
+      })
+      .filter(text => text.trim().length > 0)
+      .map(text => ({ text }));
+
+    if (textParts.length === 0) {
+      continue;
+    }
+
+    if (message.role === "system") {
+      systemInstruction = {
+        role: "system",
+        parts: textParts,
+      };
+      continue;
+    }
+
+    if (message.role === "user" || message.role === "assistant") {
+      contents.push({
+        role: message.role === "assistant" ? "model" : "user",
+        parts: textParts,
+      });
+    }
+    // Other roles (tool/function) are ignored for Google Gemini
+  }
+
+  return { systemInstruction, contents };
 }
