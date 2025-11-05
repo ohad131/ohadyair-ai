@@ -19,6 +19,8 @@ import {
   images,
   Image,
   InsertImage,
+  integrationSecrets,
+  InsertIntegrationSecret,
 } from "../src/db/schema";
 import { type LanguageCode } from "@shared/language";
 import { ENV } from './_core/env';
@@ -596,3 +598,39 @@ export async function toggleProjectFeatured(id: number, isFeatured: boolean) {
   return { success: true };
 }
 
+// Integration Secrets
+export async function getIntegrationSecretValue(key: string): Promise<string | null> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const rows = await db
+    .select({ value: integrationSecrets.value })
+    .from(integrationSecrets)
+    .where(eq(integrationSecrets.key, key))
+    .limit(1);
+
+  return rows.length > 0 ? rows[0]!.value : null;
+}
+
+export async function setIntegrationSecret(secret: InsertIntegrationSecret): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db
+    .insert(integrationSecrets)
+    .values({
+      ...secret,
+      updatedAt: new Date(),
+    })
+    .onDuplicateKeyUpdate({
+      set: {
+        label: secret.label,
+        value: secret.value,
+        updatedAt: new Date(),
+      },
+    });
+}

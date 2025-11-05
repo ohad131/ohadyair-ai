@@ -32,11 +32,13 @@ import {
   deleteImageRecord,
   getAllProjectsAdmin,
   updateProject,
+  getIntegrationSecretValue,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { sdk } from "./_core/sdk";
 import { TRPCError } from "@trpc/server";
 import { verifyPassword } from "./_core/password";
+import { invokeLLM } from "./_core/llm";
 
 const languageEnum = z.enum(SUPPORTED_LANGUAGE_CODES);
 
@@ -79,6 +81,13 @@ const blogPostUpdateInput = z
     message: "At least one field must be provided for update.",
   });
 
+const chatMessageSchema = z.object({
+  role: z.enum(["user", "assistant"]),
+  content: z.string().trim().min(1, "Message cannot be empty"),
+});
+
+const CHAT_HISTORY_LIMIT = 12;
+const FORGE_API_KEY_SECRET_KEY = "forgeApiKey";
 export const appRouter = router({
   system: systemRouter,
 
@@ -183,6 +192,139 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         await setContactSubmissionReadStatus(input.id, input.isRead ?? true);
         return { success: true } as const;
+      }),
+  }),
+
+  chat: router({
+    converse: publicProcedure
+      .input(
+        z.object({
+          sessionId: z.string().trim().min(1).max(128),
+          language: languageEnum.default("he").optional(),
+          messages: z.array(chatMessageSchema).min(1),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const language = input.language ?? "he";
+
+        const [blogPosts, aiToolsList, siteCopy, projects] = await Promise.all([
+          getAllBlogPosts(),
+          getAllAITools(),
+          getSiteContentByLanguage(language),
+          (async () => {
+            const db = await import("./db");
+            return await db.getAllProjects();
+          })(),
+        ]);
+
+        const knowledge = {
+          language,
+          lastUpdated: new Date().toISOString(),
+          siteCopy,
+          aiTools: aiToolsList.map(tool => ({
+            name: tool.name,
+            url: tool.url,
+            color: tool.color,
+            isActive: tool.isActive,
+          })),
+          projects: projects.map(project => ({
+            title: project.title,
+            slug: project.slug,
+            description: project.description,
+            fullDescription: project.fullDescription,
+            technologies: project.technologies,
+            projectUrl: project.projectUrl,
+            githubUrl: project.githubUrl,
+            isFeatured: project.isFeatured,
+            isPublished: project.isPublished,
+          })),
+          blogPosts: blogPosts.map(post => ({
+            title: post.title,
+            slug: post.slug,
+            excerpt: post.excerpt,
+            content: post.content,
+            author: post.author,
+            publishedAt: post.publishedAt,
+            isFeatured: post.isFeatured,
+          })),
+        };
+
+        const knowledgeSnapshot = JSON.stringify(knowledge, null, 2);
+
+        const systemPrompt = [
+          "You are Ohad Intelligence Chat (OI Chat), the AI strategist for visitors of ohadyair.ai.",
+          "Primary goals:",
+          "1. Understand the visitor's business, industry, and AI ambitions.",
+          "2. Use the verified website data to answer questions about services, success stories, and thought leadership.",
+          "3. Suggest realistic AI initiatives and encourage clear next steps (book a consultation, share contact info, etc.).",
+          "4. If information is missing, make reasonable suggestions and invite the visitor to continue the conversation with Ohad's team.",
+          "Tone: insightful, confident, professional, friendly. Keep answers concise but actionable.",
+          "The following JSON captures the latest website data you may rely on. Do not expose raw JSON; use it to craft natural answers.",
+          knowledgeSnapshot,
+        ].join("\n");
+
+        const recentMessages = input.messages.slice(-CHAT_HISTORY_LIMIT);
+        const llmMessages = [
+          { role: "system" as const, content: systemPrompt },
+          ...recentMessages.map(message => ({
+            role: message.role,
+            content: message.content,
+          })),
+        ];
+
+        let apiKeyOverride: string | null = null;
+        try {
+          apiKeyOverride = await getIntegrationSecretValue(FORGE_API_KEY_SECRET_KEY);
+        } catch (error) {
+          console.error("[Chat] Failed to load Gemini API key from database", error);
+        }
+
+        let result;
+        try {
+          result = await invokeLLM(
+            {
+              messages: llmMessages,
+              maxTokens: 1024,
+            },
+            { apiKey: apiKeyOverride ?? undefined }
+          );
+        } catch (error) {
+          console.error("[Chat] Gemini call failed", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to generate a response. Please try again shortly.",
+          });
+        }
+
+        const choice = result.choices[0];
+        if (!choice?.message?.content) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Received an empty response from the assistant.",
+          });
+        }
+
+        const assistantContent = Array.isArray(choice.message.content)
+          ? choice.message.content
+              .map(part => {
+                if (typeof part === "string") {
+                  return part;
+                }
+                if (part.type === "text") {
+                  return part.text;
+                }
+                return "";
+              })
+              .filter(Boolean)
+              .join("\n")
+          : choice.message.content;
+
+        return {
+          sessionId: input.sessionId,
+          message: assistantContent,
+          finishReason: choice.finish_reason,
+          usage: result.usage ?? null,
+        };
       }),
   }),
 

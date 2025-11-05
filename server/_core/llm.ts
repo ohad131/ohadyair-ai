@@ -214,9 +214,9 @@ const resolveApiUrl = () =>
     ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
     : "https://forge.manus.im/v1/chat/completions";
 
-const assertApiKey = () => {
-  if (!ENV.forgeApiKey) {
-    throw new Error("OPENAI_API_KEY is not configured");
+const assertApiKey = (apiKey?: string) => {
+  if (!apiKey) {
+    throw new Error("FORGE (Gemini) API key is not configured");
   }
 };
 
@@ -265,8 +265,16 @@ const normalizeResponseFormat = ({
   };
 };
 
-export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
-  assertApiKey();
+type InvokeOptions = {
+  apiKey?: string;
+};
+
+export async function invokeLLM(
+  params: InvokeParams,
+  options?: InvokeOptions
+): Promise<InvokeResult> {
+  const apiKey = options?.apiKey ?? ENV.forgeApiKey;
+  assertApiKey(apiKey);
 
   const {
     messages,
@@ -296,7 +304,13 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.tool_choice = normalizedToolChoice;
   }
 
-  payload.max_tokens = 32768
+  if (typeof params.maxTokens === "number") {
+    payload.max_tokens = params.maxTokens;
+  } else if (typeof params.max_tokens === "number") {
+    payload.max_tokens = params.max_tokens;
+  } else {
+    payload.max_tokens = 32768;
+  }
   payload.thinking = {
     "budget_tokens": 128
   }
@@ -316,7 +330,7 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${ENV.forgeApiKey}`,
+      authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify(payload),
   });

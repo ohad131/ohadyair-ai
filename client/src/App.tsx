@@ -19,6 +19,7 @@ import { SplashScreen } from "./components/SplashScreen";
 import CookieBanner from "./components/CookieBanner";
 import { NavProvider } from "./contexts/NavContext";
 import MobileMenu from "./components/nav/MobileMenu";
+import OIChatWidget from "./components/chat/OIChatWidget";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -58,6 +59,7 @@ function App() {
             <MobileMenu />
             <Toaster />
             <Router />
+            <OIChatWidget />
           </TooltipProvider>
         </NavProvider>
       </ThemeProvider>

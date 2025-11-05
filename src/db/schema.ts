@@ -144,3 +144,22 @@ export const images = mysqlTable("images", {
 export type Image = typeof images.$inferSelect;
 export type InsertImage = typeof images.$inferInsert;
 
+/**
+ * Integration secrets table - store API keys and tokens required by services.
+ */
+export const integrationSecrets = mysqlTable(
+  "integrationSecrets",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    key: varchar("key", { length: 100 }).notNull(),
+    label: varchar("label", { length: 255 }).notNull(),
+    value: text("value").notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  table => ({
+    keyUnique: uniqueIndex("integrationSecrets_key_unique").on(table.key),
+  })
+);
+
+export type IntegrationSecret = typeof integrationSecrets.$inferSelect;
+export type InsertIntegrationSecret = typeof integrationSecrets.$inferInsert;
