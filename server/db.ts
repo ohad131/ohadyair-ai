@@ -449,7 +449,8 @@ export async function createImageRecord(
     data,
   });
 
-  const insertId = Number((result as mysql.ResultSetHeader).insertId ?? 0);
+  const insertHeader = result as unknown as mysql.ResultSetHeader;
+  const insertId = Number(insertHeader.insertId ?? 0);
   if (!insertId) {
     const latest = await db
       .select({ id: images.id })

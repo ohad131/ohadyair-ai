@@ -7,6 +7,7 @@ export const translations = {
     services: "שירותים",
     about: "אודות",
     projects: "פרויקטים",
+    buzzai: "BuzzAI",
     faq: "שאלות נפוצות",
     blog: "בלוג",
     contact: "צור קשר",
@@ -124,12 +125,14 @@ export const translations = {
     privacyPolicy: "מדיניות פרטיות",
     termsOfService: "תקנון שימוש",
     accessibilityStatement: "הצהרת נגישות",
+    accessibilityMenuLabel: "נגישות",
     cookieMessage: "אנחנו משתמשים בעוגיות כדי לשפר את חוויית המשתמש. המשך גלישה מהווה הסכמה לשימוש בעוגיות.",
     cookieButton: "הבנתי",
 
     // OI Chat
     chatLauncherLabel: "פתח OI Chat",
     chatLauncherLabelShort: "צ'אט",
+    chatLauncherTagline: "שאלו אותי כל דבר על AI לעסק שלכם",
     chatTitle: "Ohad Intelligence Chat",
     chatSubtitle: "אני כאן כדי לחשוב איתך על יישומי AI בעסק שלך.",
     chatWelcome: "היי, אני OI Chat. ספר לי על התהליכים שתרצה לשדרג עם AI ונמצא רעיונות מעשיים.",
@@ -141,6 +144,28 @@ export const translations = {
     chatSuggestionExploreServices: "מה השירותים העיקריים שאתם מציעים?",
     chatSuggestionProjectIdeas: "תן לי רעיונות לפרויקטי AI בעסק שלי",
     chatSuggestionNextSteps: "איך נתקדם לשיחת ייעוץ?",
+    chatSystemPrompt:
+      "You are Ohad Intelligence Chat (OI Chat), the AI strategist for visitors of ohadyair.ai.\nPrimary goals:\n1. Understand the visitor's business, industry, and AI ambitions.\n2. Use the verified website data to answer questions about services, success stories, and thought leadership.\n3. Suggest realistic AI initiatives and encourage clear next steps (book a consultation, share contact info, etc.).\n4. If information is missing, make reasonable suggestions and invite the visitor to continue the conversation with Ohad's team.\nTone: insightful, confident, professional, friendly. Keep answers concise but actionable.",
+
+    // BuzzAI Section
+    buzzaiTitle: "BuzzAI – שיווק חכם שמתקתק לבד",
+    buzzaiSubtitle: "פלטפורמה אוטומטית לניהול נוכחות דיגיטלית, יצירת תוכן וניתוח ביצועים.",
+    buzzaiDescription:
+      "BuzzAI מחברת בין יצירת תוכן, תזמון פוסטים וניתוח תוצאות באמצעות בינה מלאכותית, כדי להעניק לצוותי השיווק שקט תעשייתי ונראות עקבית.",
+    buzzaiCtaPrimary: "קבעו הדגמה",
+    buzzaiCtaSecondary: "גלו איך זה עובד",
+    buzzaiFeature1Title: "יצירת תוכן מונעת AI",
+    buzzaiFeature1Desc: "מחוללי תוכן מותאמים שמפיקים פוסטים בעברית ובאנגלית לפי קול המותג והיעדים העסקיים.",
+    buzzaiFeature2Title: "פרסום רב-ערוצי",
+    buzzaiFeature2Desc: "תכנון, תזמון והפצה של קמפיינים לכל הרשתות החברתיות בלחיצה אחת.",
+    buzzaiFeature3Title: "מדדים שממליצים על הצעד הבא",
+    buzzaiFeature3Desc: "דשבורד אנליטי שחוזה ביצועים ומסמן רעיונות חדשים להגדלת החשיפה.",
+    buzzaiMetric1Value: "65%",
+    buzzaiMetric1Label: "חיסכון בזמן לצוותי שיווק",
+    buzzaiMetric2Value: "3x",
+    buzzaiMetric2Label: "יותר רעיונות תוכן בחודש",
+    buzzaiMetric3Value: "24/7",
+    buzzaiMetric3Label: "תפעול אוטומטי עם השגחה אנושית",
 
     skipToContent: "דלג לתוכן הראשי",
     navMenuLabel: "תפריט ניווט",
@@ -151,6 +176,7 @@ export const translations = {
     services: "Services",
     about: "About",
     projects: "Projects",
+    buzzai: "BuzzAI",
     faq: "FAQ",
     blog: "Blog",
     contact: "Contact",
@@ -268,12 +294,14 @@ export const translations = {
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
     accessibilityStatement: "Accessibility Statement",
+    accessibilityMenuLabel: "Accessibility",
     cookieMessage: "We use cookies to improve your experience. Continuing to browse constitutes agreement to our use of cookies.",
     cookieButton: "I Understand",
 
     // OI Chat
     chatLauncherLabel: "Open OI Chat",
     chatLauncherLabelShort: "Chat",
+    chatLauncherTagline: "Ask me anything about AI opportunities",
     chatTitle: "Ohad Intelligence Chat",
     chatSubtitle: "I'm here to help you design your next AI move.",
     chatWelcome: "Hi, I'm OI Chat. Tell me about your business and we'll explore how AI can drive results.",
@@ -285,6 +313,28 @@ export const translations = {
     chatSuggestionExploreServices: "What are your core AI services?",
     chatSuggestionProjectIdeas: "Suggest AI projects for my business",
     chatSuggestionNextSteps: "What are the next steps to book a consultation?",
+    chatSystemPrompt:
+      "You are Ohad Intelligence Chat (OI Chat), the AI strategist for visitors of ohadyair.ai.\nPrimary goals:\n1. Understand the visitor's business, industry, and AI ambitions.\n2. Use the verified website data to answer questions about services, success stories, and thought leadership.\n3. Suggest realistic AI initiatives and encourage clear next steps (book a consultation, share contact info, etc.).\n4. If information is missing, make reasonable suggestions and invite the visitor to continue the conversation with Ohad's team.\nTone: insightful, confident, professional, friendly. Keep answers concise but actionable.",
+
+    // BuzzAI Section
+    buzzaiTitle: "BuzzAI – Automated social buzz that performs",
+    buzzaiSubtitle: "An AI-powered workspace for planning, creating, and publishing content across every channel.",
+    buzzaiDescription:
+      "BuzzAI orchestrates content ideation, scheduling, and performance insights so marketing teams stay consistent without burning out.",
+    buzzaiCtaPrimary: "Book a demo",
+    buzzaiCtaSecondary: "See how it works",
+    buzzaiFeature1Title: "AI-crafted content",
+    buzzaiFeature1Desc: "Custom generators that write on-brand posts in Hebrew and English based on your voice.",
+    buzzaiFeature2Title: "Multi-channel automation",
+    buzzaiFeature2Desc: "Plan campaigns once and launch them everywhere with synchronized scheduling.",
+    buzzaiFeature3Title: "Guided performance insights",
+    buzzaiFeature3Desc: "A predictive dashboard that surfaces what to publish next for higher engagement.",
+    buzzaiMetric1Value: "65%",
+    buzzaiMetric1Label: "Time saved for marketing teams",
+    buzzaiMetric2Value: "3x",
+    buzzaiMetric2Label: "More content ideas each month",
+    buzzaiMetric3Value: "24/7",
+    buzzaiMetric3Label: "Always-on automation with human oversight",
 
     skipToContent: "Skip to main content",
     navMenuLabel: "Navigation menu",
