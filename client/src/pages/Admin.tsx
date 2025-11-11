@@ -141,6 +141,30 @@ const SITE_CONTENT_SECTIONS: SiteContentSection[] = [
     ],
   },
   {
+    id: "buzzai",
+    label: "BuzzAI",
+    description: "תוכן מקטע BuzzAI באתר",
+    fields: [
+      { key: "buzzaiTitle", label: "BuzzAI Title" },
+      { key: "buzzaiSubtitle", label: "BuzzAI Subtitle", type: "textarea" },
+      { key: "buzzaiDescription", label: "BuzzAI Description", type: "textarea" },
+      { key: "buzzaiCtaPrimary", label: "Primary CTA Label" },
+      { key: "buzzaiCtaSecondary", label: "Secondary CTA Label" },
+      { key: "buzzaiFeature1Title", label: "Feature 1 Title" },
+      { key: "buzzaiFeature1Desc", label: "Feature 1 Description", type: "textarea" },
+      { key: "buzzaiFeature2Title", label: "Feature 2 Title" },
+      { key: "buzzaiFeature2Desc", label: "Feature 2 Description", type: "textarea" },
+      { key: "buzzaiFeature3Title", label: "Feature 3 Title" },
+      { key: "buzzaiFeature3Desc", label: "Feature 3 Description", type: "textarea" },
+      { key: "buzzaiMetric1Value", label: "Metric 1 Value" },
+      { key: "buzzaiMetric1Label", label: "Metric 1 Label" },
+      { key: "buzzaiMetric2Value", label: "Metric 2 Value" },
+      { key: "buzzaiMetric2Label", label: "Metric 2 Label" },
+      { key: "buzzaiMetric3Value", label: "Metric 3 Value" },
+      { key: "buzzaiMetric3Label", label: "Metric 3 Label" },
+    ],
+  },
+  {
     id: "faq",
     label: "FAQ",
     fields: [
@@ -174,6 +198,12 @@ const SITE_CONTENT_SECTIONS: SiteContentSection[] = [
       { key: "stats3Value", label: "Stat 3 Value" },
       { key: "stats3Label", label: "Stat 3 Label" },
     ],
+  },
+  {
+    id: "chat",
+    label: "OI Chat",
+    description: "הנחיות המערכת של צ'אט ה-AI",
+    fields: [{ key: "chatSystemPrompt", label: "System Instructions", type: "textarea" }],
   },
 ];
 
@@ -440,7 +470,7 @@ export default function Admin() {
     const next: Record<string, string> = {};
 
     SITE_CONTENT_KEYS.forEach(key => {
-      const stored = siteContentQuery.data?.[key];
+      const stored = (siteContentQuery.data as Record<string, string> | undefined)?.[key];
       const fallbackValue = (fallback as Record<string, string>)[key] ?? "";
       next[key] = typeof stored === "string" ? stored : fallbackValue;
     });

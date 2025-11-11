@@ -1,8 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
-export default function AccessibilityMenu() {
+type AccessibilityMenuProps = {
+  buttonClassName?: string;
+  label?: string;
+  showLabel?: boolean;
+};
+
+export default function AccessibilityMenu({
+  buttonClassName,
+  label = "תפריט נגישות",
+  showLabel = false,
+}: AccessibilityMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [fontSize, setFontSize] = useState(100);
   const [contrast, setContrast] = useState(false);
@@ -51,26 +62,45 @@ export default function AccessibilityMenu() {
     <>
       {/* Accessibility Button */}
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 glass glass-hover rounded-full flex items-center justify-center text-primary hover:scale-110 transition-transform shadow-lg"
-        aria-label="תפריט נגישות"
-        title="תפריט נגישות"
+        className={cn(
+          "group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full border border-primary/20 bg-background/70 px-4 py-2 text-sm font-medium text-secondary shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 glass glass-hover",
+          buttonClassName
+        )}
+        aria-label={label}
+        title={label}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="10" r="3" />
-          <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-        </svg>
+        <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-105">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="10" r="3" />
+            <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+          </svg>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-full border border-primary/40 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          />
+        </span>
+        {showLabel && (
+          <span className="hidden text-sm font-semibold text-secondary transition-colors duration-300 group-hover:text-primary md:inline">
+            {label}
+          </span>
+        )}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-primary/30 via-primary/60 to-primary/30 transition-transform duration-300 group-hover:scale-x-100"
+        />
       </button>
 
       {/* Accessibility Menu Panel */}

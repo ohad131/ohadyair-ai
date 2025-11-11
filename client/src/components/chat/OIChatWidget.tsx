@@ -178,7 +178,10 @@ export function OIChatWidget() {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {isOpen && (
-        <div className="flex w-[360px] max-w-[90vw] flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl">
+        <div
+          id="oi-chat-panel"
+          className="flex w-[360px] max-w-[90vw] flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl"
+        >
           <div className="flex items-start justify-between gap-2 border-b border-border bg-primary/5 px-5 py-4">
             <div>
               <h2 className="text-base font-semibold text-foreground">
@@ -262,15 +265,39 @@ export function OIChatWidget() {
       )}
 
       <Button
+        type="button"
         size="lg"
-        className={cn(
-          "group flex items-center gap-2 rounded-full px-5 py-3 shadow-lg transition-transform",
-          isOpen ? "bg-primary/90" : "bg-primary"
-        )}
         onClick={toggleOpen}
+        aria-expanded={isOpen}
+        aria-controls="oi-chat-panel"
+        className={cn(
+          "group relative flex items-center gap-4 overflow-hidden rounded-full px-6 py-4 text-left text-white shadow-[0_18px_45px_rgba(56,189,248,0.45)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
+          isOpen
+            ? "bg-gradient-to-r from-primary/90 via-primary to-sky-600"
+            : "bg-gradient-to-r from-primary via-primary/90 to-sky-500 hover:-translate-y-1 hover:shadow-[0_26px_65px_rgba(56,189,248,0.55)]"
+        )}
       >
-        {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
-        <span>{t.chatLauncherLabel}</span>
+        <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white/20 text-white transition-transform duration-300 group-hover:scale-105">
+          {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-full border border-white/40 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          />
+        </span>
+        <div className="flex flex-col items-start">
+          <span className="text-xs uppercase tracking-[0.35em] text-white/70">
+            {t.chatLauncherLabelShort}
+          </span>
+          <span className="text-lg font-semibold leading-tight">{t.chatLauncherLabel}</span>
+          <span className="hidden text-xs text-white/80 sm:block">{t.chatLauncherTagline}</span>
+        </div>
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-0 w-20 -translate-x-full bg-white/20 blur-2xl transition-transform duration-500 group-hover:translate-x-[220%]"
+        />
+        <span aria-hidden className="pointer-events-none absolute -top-2 right-5 text-xl text-amber-200 animate-bounce">
+          ✨
+        </span>
       </Button>
     </div>
   );

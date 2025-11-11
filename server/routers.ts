@@ -87,6 +87,8 @@ const chatMessageSchema = z.object({
 });
 
 const CHAT_HISTORY_LIMIT = 12;
+const DEFAULT_CHAT_INSTRUCTIONS =
+  "You are Ohad Intelligence Chat (OI Chat), the AI strategist for visitors of ohadyair.ai.\nPrimary goals:\n1. Understand the visitor's business, industry, and AI ambitions.\n2. Use the verified website data to answer questions about services, success stories, and thought leadership.\n3. Suggest realistic AI initiatives and encourage clear next steps (book a consultation, share contact info, etc.).\n4. If information is missing, make reasonable suggestions and invite the visitor to continue the conversation with Ohad's team.\nTone: insightful, confident, professional, friendly. Keep answers concise but actionable.";
 const FORGE_API_KEY_SECRET_KEY = "forgeApiKey";
 export const appRouter = router({
   system: systemRouter,
@@ -251,14 +253,16 @@ export const appRouter = router({
 
         const knowledgeSnapshot = JSON.stringify(knowledge, null, 2);
 
+        const storedInstructions = siteCopy?.["chatSystemPrompt"];
+        const normalizedInstructions = storedInstructions?.replace(/\r\n/g, "\n").trim();
+        const systemInstructions =
+          normalizedInstructions && normalizedInstructions.length > 0
+            ? normalizedInstructions
+            : DEFAULT_CHAT_INSTRUCTIONS;
+
         const systemPrompt = [
-          "You are Ohad Intelligence Chat (OI Chat), the AI strategist for visitors of ohadyair.ai.",
-          "Primary goals:",
-          "1. Understand the visitor's business, industry, and AI ambitions.",
-          "2. Use the verified website data to answer questions about services, success stories, and thought leadership.",
-          "3. Suggest realistic AI initiatives and encourage clear next steps (book a consultation, share contact info, etc.).",
-          "4. If information is missing, make reasonable suggestions and invite the visitor to continue the conversation with Ohad's team.",
-          "Tone: insightful, confident, professional, friendly. Keep answers concise but actionable.",
+          systemInstructions,
+          "",
           "The following JSON captures the latest website data you may rely on. Do not expose raw JSON; use it to craft natural answers.",
           knowledgeSnapshot,
         ].join("\n");
