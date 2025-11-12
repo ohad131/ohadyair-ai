@@ -176,6 +176,8 @@ export function OIChatWidget() {
     }
   };
 
+  const closeLabel = isHebrew ? "סגור צ'אט" : "Close chat";
+
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {isOpen && (
@@ -270,37 +272,14 @@ export function OIChatWidget() {
         onClick={toggleOpen}
         aria-expanded={isOpen}
         aria-controls="oi-chat-panel"
+        aria-label={isOpen ? closeLabel : t.chatLauncherLabel}
         className={cn(
-          "group relative flex items-center gap-4 overflow-hidden rounded-full border border-white/60 bg-white/90 px-5 py-4 text-left text-secondary shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-lg transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-          isHebrew ? "flex-row-reverse text-right" : "text-left",
-          isOpen
-            ? "scale-[1.02] shadow-[0_28px_75px_rgba(56,189,248,0.3)]"
-            : "hover:-translate-y-1 hover:shadow-[0_32px_85px_rgba(56,189,248,0.35)]",
-          "dark:border-white/15 dark:bg-slate-950/85 dark:text-white"
+          "flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5",
+          isHebrew ? "flex-row-reverse" : ""
         )}
       >
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-primary/30 via-sky-300/25 to-emerald-300/30 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 -top-7 h-20 w-20 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary/35 via-sky-300/25 to-emerald-300/35 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-70"
-        />
-        <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary via-sky-400 to-emerald-400 text-white shadow-lg shadow-primary/40 transition-transform duration-300 group-hover:scale-105">
-          <span aria-hidden className="absolute inset-0 rounded-full border border-white/40 opacity-70" />
-          <span aria-hidden className="absolute inset-0 blur-lg bg-white/25 opacity-0 transition-opacity duration-300 group-hover:opacity-80" />
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white">
-            {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
-          </span>
-        </span>
-        <div className={cn("relative flex flex-col", isHebrew ? "items-end text-right" : "items-start text-left")}>
-          <span className="text-[11px] font-semibold uppercase tracking-[0.35em] text-primary/80 dark:text-primary/60">
-            {t.chatLauncherLabelShort}
-          </span>
-          <span className="text-lg font-semibold leading-tight text-secondary dark:text-white">{t.chatLauncherLabel}</span>
-          <span className="text-xs text-muted-foreground">{t.chatLauncherTagline}</span>
-        </div>
+        {isOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
+        <span>{isOpen ? closeLabel : t.chatLauncherLabel}</span>
       </Button>
     </div>
   );
