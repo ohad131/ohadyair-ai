@@ -267,37 +267,40 @@ export function OIChatWidget() {
 
       <Button
         type="button"
-        size="lg"
         onClick={toggleOpen}
         aria-expanded={isOpen}
         aria-controls="oi-chat-panel"
         className={cn(
-          "group relative flex items-center gap-4 overflow-hidden rounded-full bg-transparent px-6 py-4 text-left text-white transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/60 focus-visible:ring-offset-background",
-          "before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-gradient-to-r before:from-primary/70 before:via-sky-400/75 before:to-fuchsia-500/70 before:opacity-90 before:transition before:duration-500 before:content-['']",
-          "after:pointer-events-none after:absolute after:inset-0 after:-z-20 after:rounded-full after:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_65%)] after:opacity-60 after:transition-all after:duration-700 after:content-['']",
+          "group relative flex items-center gap-4 overflow-hidden rounded-full border border-white/60 bg-white/90 px-5 py-4 text-left text-secondary shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-lg transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           isHebrew ? "flex-row-reverse text-right" : "text-left",
           isOpen
-            ? "shadow-[0_28px_75px_rgba(99,102,241,0.35)] before:opacity-100 after:opacity-80"
-            : "shadow-[0_24px_65px_rgba(56,189,248,0.35)] hover:-translate-y-1 hover:shadow-[0_30px_85px_rgba(56,189,248,0.55)] hover:before:opacity-100"
+            ? "scale-[1.02] shadow-[0_28px_75px_rgba(56,189,248,0.3)]"
+            : "hover:-translate-y-1 hover:shadow-[0_32px_85px_rgba(56,189,248,0.35)]",
+          "dark:border-white/15 dark:bg-slate-950/85 dark:text-white"
         )}
       >
-        <span aria-hidden className="pointer-events-none absolute inset-0 -z-30 bg-[radial-gradient(circle_at_bottom,_rgba(14,165,233,0.28),_transparent_60%)] opacity-80" />
-        <span aria-hidden className="pointer-events-none absolute -left-12 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-white/30 blur-3xl transition-all duration-700 group-hover:translate-x-6 group-hover:opacity-90" />
-        <span aria-hidden className="pointer-events-none absolute -right-16 top-0 h-32 w-32 rounded-full border border-white/25 opacity-50 transition-transform duration-[3000ms] group-hover:rotate-45 group-hover:scale-110" />
-        <span aria-hidden className="pointer-events-none absolute inset-x-0 -bottom-px h-px w-full bg-gradient-to-r from-transparent via-white/80 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-        <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-white/15 text-white shadow-inner shadow-primary/30 transition-transform duration-500 group-hover:scale-110">
-          <span aria-hidden className="absolute inset-0 rounded-full border border-white/25 opacity-40" />
-          <span aria-hidden className="absolute inset-0 animate-[spin_6s_linear_infinite] rounded-full border border-white/10" />
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white">
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-primary/30 via-sky-300/25 to-emerald-300/30 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 -top-7 h-20 w-20 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary/35 via-sky-300/25 to-emerald-300/35 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-70"
+        />
+        <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary via-sky-400 to-emerald-400 text-white shadow-lg shadow-primary/40 transition-transform duration-300 group-hover:scale-105">
+          <span aria-hidden className="absolute inset-0 rounded-full border border-white/40 opacity-70" />
+          <span aria-hidden className="absolute inset-0 blur-lg bg-white/25 opacity-0 transition-opacity duration-300 group-hover:opacity-80" />
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white">
             {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
           </span>
         </span>
         <div className={cn("relative flex flex-col", isHebrew ? "items-end text-right" : "items-start text-left")}>
-          <span className="text-[11px] uppercase tracking-[0.35em] text-white/70">{t.chatLauncherLabelShort}</span>
-          <span className="text-lg font-semibold leading-tight drop-shadow">{t.chatLauncherLabel}</span>
-          <span className="text-xs text-white/80">{t.chatLauncherTagline}</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.35em] text-primary/80 dark:text-primary/60">
+            {t.chatLauncherLabelShort}
+          </span>
+          <span className="text-lg font-semibold leading-tight text-secondary dark:text-white">{t.chatLauncherLabel}</span>
+          <span className="text-xs text-muted-foreground">{t.chatLauncherTagline}</span>
         </div>
-        <span aria-hidden className="pointer-events-none absolute inset-0 -z-10 translate-x-[-120%] bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 group-hover:translate-x-6 group-hover:opacity-100" />
       </Button>
     </div>
   );
