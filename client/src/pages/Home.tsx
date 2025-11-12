@@ -8,7 +8,7 @@ import AccessibilityMenu from "@/components/AccessibilityMenu";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
 import { LanguageToggle } from "@/components/LanguageToggle";
-import { Twitter, Linkedin, Phone } from "lucide-react";
+import { Twitter, Linkedin, Phone, ArrowUpRight } from "lucide-react";
 import AIToolsNetwork from "@/components/AIToolsNetwork";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -700,131 +700,136 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="buzzai" className="relative overflow-hidden py-16 md:py-24">
+        <section id="buzzai" className="relative isolate overflow-hidden py-16 md:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18)_0%,_transparent_55%)] dark:bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.22)_0%,_transparent_60%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.22)_0%,_transparent_55%)] dark:bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.28)_0%,_transparent_60%)]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white/10 dark:from-primary/10 dark:via-transparent dark:to-background"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/55 via-white/20 to-transparent dark:from-primary/10 dark:via-transparent dark:to-background"
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-8 h-28 w-28 -translate-x-1/2 rounded-full border border-primary/30 bg-primary/15 blur-3xl"
           />
           <div className="container relative">
-            <div className={cn("mx-auto max-w-3xl space-y-4 text-center md:text-left", isHebrew ? "md:text-right" : "")}>
-              <span
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary shadow-[0_10px_35px_rgba(56,189,248,0.25)]",
-                  isHebrew ? "flex-row-reverse" : ""
-                )}
-              >
-                <span className="text-lg">🤖</span>
-                <span>{t.buzzai}</span>
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary leading-tight">{buzzaiTitle}</h2>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">{buzzaiSubtitle}</p>
-            </div>
-
-            <div className="mt-12 grid gap-10 lg:grid-cols-[1.05fr,0.95fr]">
-              <div className={cn("flex flex-col gap-8", cardBodyAlignmentClass)}>
-                <p className="text-sm font-medium text-secondary/80">{buzzaiHighlightsLead}</p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {buzzaiHighlights.map(highlight => (
-                    <div
-                      key={highlight.title}
-                      className={cn(
-                        "group relative overflow-hidden rounded-3xl border border-white/40 bg-white/75 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.12)] backdrop-blur transition-all duration-500 dark:border-white/10 dark:bg-white/10 dark:shadow-[0_24px_55px_rgba(14,116,144,0.35)]",
-                        isHebrew ? "text-right" : "text-left"
-                      )}
-                    >
-                      <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-amber-200/15 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                      <div className="relative flex items-start gap-3">
-                        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
-                          {highlight.icon}
-                        </span>
-                        <div className="space-y-1">
-                          <h3 className="text-lg font-semibold text-secondary">{highlight.title}</h3>
-                          <p className="text-sm text-muted-foreground leading-relaxed">{highlight.description}</p>
+            <div className="grid gap-12 lg:grid-cols-[1.1fr,0.9fr]">
+              <div className={cn("space-y-6", isHebrew ? "text-right" : "text-left")}>
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-primary shadow-[0_12px_40px_rgba(56,189,248,0.28)] backdrop-blur dark:bg-white/10",
+                    isHebrew ? "flex-row-reverse" : ""
+                  )}
+                >
+                  <span className="text-lg">🤖</span>
+                  <span>{t.buzzai}</span>
+                </span>
+                <h2 className="text-3xl md:text-4xl font-bold text-secondary leading-tight">{buzzaiTitle}</h2>
+                <p className="text-base md:text-lg text-muted-foreground leading-relaxed">{buzzaiSubtitle}</p>
+                <div className="space-y-4">
+                  <p className="text-sm font-medium text-secondary/80">{buzzaiHighlightsLead}</p>
+                  <ul className="grid gap-4 sm:grid-cols-2">
+                    {buzzaiHighlights.map(highlight => (
+                      <li
+                        key={highlight.title}
+                        className="group relative overflow-hidden rounded-3xl border border-white/50 bg-white/80 p-4 shadow-[0_20px_45px_rgba(15,23,42,0.14)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_65px_rgba(15,23,42,0.18)] dark:border-white/10 dark:bg-white/10 dark:shadow-[0_24px_55px_rgba(14,116,144,0.35)]"
+                      >
+                        <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-emerald-200/15 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                        <div className={cn("relative flex items-start gap-3", isHebrew ? "flex-row-reverse text-right" : "text-left")}>
+                          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-lg">
+                            {highlight.icon}
+                          </span>
+                          <div className="space-y-1">
+                            <p className="text-sm font-semibold text-secondary leading-relaxed">{highlight.title}</p>
+                            {highlight.description && (
+                              <p className="text-xs text-muted-foreground leading-relaxed">{highlight.description}</p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <span className="pointer-events-none absolute -bottom-6 left-1/2 h-20 w-20 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl transition-all duration-500 group-hover:scale-125 group-hover:opacity-100" />
-                    </div>
-                  ))}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{buzzaiDescription}</p>
               </div>
 
-              <Card className="relative overflow-hidden rounded-[32px] border border-primary/25 bg-background/80 p-6 md:p-8 shadow-[0_30px_75px_rgba(15,23,42,0.22)] backdrop-blur">
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-fuchsia-200/15"
-                />
-                <div className="relative flex h-full flex-col gap-6">
-                  <div className={cn("space-y-3", cardBodyAlignmentClass)}>
-                    <h3 className="text-xs font-semibold uppercase tracking-[0.4em] text-primary">{t.buzzai}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{buzzaiDescription}</p>
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    {buzzaiMetrics.map(metric => (
-                      <div
-                        key={metric.label}
-                        className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-background/70 px-4 py-5 text-center shadow-sm transition-all duration-500 hover:border-primary/55 hover:shadow-[0_18px_40px_rgba(14,165,233,0.25)]"
-                      >
-                        <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/12 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                        <div className="relative text-2xl font-bold text-primary">{metric.value}</div>
-                        <div className="relative mt-1 text-xs text-muted-foreground leading-snug">{metric.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="space-y-4">
-                    {buzzaiActions.map(action => (
-                      <div
-                        key={action.href}
-                        className={cn(
-                          "group relative overflow-hidden rounded-3xl border border-primary/25 bg-background/70 p-5 transition-all duration-500 hover:border-primary/50 hover:shadow-[0_24px_55px_rgba(14,165,233,0.28)]",
-                          cardBodyAlignmentClass
-                        )}
-                      >
-                        <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/15 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="flex flex-col gap-6">
+                <Card className="relative overflow-hidden rounded-[32px] border border-primary/25 bg-background/80 p-6 md:p-8 shadow-[0_30px_75px_rgba(15,23,42,0.22)] backdrop-blur">
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-fuchsia-300/20 dark:from-primary/10 dark:to-emerald-400/20"
+                  />
+                  <div className="relative flex h-full flex-col gap-6">
+                    <div className={cn("space-y-2", cardBodyAlignmentClass)}>
+                      <h3 className="text-xs font-semibold uppercase tracking-[0.4em] text-primary">{t.buzzai}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{buzzaiCtaPrimaryDesc}</p>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      {buzzaiMetrics.map(metric => (
                         <div
+                          key={metric.label}
+                          className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-background/70 px-4 py-5 text-center shadow-sm transition-all duration-500 hover:border-primary/55 hover:shadow-[0_18px_40px_rgba(14,165,233,0.25)]"
+                        >
+                          <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                          <div className="relative text-2xl font-bold text-primary">{metric.value}</div>
+                          <div className="relative mt-1 text-xs text-muted-foreground leading-snug">{metric.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="space-y-3">
+                      {buzzaiActions.map(action => (
+                        <div
+                          key={action.href}
                           className={cn(
-                            "relative flex flex-col gap-4 sm:flex-row sm:items-center",
-                            isHebrew ? "sm:flex-row-reverse" : ""
+                            "group relative overflow-hidden rounded-3xl border border-primary/25 bg-background/70 p-5 transition-all duration-500 hover:border-primary/50 hover:shadow-[0_24px_55px_rgba(14,165,233,0.28)]",
+                            cardBodyAlignmentClass
                           )}
                         >
-                          <div className={cn("flex items-start gap-3", isHebrew ? "flex-row-reverse text-right" : "text-left")}>
-                            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
-                              {action.icon}
-                            </span>
-                            <div className={cn("space-y-1", isHebrew ? "text-right" : "text-left")}>
-                              <h4 className="text-base font-semibold text-secondary">{action.title}</h4>
-                              <p className="text-xs text-muted-foreground leading-relaxed">{action.description}</p>
-                            </div>
-                          </div>
-                          <Button
-                            asChild
-                            size="sm"
+                          <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/15 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                          <div
                             className={cn(
-                              "relative inline-flex h-10 items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary via-cyan-400 to-emerald-400 px-5 text-xs font-semibold text-white shadow-lg shadow-primary/30 transition hover:shadow-primary/40",
-                              isHebrew ? "sm:mr-auto sm:ml-0" : "sm:ml-auto"
+                              "relative flex flex-col gap-4 sm:flex-row sm:items-center",
+                              isHebrew ? "sm:flex-row-reverse" : ""
                             )}
                           >
-                            <a href={action.href} target="_blank" rel="noreferrer">
-                              {action.label}
-                            </a>
-                          </Button>
+                            <div className={cn("flex items-start gap-3", isHebrew ? "flex-row-reverse text-right" : "text-left")}>
+                              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
+                                {action.icon}
+                              </span>
+                              <div className={cn("space-y-1", isHebrew ? "text-right" : "text-left")}>
+                                <h4 className="text-base font-semibold text-secondary">{action.title}</h4>
+                                <p className="text-xs text-muted-foreground leading-relaxed">{action.description}</p>
+                              </div>
+                            </div>
+                            <Button
+                              asChild
+                              size="sm"
+                              className={cn(
+                                "relative inline-flex h-10 items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary via-sky-400 to-emerald-400 px-5 text-xs font-semibold text-white shadow-lg shadow-primary/30 transition hover:shadow-primary/40",
+                                isHebrew ? "sm:mr-auto sm:ml-0" : "sm:ml-auto"
+                              )}
+                            >
+                              <a href={action.href} target="_blank" rel="noreferrer">
+                                {action.label}
+                                <ArrowUpRight className="h-4 w-4" />
+                              </a>
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                  <div
-                    className={cn(
-                      "rounded-3xl border border-dashed border-primary/30 bg-background/70 p-6 text-sm font-medium leading-relaxed text-secondary",
-                      cardBodyAlignmentClass
-                    )}
-                  >
-                    {buzzaiFooter}
-                  </div>
+                </Card>
+                <div
+                  className={cn(
+                    "rounded-3xl border border-dashed border-primary/35 bg-background/70 p-6 text-sm font-medium leading-relaxed text-secondary shadow-[0_20px_45px_rgba(15,23,42,0.12)] backdrop-blur",
+                    cardBodyAlignmentClass
+                  )}
+                >
+                  {buzzaiFooter}
                 </div>
-              </Card>
+              </div>
             </div>
           </div>
         </section>
