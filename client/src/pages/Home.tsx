@@ -131,23 +131,34 @@ export default function Home() {
   const buzzaiTitle = resolveCopy("buzzaiTitle", t.buzzaiTitle);
   const buzzaiSubtitle = resolveCopy("buzzaiSubtitle", t.buzzaiSubtitle);
   const buzzaiDescription = resolveCopy("buzzaiDescription", t.buzzaiDescription);
+  const buzzaiFooter = resolveCopy("buzzaiFooter", t.buzzaiFooter);
+  const buzzaiHighlightsLead = resolveCopy("buzzaiHighlightsLead", t.buzzaiHighlightsLead);
   const buzzaiCtaPrimary = resolveCopy("buzzaiCtaPrimary", t.buzzaiCtaPrimary);
+  const buzzaiCtaPrimaryTitle = resolveCopy("buzzaiCtaPrimaryTitle", t.buzzaiCtaPrimaryTitle);
+  const buzzaiCtaPrimaryDesc = resolveCopy("buzzaiCtaPrimaryDesc", t.buzzaiCtaPrimaryDesc);
   const buzzaiCtaSecondary = resolveCopy("buzzaiCtaSecondary", t.buzzaiCtaSecondary);
-  const buzzaiFeatures = [
+  const buzzaiCtaSecondaryTitle = resolveCopy("buzzaiCtaSecondaryTitle", t.buzzaiCtaSecondaryTitle);
+  const buzzaiCtaSecondaryDesc = resolveCopy("buzzaiCtaSecondaryDesc", t.buzzaiCtaSecondaryDesc);
+  const buzzaiHighlights = [
     {
-      icon: "✨",
+      icon: "💡",
       title: resolveCopy("buzzaiFeature1Title", t.buzzaiFeature1Title),
       description: resolveCopy("buzzaiFeature1Desc", t.buzzaiFeature1Desc),
     },
     {
-      icon: "📢",
+      icon: "🧠",
       title: resolveCopy("buzzaiFeature2Title", t.buzzaiFeature2Title),
       description: resolveCopy("buzzaiFeature2Desc", t.buzzaiFeature2Desc),
     },
     {
-      icon: "📊",
+      icon: "⚙️",
       title: resolveCopy("buzzaiFeature3Title", t.buzzaiFeature3Title),
       description: resolveCopy("buzzaiFeature3Desc", t.buzzaiFeature3Desc),
+    },
+    {
+      icon: "🔥",
+      title: resolveCopy("buzzaiFeature4Title", t.buzzaiFeature4Title),
+      description: resolveCopy("buzzaiFeature4Desc", t.buzzaiFeature4Desc),
     },
   ];
   const buzzaiMetrics = [
@@ -162,6 +173,22 @@ export default function Home() {
     {
       value: resolveCopy("buzzaiMetric3Value", t.buzzaiMetric3Value),
       label: resolveCopy("buzzaiMetric3Label", t.buzzaiMetric3Label),
+    },
+  ];
+  const buzzaiActions = [
+    {
+      icon: "📡",
+      href: "https://t.me/BuzzAI234",
+      title: buzzaiCtaPrimaryTitle,
+      description: buzzaiCtaPrimaryDesc,
+      label: buzzaiCtaPrimary,
+    },
+    {
+      icon: "💬",
+      href: "https://t.me/publicBuzzAI",
+      title: buzzaiCtaSecondaryTitle,
+      description: buzzaiCtaSecondaryDesc,
+      label: buzzaiCtaSecondary,
     },
   ];
 
@@ -673,9 +700,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="buzzai" className="container mx-auto py-12 md:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-stretch">
-            <div className={cn("space-y-6", cardBodyAlignmentClass)}>
+        <section id="buzzai" className="relative overflow-hidden py-16 md:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18)_0%,_transparent_55%)] dark:bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.22)_0%,_transparent_60%)]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white/10 dark:from-primary/10 dark:via-transparent dark:to-background"
+          />
+          <div className="container relative">
+            <div className={cn("mx-auto max-w-3xl space-y-4 text-center md:text-left", isHebrew ? "md:text-right" : "")}>
               <span
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary shadow-[0_10px_35px_rgba(56,189,248,0.25)]",
@@ -685,100 +720,112 @@ export default function Home() {
                 <span className="text-lg">🤖</span>
                 <span>{t.buzzai}</span>
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-secondary leading-tight animate-fade-in-up">
-                {buzzaiTitle}
-              </h2>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed animate-fade-in-up stagger-1">
-                {buzzaiSubtitle}
-              </p>
-              <div className="space-y-4">
-                {buzzaiFeatures.map((feature, index) => (
-                  <div
-                    key={feature.title}
-                    className={cn(
-                      `glass glass-hover flex items-start gap-4 rounded-2xl p-4 md:p-5 animate-fade-in-up stagger-${index + 2}`,
-                      isHebrew ? "flex-row-reverse text-right" : "text-left"
-                    )}
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-2xl">
-                      {feature.icon}
-                    </div>
-                    <div className="space-y-1">
-                      <h3 className="text-lg font-semibold text-secondary">{feature.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div
-                className={cn(
-                  "flex flex-wrap items-center gap-3 pt-2",
-                  isHebrew ? "justify-end" : "justify-start"
-                )}
-              >
-                <Button
-                  asChild
-                  className="liquid-button h-12 rounded-full px-6 text-white text-sm font-medium shadow-lg shadow-primary/30"
-                >
-                  <a href="#contact">{buzzaiCtaPrimary}</a>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="glass-hover h-12 rounded-full border-primary/40 px-6 text-sm font-medium text-primary"
-                >
-                  <a href="#projects">{buzzaiCtaSecondary}</a>
-                </Button>
-              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-secondary leading-tight">{buzzaiTitle}</h2>
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">{buzzaiSubtitle}</p>
             </div>
-            <Card className="relative overflow-hidden rounded-3xl border border-primary/20 bg-background/80 p-6 md:p-8 shadow-[0_25px_60px_rgba(15,23,42,0.18)]">
-              <div
-                className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-amber-200/25"
-                aria-hidden
-              />
-              <div className="relative flex h-full flex-col gap-6">
-                <div
-                  className={cn(
-                    "rounded-2xl border border-primary/40 bg-background/80 p-5 backdrop-blur",
-                    cardBodyAlignmentClass
-                  )}
-                >
-                  <h3 className="text-base font-semibold text-primary uppercase tracking-[0.3em]">{t.buzzai}</h3>
-                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{buzzaiDescription}</p>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  {buzzaiMetrics.map(metric => (
+
+            <div className="mt-12 grid gap-10 lg:grid-cols-[1.05fr,0.95fr]">
+              <div className={cn("flex flex-col gap-8", cardBodyAlignmentClass)}>
+                <p className="text-sm font-medium text-secondary/80">{buzzaiHighlightsLead}</p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {buzzaiHighlights.map(highlight => (
                     <div
-                      key={metric.label}
-                      className="glass rounded-2xl px-4 py-5 text-center shadow-sm"
-                    >
-                      <div className="text-2xl font-bold text-primary">{metric.value}</div>
-                      <div className="mt-1 text-xs text-muted-foreground leading-snug">{metric.label}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-auto space-y-2 rounded-2xl border border-dashed border-primary/30 bg-background/70 p-5 shadow-inner">
-                  {buzzaiFeatures.map(feature => (
-                    <div
-                      key={`${feature.title}-workflow`}
+                      key={highlight.title}
                       className={cn(
-                        "flex items-center justify-between rounded-xl bg-primary/5 px-4 py-3 text-xs font-medium text-secondary",
-                        isHebrew ? "flex-row-reverse text-right" : ""
+                        "group relative overflow-hidden rounded-3xl border border-white/40 bg-white/75 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.12)] backdrop-blur transition-all duration-500 dark:border-white/10 dark:bg-white/10 dark:shadow-[0_24px_55px_rgba(14,116,144,0.35)]",
+                        isHebrew ? "text-right" : "text-left"
                       )}
                     >
-                      <span className={cn("flex items-center gap-2", isHebrew ? "flex-row-reverse" : "")}> 
-                        <span className="text-base">{feature.icon}</span>
-                        <span>{feature.title}</span>
-                      </span>
-                      <span className="flex items-center gap-1 text-primary/70">
-                        <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-                        AI
-                      </span>
+                      <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-amber-200/15 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                      <div className="relative flex items-start gap-3">
+                        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
+                          {highlight.icon}
+                        </span>
+                        <div className="space-y-1">
+                          <h3 className="text-lg font-semibold text-secondary">{highlight.title}</h3>
+                          <p className="text-sm text-muted-foreground leading-relaxed">{highlight.description}</p>
+                        </div>
+                      </div>
+                      <span className="pointer-events-none absolute -bottom-6 left-1/2 h-20 w-20 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl transition-all duration-500 group-hover:scale-125 group-hover:opacity-100" />
                     </div>
                   ))}
                 </div>
               </div>
-            </Card>
+
+              <Card className="relative overflow-hidden rounded-[32px] border border-primary/25 bg-background/80 p-6 md:p-8 shadow-[0_30px_75px_rgba(15,23,42,0.22)] backdrop-blur">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-fuchsia-200/15"
+                />
+                <div className="relative flex h-full flex-col gap-6">
+                  <div className={cn("space-y-3", cardBodyAlignmentClass)}>
+                    <h3 className="text-xs font-semibold uppercase tracking-[0.4em] text-primary">{t.buzzai}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{buzzaiDescription}</p>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    {buzzaiMetrics.map(metric => (
+                      <div
+                        key={metric.label}
+                        className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-background/70 px-4 py-5 text-center shadow-sm transition-all duration-500 hover:border-primary/55 hover:shadow-[0_18px_40px_rgba(14,165,233,0.25)]"
+                      >
+                        <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/12 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                        <div className="relative text-2xl font-bold text-primary">{metric.value}</div>
+                        <div className="relative mt-1 text-xs text-muted-foreground leading-snug">{metric.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-4">
+                    {buzzaiActions.map(action => (
+                      <div
+                        key={action.href}
+                        className={cn(
+                          "group relative overflow-hidden rounded-3xl border border-primary/25 bg-background/70 p-5 transition-all duration-500 hover:border-primary/50 hover:shadow-[0_24px_55px_rgba(14,165,233,0.28)]",
+                          cardBodyAlignmentClass
+                        )}
+                      >
+                        <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/15 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                        <div
+                          className={cn(
+                            "relative flex flex-col gap-4 sm:flex-row sm:items-center",
+                            isHebrew ? "sm:flex-row-reverse" : ""
+                          )}
+                        >
+                          <div className={cn("flex items-start gap-3", isHebrew ? "flex-row-reverse text-right" : "text-left")}>
+                            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
+                              {action.icon}
+                            </span>
+                            <div className={cn("space-y-1", isHebrew ? "text-right" : "text-left")}>
+                              <h4 className="text-base font-semibold text-secondary">{action.title}</h4>
+                              <p className="text-xs text-muted-foreground leading-relaxed">{action.description}</p>
+                            </div>
+                          </div>
+                          <Button
+                            asChild
+                            size="sm"
+                            className={cn(
+                              "relative inline-flex h-10 items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary via-cyan-400 to-emerald-400 px-5 text-xs font-semibold text-white shadow-lg shadow-primary/30 transition hover:shadow-primary/40",
+                              isHebrew ? "sm:mr-auto sm:ml-0" : "sm:ml-auto"
+                            )}
+                          >
+                            <a href={action.href} target="_blank" rel="noreferrer">
+                              {action.label}
+                            </a>
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div
+                    className={cn(
+                      "rounded-3xl border border-dashed border-primary/30 bg-background/70 p-6 text-sm font-medium leading-relaxed text-secondary",
+                      cardBodyAlignmentClass
+                    )}
+                  >
+                    {buzzaiFooter}
+                  </div>
+                </div>
+              </Card>
+            </div>
           </div>
         </section>
 
