@@ -13,7 +13,6 @@ export default function MobileMenu() {
     { href: "services", label: t.services },
     { href: "about", label: t.about },
     { href: "projects", label: t.projects },
-    { href: "buzzai", label: t.buzzai },
     { href: "faq", label: t.faq },
     { href: "blog", label: t.blog },
     { href: "contact", label: t.contact },
