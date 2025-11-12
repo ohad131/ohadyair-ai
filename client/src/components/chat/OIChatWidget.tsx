@@ -271,31 +271,35 @@ export function OIChatWidget() {
         aria-expanded={isOpen}
         aria-controls="oi-chat-panel"
         className={cn(
-          "group relative flex items-center gap-4 overflow-hidden rounded-full px-6 py-4 text-left text-white shadow-[0_18px_45px_rgba(56,189,248,0.45)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
+          "group relative flex items-center gap-4 overflow-hidden rounded-full border border-white/15 px-6 py-4 text-left text-white shadow-[0_18px_45px_rgba(56,189,248,0.35)] backdrop-blur-md transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/60 focus-visible:ring-offset-background",
+          "before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-gradient-to-r before:from-white/40 before:via-white/10 before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 before:content-['']",
+          "after:pointer-events-none after:absolute after:inset-y-0 after:-left-1/3 after:h-full after:w-1/2 after:translate-x-[-130%] after:bg-white/25 after:blur-2xl after:transition-transform after:duration-700 after:content-['']",
           isOpen
-            ? "bg-gradient-to-r from-primary/90 via-primary to-sky-600"
-            : "bg-gradient-to-r from-primary via-primary/90 to-sky-500 hover:-translate-y-1 hover:shadow-[0_26px_65px_rgba(56,189,248,0.55)]"
+            ? "bg-gradient-to-r from-primary/90 via-primary to-indigo-600 shadow-[0_24px_70px_rgba(99,102,241,0.45)] before:opacity-70"
+            : "bg-gradient-to-r from-sky-500 via-primary to-fuchsia-500 hover:-translate-y-1 hover:shadow-[0_30px_85px_rgba(56,189,248,0.55)] hover:before:opacity-100 hover:after:translate-x-[220%]"
         )}
       >
-        <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white/20 text-white transition-transform duration-300 group-hover:scale-105">
-          {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
+        <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white shadow-inner transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-full border border-white/40 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            className="absolute inset-0 rounded-full bg-white/20 opacity-0 transition-all duration-700 group-hover:opacity-100 group-hover:animate-ping"
           />
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white">
+            {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
+          </span>
         </span>
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start text-white">
           <span className="text-xs uppercase tracking-[0.35em] text-white/70">
             {t.chatLauncherLabelShort}
           </span>
-          <span className="text-lg font-semibold leading-tight">{t.chatLauncherLabel}</span>
+          <span className="text-lg font-semibold leading-tight drop-shadow">{t.chatLauncherLabel}</span>
           <span className="hidden text-xs text-white/80 sm:block">{t.chatLauncherTagline}</span>
         </div>
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 left-0 w-20 -translate-x-full bg-white/20 blur-2xl transition-transform duration-500 group-hover:translate-x-[220%]"
+          className="pointer-events-none absolute -top-3 right-6 h-16 w-16 rounded-full bg-sky-300/40 blur-3xl transition-transform duration-700 group-hover:scale-[1.4]"
         />
-        <span aria-hidden className="pointer-events-none absolute -top-2 right-5 text-xl text-amber-200 animate-bounce">
+        <span aria-hidden className="pointer-events-none absolute -top-1 right-3 text-xl text-amber-200 transition-transform duration-700 group-hover:-translate-y-1 group-hover:scale-110">
           ✨
         </span>
       </Button>
