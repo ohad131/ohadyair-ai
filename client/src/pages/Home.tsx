@@ -217,46 +217,69 @@ export default function Home() {
 
   // Scroll animation observer
   useEffect(() => {
-    // Immediately show hero section animations
-    const heroSection = document.getElementById('home');
-    if (heroSection) {
-      const heroAnimated = heroSection.querySelectorAll(
-        '.animate-fade-in-up, .animate-fade-in-left, .animate-fade-in-right, .animate-scale-in, .animate-bounce-in, .animate-slide-in-bottom'
-      );
-      heroAnimated.forEach((el) => el.classList.add('visible'));
-    }
+    const animatedSelectors = [
+      ".animate-fade-in-up",
+      ".animate-fade-in-left",
+      ".animate-fade-in-right",
+      ".animate-scale-in",
+      ".animate-bounce-in",
+      ".animate-slide-in-bottom",
+    ];
+    const animatedQuery = animatedSelectors.join(", ");
+    const heroSection = document.getElementById("home");
+    const exitTimers = new Map<Element, number>();
+    const exitDelay = 160;
+
+    const clearExitTimer = (element: Element) => {
+      const timerId = exitTimers.get(element);
+      if (timerId) {
+        window.clearTimeout(timerId);
+        exitTimers.delete(element);
+      }
+    };
+
+    const scheduleExit = (element: Element) => {
+      if (exitTimers.has(element)) return;
+      const timerId = window.setTimeout(() => {
+        element.classList.remove("visible");
+        exitTimers.delete(element);
+      }, exitDelay);
+      exitTimers.set(element, timerId);
+    };
+
+    // Ensure hero section content fades in immediately on load
+    const heroAnimated = heroSection?.querySelectorAll(animatedQuery);
+    heroAnimated?.forEach(el => el.classList.add("visible"));
 
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
+          const element = entry.target;
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          const isStillOnScreen =
+            entry.boundingClientRect.bottom > 0 && entry.boundingClientRect.top < viewportHeight;
+
+          if (entry.isIntersecting || isStillOnScreen) {
+            clearExitTimer(element);
+            element.classList.add("visible");
+          } else {
+            scheduleExit(element);
           }
         });
       },
       {
-        threshold: 0.1,
-        rootMargin: '50px',
+        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+        rootMargin: "0px 0px -8% 0px",
       }
     );
 
-    // Observe all animated elements EXCEPT those in hero section
-    const animatedElements = document.querySelectorAll(
-      '.animate-fade-in-up, .animate-fade-in-left, .animate-fade-in-right, .animate-scale-in, .animate-bounce-in, .animate-slide-in-bottom'
-    );
-
-    animatedElements.forEach(el => {
-      // Skip hero section elements
-      if (!heroSection?.contains(el)) {
-        observer.observe(el);
-      }
-    });
+    const animatedElements = document.querySelectorAll(animatedQuery);
+    animatedElements.forEach(element => observer.observe(element));
 
     return () => {
-      animatedElements.forEach(el => {
-        observer.unobserve(el);
-      });
+      observer.disconnect();
+      exitTimers.forEach(timerId => window.clearTimeout(timerId));
+      exitTimers.clear();
     };
   }, []);
 
