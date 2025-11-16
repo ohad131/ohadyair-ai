@@ -43,6 +43,13 @@
       "when": 1761650000000,
       "tag": "0005_admin_media_library",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1762100000000,
+      "tag": "0006_video_media_library",
+      "breakpoints": true
     }
   ]
 }

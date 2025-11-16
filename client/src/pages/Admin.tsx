@@ -35,6 +35,7 @@ const BASE_IMAGE_URL_REGEX = /\/api\/images\/(\d+)/;
 type AdminBlogPost = RouterOutputs["blog"]["adminList"][number];
 type AdminProject = RouterOutputs["projects"]["adminList"][number];
 type MediaItem = RouterOutputs["images"]["list"][number];
+type VideoItem = RouterOutputs["videos"]["list"][number];
 type ContactSubmission = RouterOutputs["contact"]["list"][number];
 
 type BlogPostFormState = {
@@ -298,6 +299,9 @@ export default function Admin() {
   const blogContentImageInputRef = useRef<HTMLInputElement>(null);
   const projectContentImageInputRef = useRef<HTMLInputElement>(null);
   const mediaUploadInputRef = useRef<HTMLInputElement>(null);
+  const blogContentVideoInputRef = useRef<HTMLInputElement>(null);
+  const projectContentVideoInputRef = useRef<HTMLInputElement>(null);
+  const mediaVideoUploadInputRef = useRef<HTMLInputElement>(null);
 
   const blogQuery = trpc.blog.adminList.useQuery(undefined, {
     enabled: isAuthenticated,
@@ -319,7 +323,10 @@ export default function Admin() {
     { enabled: isAuthenticated }
   );
 
-  const mediaQuery = trpc.images.list.useQuery(undefined, {
+  const imageQuery = trpc.images.list.useQuery(undefined, {
+    enabled: isAuthenticated && activeTab === "media",
+  });
+  const videoQuery = trpc.videos.list.useQuery(undefined, {
     enabled: isAuthenticated && activeTab === "media",
   });
 
@@ -438,6 +445,25 @@ export default function Admin() {
     },
   });
 
+  const uploadVideoMutation = trpc.videos.upload.useMutation({
+    onSuccess: () => {
+      utils.videos.list.invalidate();
+    },
+    onError: error => {
+      toast.error(error.message || "העלאת הווידאו נכשלה");
+    },
+  });
+
+  const deleteVideoMutation = trpc.videos.delete.useMutation({
+    onSuccess: () => {
+      toast.success("הווידאו נמחק");
+      utils.videos.list.invalidate();
+    },
+    onError: error => {
+      toast.error(error.message || "מחיקת הווידאו נכשלה");
+    },
+  });
+
   useEffect(() => {
     if (!isAuthenticated) return;
     if (!siteContentQuery.data) return;
@@ -485,7 +511,8 @@ export default function Admin() {
 
   const posts = useMemo(() => blogQuery.data ?? [], [blogQuery.data]);
   const projects = useMemo(() => projectQuery.data ?? [], [projectQuery.data]);
-  const mediaItems = useMemo(() => mediaQuery.data ?? [], [mediaQuery.data]);
+  const imageItems = useMemo(() => imageQuery.data ?? [], [imageQuery.data]);
+  const videoItems = useMemo(() => videoQuery.data ?? [], [videoQuery.data]);
   const leads = useMemo(() => leadsQuery.data ?? [], [leadsQuery.data]);
   const unreadLeadsCount = useMemo(() => leads.filter(lead => !lead.isRead).length, [leads]);
   const filteredLeads = useMemo(() => {
@@ -496,6 +523,7 @@ export default function Admin() {
   }, [leadFilter, leads]);
 
   const isUploadingImage = uploadImageMutation.isPending;
+  const isUploadingVideo = uploadVideoMutation.isPending;
 
   function resetBlogForm() {
     setEditingBlogId(null);
@@ -521,7 +549,8 @@ export default function Admin() {
       projectQuery.refetch(),
       leadsQuery.refetch(),
       siteContentQuery.refetch(),
-      mediaQuery.refetch(),
+      imageQuery.refetch(),
+      videoQuery.refetch(),
     ]);
     toast.success("ברוך הבא");
   }
@@ -534,6 +563,22 @@ export default function Admin() {
       base64Data: base64,
     });
     toast.success("התמונה הועלתה בהצלחה");
+    return result;
+  }
+
+  async function handleUploadVideo(file: File) {
+    const mimeType = file.type || "video/mp4";
+    if (!mimeType.startsWith("video/")) {
+      toast.error("נא להעלות קובץ וידאו תקין");
+      return;
+    }
+    const base64 = await fileToBase64(file);
+    const result = await uploadVideoMutation.mutateAsync({
+      fileName: file.name,
+      mimeType,
+      base64Data: base64,
+    });
+    toast.success("הווידאו הועלה בהצלחה");
     return result;
   }
 
@@ -786,6 +831,36 @@ export default function Admin() {
                           }
                         }}
                       />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => blogContentVideoInputRef.current?.click()}
+                        disabled={isUploadingVideo}
+                      >
+                        העלאת וידאו לתוכן
+                      </Button>
+                      <input
+                        type="file"
+                        accept="video/*"
+                        ref={blogContentVideoInputRef}
+                        className="hidden"
+                        onChange={async event => {
+                          const file = event.target.files?.[0];
+                          if (!file) return;
+                          try {
+                            const result = await handleUploadVideo(file);
+                            if (!result) return;
+                            setBlogForm(prev => ({
+                              ...prev,
+                              content:
+                                prev.content +
+                                `\n<p><video controls style="max-width:100%;height:auto;" src="${result.url}"></video></p>\n`,
+                            }));
+                          } finally {
+                            event.target.value = "";
+                          }
+                        }}
+                      />
                     </div>
                   </div>
                   <div className="grid gap-2">
@@ -995,6 +1070,36 @@ export default function Admin() {
                               fullDescription:
                                 prev.fullDescription +
                                 `\n<p><img src="${result.url}" alt="" style=\"max-width:100%;height:auto;\" /></p>\n`,
+                            }));
+                          } finally {
+                            event.target.value = "";
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => projectContentVideoInputRef.current?.click()}
+                        disabled={isUploadingVideo}
+                      >
+                        העלאת וידאו לתוכן
+                      </Button>
+                      <input
+                        type="file"
+                        accept="video/*"
+                        ref={projectContentVideoInputRef}
+                        className="hidden"
+                        onChange={async event => {
+                          const file = event.target.files?.[0];
+                          if (!file) return;
+                          try {
+                            const result = await handleUploadVideo(file);
+                            if (!result) return;
+                            setProjectForm(prev => ({
+                              ...prev,
+                              fullDescription:
+                                prev.fullDescription +
+                                `\n<p><video controls style="max-width:100%;height:auto;" src="${result.url}"></video></p>\n`,
                             }));
                           } finally {
                             event.target.value = "";
@@ -1333,12 +1438,12 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="media" className="space-y-6">
-            <Card className="p-6 space-y-6">
+            <Card className="p-6 space-y-8">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-secondary">ספריית המדיה</h2>
+                  <h2 className="text-xl font-semibold text-secondary">ספריית מדיה</h2>
                   <p className="text-muted-foreground text-sm">
-                    העלה תמונות ושמור אותן לשימוש באתר
+                    העלה קבצי תמונה ווידאו לשימוש ישיר בבלוגים ובפרויקטים
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -1364,57 +1469,140 @@ export default function Admin() {
                       }
                     }}
                   />
+                  <Button
+                    variant="outline"
+                    onClick={() => mediaVideoUploadInputRef.current?.click()}
+                    disabled={isUploadingVideo}
+                  >
+                    העלה וידאו חדש
+                  </Button>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    className="hidden"
+                    ref={mediaVideoUploadInputRef}
+                    onChange={async event => {
+                      const file = event.target.files?.[0];
+                      if (!file) return;
+                      try {
+                        await handleUploadVideo(file);
+                      } finally {
+                        event.target.value = "";
+                      }
+                    }}
+                  />
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {mediaItems.map((item: MediaItem) => (
-                  <Card key={item.id} className="overflow-hidden border border-border/60">
-                    <div className="h-40 bg-muted/40 flex items-center justify-center overflow-hidden">
-                      <img
-                        src={item.url}
-                        alt={item.fileName}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="p-4 space-y-2 text-sm">
-                      <div className="font-semibold text-secondary truncate">{item.fileName}</div>
-                      <div className="text-muted-foreground text-xs">
-                        {item.mimeType}
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            if (navigator.clipboard?.writeText) {
-                              navigator.clipboard
-                                .writeText(item.url)
-                                .then(() => toast.success("הקישור הועתק"))
-                                .catch(() => toast.error("נכשל בהעתקת הקישור"));
-                            } else {
-                              toast.error("הדפדפן לא תומך בהעתקה אוטומטית");
-                            }
-                          }}
-                        >
-                          העתק קישור
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => deleteImageMutation.mutate({ id: item.id })}
-                        >
-                          מחק
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-                {mediaItems.length === 0 && (
-                  <div className="col-span-full text-center text-muted-foreground">
-                    אין תמונות בספרייה עדיין
+              <div className="space-y-10">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-secondary">תמונות</h3>
+                    <span className="text-sm text-muted-foreground">{imageItems.length} קבצים</span>
                   </div>
-                )}
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {imageItems.map((item: MediaItem) => (
+                      <Card key={item.id} className="overflow-hidden border border-border/60">
+                        <div className="h-40 bg-muted/40 flex items-center justify-center overflow-hidden">
+                          <img
+                            src={item.url}
+                            alt={item.fileName}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="p-4 space-y-2 text-sm">
+                          <div className="font-semibold text-secondary truncate">{item.fileName}</div>
+                          <div className="text-muted-foreground text-xs">{item.mimeType}</div>
+                          <div className="flex flex-wrap gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                if (navigator.clipboard?.writeText) {
+                                  navigator.clipboard
+                                    .writeText(item.url)
+                                    .then(() => toast.success("הקישור הועתק"))
+                                    .catch(() => toast.error("נכשל בהעתקת הקישור"));
+                                } else {
+                                  toast.error("הדפדפן לא תומך בהעתקה אוטומטית");
+                                }
+                              }}
+                            >
+                              העתק קישור
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => deleteImageMutation.mutate({ id: item.id })}
+                            >
+                              מחק
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                    {imageItems.length === 0 && (
+                      <div className="col-span-full text-center text-muted-foreground">
+                        אין תמונות בספרייה עדיין
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-secondary">וידאו</h3>
+                    <span className="text-sm text-muted-foreground">{videoItems.length} קבצים</span>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {videoItems.map((item: VideoItem) => (
+                      <Card key={item.id} className="overflow-hidden border border-border/60">
+                        <div className="h-52 bg-muted/40 flex items-center justify-center overflow-hidden">
+                          <video
+                            controls
+                            preload="metadata"
+                            src={item.url}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="p-4 space-y-2 text-sm">
+                          <div className="font-semibold text-secondary truncate">{item.fileName}</div>
+                          <div className="text-muted-foreground text-xs">{item.mimeType}</div>
+                          <div className="flex flex-wrap gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                if (navigator.clipboard?.writeText) {
+                                  navigator.clipboard
+                                    .writeText(item.url)
+                                    .then(() => toast.success("הקישור הועתק"))
+                                    .catch(() => toast.error("נכשל בהעתקת הקישור"));
+                                } else {
+                                  toast.error("הדפדפן לא תומך בהעתקה אוטומטית");
+                                }
+                              }}
+                            >
+                              העתק קישור
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => deleteVideoMutation.mutate({ id: item.id })}
+                            >
+                              מחק
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                    {videoItems.length === 0 && (
+                      <div className="col-span-full text-center text-muted-foreground">
+                        אין סרטונים בספרייה עדיין
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </Card>
           </TabsContent>

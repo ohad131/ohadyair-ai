@@ -30,6 +30,10 @@ import {
   getImageRecord,
   listImageRecords,
   deleteImageRecord,
+  createVideoRecord,
+  getVideoRecord,
+  listVideoRecords,
+  deleteVideoRecord,
   getAllProjectsAdmin,
   updateProject,
   getIntegrationSecretValue,
@@ -603,6 +607,48 @@ export const appRouter = router({
           fileName: record.fileName,
           mimeType: record.mimeType,
           url: `/api/images/${record.id}`,
+        } as const;
+      }),
+  }),
+
+  videos: router({
+    upload: adminProcedure
+      .input(
+        z.object({
+          fileName: z.string().min(1),
+          mimeType: z.string().regex(/^video\//i, "Only video files are allowed"),
+          base64Data: z.string().min(1),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const { id } = await createVideoRecord(input);
+        return { id, url: `/api/videos/${id}` } as const;
+      }),
+    list: adminProcedure.query(async () => {
+      const items = await listVideoRecords();
+      return items.map(item => ({
+        ...item,
+        url: `/api/videos/${item.id}`,
+      }));
+    }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteVideoRecord(input.id);
+        return { success: true } as const;
+      }),
+    get: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const record = await getVideoRecord(input.id);
+        if (!record) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Video not found" });
+        }
+        return {
+          id: record.id,
+          fileName: record.fileName,
+          mimeType: record.mimeType,
+          url: `/api/videos/${record.id}`,
         } as const;
       }),
   }),

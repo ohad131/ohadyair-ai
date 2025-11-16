@@ -19,6 +19,9 @@ import {
   images,
   Image,
   InsertImage,
+  videos,
+  Video,
+  InsertVideo,
   integrationSecrets,
   InsertIntegrationSecret,
 } from "../src/db/schema";
@@ -29,6 +32,7 @@ let pool: mysql.Pool | null = null;
 let _db: ReturnType<typeof drizzle> | null = null;
 
 const BASE64_HEADER_PATTERN = /^data:[^;]+;base64,/i;
+const VIDEO_MIME_TYPE_PATTERN = /^video\//i;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
@@ -433,6 +437,12 @@ function normalizeBase64Data(value: string): string {
   return trimmed.replace(BASE64_HEADER_PATTERN, "");
 }
 
+function assertVideoMimeType(mimeType: string) {
+  if (!VIDEO_MIME_TYPE_PATTERN.test(mimeType)) {
+    throw new Error("Only video files are allowed");
+  }
+}
+
 export async function createImageRecord(
   input: Pick<InsertImage, "fileName" | "mimeType"> & { base64Data: string }
 ): Promise<{ id: number }> {
@@ -504,6 +514,81 @@ export async function deleteImageRecord(id: number) {
   }
 
   await db.delete(images).where(eq(images.id, id));
+  return { success: true };
+}
+
+export async function createVideoRecord(
+  input: Pick<InsertVideo, "fileName" | "mimeType"> & { base64Data: string }
+): Promise<{ id: number }> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  assertVideoMimeType(input.mimeType);
+  const data = normalizeBase64Data(input.base64Data);
+
+  const result = await db.insert(videos).values({
+    fileName: input.fileName,
+    mimeType: input.mimeType,
+    data,
+  });
+
+  const insertHeader = result as unknown as mysql.ResultSetHeader;
+  const insertId = Number(insertHeader.insertId ?? 0);
+  if (!insertId) {
+    const latest = await db
+      .select({ id: videos.id })
+      .from(videos)
+      .orderBy(desc(videos.id))
+      .limit(1);
+    if (!latest[0]) {
+      throw new Error("Failed to determine new video ID");
+    }
+    return { id: Number(latest[0]!.id) };
+  }
+
+  return { id: insertId };
+}
+
+export async function getVideoRecord(id: number): Promise<Video | null> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const rows = await db.select().from(videos).where(eq(videos.id, id)).limit(1);
+  return rows.length > 0 ? rows[0] : null;
+}
+
+export async function listVideoRecords(): Promise<Array<Omit<Video, "data">>> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const rows = await db
+    .select({
+      id: videos.id,
+      fileName: videos.fileName,
+      mimeType: videos.mimeType,
+      createdAt: videos.createdAt,
+    })
+    .from(videos)
+    .orderBy(desc(videos.createdAt));
+
+  return rows.map(row => ({
+    ...row,
+  }));
+}
+
+export async function deleteVideoRecord(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  await db.delete(videos).where(eq(videos.id, id));
   return { success: true };
 }
 

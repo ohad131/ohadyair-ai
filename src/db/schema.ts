@@ -145,6 +145,20 @@ export type Image = typeof images.$inferSelect;
 export type InsertImage = typeof images.$inferInsert;
 
 /**
+ * Media library videos table
+ */
+export const videos = mysqlTable("videos", {
+  id: int("id").primaryKey().autoincrement(),
+  fileName: varchar("fileName", { length: 255 }).notNull(),
+  mimeType: varchar("mimeType", { length: 100 }).notNull(),
+  data: longtext("data").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Video = typeof videos.$inferSelect;
+export type InsertVideo = typeof videos.$inferInsert;
+
+/**
  * Integration secrets table - store API keys and tokens required by services.
  */
 export const integrationSecrets = mysqlTable(

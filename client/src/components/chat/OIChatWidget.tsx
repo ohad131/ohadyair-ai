@@ -177,9 +177,10 @@ export function OIChatWidget() {
   };
 
   const closeLabel = isHebrew ? "סגור צ'אט" : "Close chat";
+  const tooltipLabel = isOpen ? closeLabel : t.chatLauncherLabel;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-3">
       {isOpen && (
         <div
           id="oi-chat-panel"
@@ -267,20 +268,38 @@ export function OIChatWidget() {
         </div>
       )}
 
-      <Button
-        type="button"
-        onClick={toggleOpen}
-        aria-expanded={isOpen}
-        aria-controls="oi-chat-panel"
-        aria-label={isOpen ? closeLabel : t.chatLauncherLabel}
-        className={cn(
-          "flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5",
-          isHebrew ? "flex-row-reverse" : ""
-        )}
-      >
-        {isOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
-        <span>{isOpen ? closeLabel : t.chatLauncherLabel}</span>
-      </Button>
+      <div className="group relative flex items-center justify-center">
+        <div className="absolute right-full mr-4 px-3 py-1.5 bg-gray-900/80 dark:bg-black/80 text-white text-sm font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+          {tooltipLabel}
+          <div className="absolute left-full top-1/2 -translate-y-1/2 w-2 h-2 bg-inherit transform rotate-45" />
+        </div>
+        <button
+          type="button"
+          onClick={toggleOpen}
+          aria-expanded={isOpen}
+          aria-controls="oi-chat-panel"
+          aria-label={tooltipLabel}
+          className="oi-chat-floating-button h-26 w-26"
+        >
+          <div className="oi-chat-icon-container flex flex-col items-center justify-center text-primary p-2">
+            <span
+              className="material-symbols-outlined leading-none"
+              style={{
+                fontSize: 50,
+                fontVariationSettings: "\"FILL\" 1, \"wght\" 300",
+              }}
+            >
+              neurology
+            </span>
+            <span
+              className="oi-chat-button-label font-bold"
+              style={{ fontSize: 11, marginTop: -3 }}
+            >
+              OI CHAT
+            </span>
+          </div>
+        </button>
+      </div>
     </div>
   );
 }

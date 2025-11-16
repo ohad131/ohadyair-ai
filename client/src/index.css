@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -317,6 +319,52 @@
   .liquid-button:hover {
     box-shadow: 0 6px 25px rgba(0, 188, 212, 0.5);
     transform: translateY(-2px);
+  }
+
+  .oi-chat-floating-button {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    overflow: hidden;
+    border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+    background-color: rgba(25, 195, 230, 0.1);
+    backdrop-filter: blur(12px) brightness(1.1);
+    -webkit-backdrop-filter: blur(12px) brightness(1.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .oi-chat-floating-button:hover {
+    border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .oi-chat-icon-container {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0 0 15px rgba(25, 195, 230, 0.8),
+      0 0 30px rgba(25, 195, 230, 0.6);
+  }
+
+  .oi-chat-floating-button:hover .oi-chat-icon-container {
+    text-shadow: 0 0 25px rgba(25, 195, 230, 1),
+      0 0 50px rgba(25, 195, 230, 0.8);
+  }
+
+  .oi-chat-icon-container .material-symbols-outlined {
+    font-size: 78px;
+    line-height: 0.9;
+  }
+
+  .oi-chat-button-label {
+    font-size: 11px;
+    margin-top: -4px;
+    line-height: 1;
   }
 }
 
