@@ -127,6 +127,53 @@ export default function Home() {
   const stat2Label = resolveCopy("stats2Label", t.statClients);
   const stat3Value = resolveCopy("stats3Value", "100%");
   const stat3Label = resolveCopy("stats3Label", t.statQuality);
+  const buzzAIChannelLink = "https://t.me/BuzzAI234";
+  const buzzAIGroupLink = "https://t.me/publicBuzzAI";
+  const buzzAIContent = isHebrew
+    ? {
+        navLabel: "BuzzAI",
+        kicker: "BuzzAI",
+        badge: "AI NEWS UPDATES",
+        title: "רוצים להבין באמת מה קורה בעולם הבינה המלאכותית?",
+        subtitle: "ברוכים הבאים ל-BuzzAI – קהילה חיה ונושמת של אנשים שחיים טכנולוגיה, חדשנות ובינה מלאכותית.",
+        description: "כאן תקבלו את כל מה ש-Buzzzzzzz בתחום:",
+        mission:
+          "המטרה של הקהילה היא ליצור מקום שבו כל אחד יכול להבין, לשתף, לשאול ולהתעדכן. לא צריך להיות מתכנת או חוקר כדי לקחת חלק – מספיק להיות סקרן.",
+        invite: "הצטרפו עכשיו לערוץ הטלגרם כדי להישאר מעודכנים וכשתרצו לדבר על זה יחד עם אחרים, עברו לקבוצת הדיונים שלנו.",
+        closing: "בואו להיות חלק מהקהילה שמביאה את ה-AI לשפה של כולנו.",
+        channelCta: "📡 הצטרפו לערוץ BuzzAI",
+        groupCta: "💬 הצטרפו לקבוצת הדיונים",
+        channelNote: "https://t.me/BuzzAI234",
+        groupNote: "https://t.me/publicBuzzAI",
+        bullets: [
+          { icon: "💡", text: "חדשות ועדכונים חשובים מהעולם" },
+          { icon: "🧠", text: "הסברים פשוטים על מושגים, מגמות וכלים חדשים" },
+          { icon: "⚙", text: "שיחות פתוחות עם אנשים סקרנים בדיוק כמוכם" },
+          { icon: "🔥", text: "השראה לרעיונות, פרויקטים וחשיבה מחוץ לקופסה" },
+        ],
+      }
+    : {
+        navLabel: "BuzzAI",
+        kicker: "BuzzAI",
+        badge: "AI NEWS UPDATES",
+        title: "Want to truly understand what's happening in the AI world?",
+        subtitle: "Welcome to BuzzAI — a vibrant community for people who live and breathe technology, innovation, and artificial intelligence.",
+        description: "Here’s where you catch every Buzz-worthy update in AI:",
+        mission:
+          "Our goal is to create a space where everyone can understand, share, ask, and stay in the loop. You don’t have to be a researcher or engineer — curiosity is enough.",
+        invite: "Join the Telegram channel to stay updated and hop into the discussion group whenever you want to talk it through with others.",
+        closing: "Be part of the community that translates AI into everyone’s language.",
+        channelCta: "📡 Join the BuzzAI channel",
+        groupCta: "💬 Enter the discussion group",
+        channelNote: "https://t.me/BuzzAI234",
+        groupNote: "https://t.me/publicBuzzAI",
+        bullets: [
+          { icon: "💡", text: "Key news and updates from across the globe" },
+          { icon: "🧠", text: "Plain-language explainers on trends, concepts, and new tools" },
+          { icon: "⚙", text: "Open conversations with curious people just like you" },
+          { icon: "🔥", text: "Inspiration for ideas, projects, and out-of-the-box thinking" },
+        ],
+      };
 
 
   const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -216,7 +263,7 @@ export default function Home() {
   // Track active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["home", "services", "about", "projects", "faq", "blog", "contact"];
+      const sections = ["home", "services", "about", "projects", "buzzai", "faq", "blog", "contact"];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -300,6 +347,7 @@ export default function Home() {
                 { href: "services", label: t.services },
                 { href: "about", label: t.about },
                 { href: "projects", label: t.projects },
+                { href: "buzzai", label: buzzAIContent.navLabel },
                 { href: "faq", label: t.faq },
                 { href: "blog", label: t.blog },
                 { href: "contact", label: t.contact },
@@ -633,6 +681,94 @@ export default function Home() {
                 ))}
               </div>
             )}
+          </div>
+        </section>
+
+        {/* BuzzAI Community Section */}
+        <section id="buzzai" className="container mx-auto py-12 md:py-20">
+          <div className="relative overflow-hidden rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/5 via-background to-secondary/5 dark:from-primary/20 dark:via-[#05060a] dark:to-secondary/10 p-6 md:p-12">
+            <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary/20 blur-3xl opacity-70" aria-hidden="true" />
+            <div className="absolute -bottom-20 -left-10 w-64 h-64 bg-secondary/10 blur-3xl opacity-70" aria-hidden="true" />
+            <div className="relative grid items-center gap-10 lg:grid-cols-2">
+              <div className={cn("space-y-6", cardBodyAlignmentClass)}>
+                <div
+                  className={cn(
+                    "inline-flex items-center gap-3 text-primary font-semibold tracking-[0.4em] uppercase text-xs",
+                    isHebrew ? "flex-row-reverse" : ""
+                  )}
+                >
+                  <span>{buzzAIContent.kicker}</span>
+                  <span className="w-2 h-2 rounded-full bg-primary/70" aria-hidden="true" />
+                  <span className="tracking-[0.3em] text-[0.65rem] text-primary/70">{buzzAIContent.badge}</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-secondary animate-fade-in-up">{buzzAIContent.title}</h2>
+                <p className="text-base md:text-lg text-muted-foreground leading-relaxed animate-fade-in-up stagger-1">
+                  {buzzAIContent.subtitle}
+                </p>
+                <p className="text-base text-muted-foreground leading-relaxed animate-fade-in-up stagger-2">{buzzAIContent.description}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fade-in-up stagger-3">
+                  {buzzAIContent.bullets.map(bullet => (
+                    <div
+                      key={bullet.text}
+                      className={cn(
+                        "glass glass-hover rounded-2xl p-4 flex gap-3 items-start hover-glow",
+                        cardBodyAlignmentClass === "text-right" ? "flex-row-reverse text-right" : "text-left"
+                      )}
+                    >
+                      <span className="text-2xl" aria-hidden="true">
+                        {bullet.icon}
+                      </span>
+                      <p className={cn("text-sm text-secondary leading-relaxed", cardBodyAlignmentClass)}>{bullet.text}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed animate-fade-in-up stagger-4">
+                  {buzzAIContent.mission}
+                </p>
+                <p className="text-base font-semibold text-primary animate-fade-in-up stagger-5">{buzzAIContent.closing}</p>
+              </div>
+
+              <Card
+                className={cn(
+                  "relative overflow-hidden glass-dark rounded-3xl border border-white/10 p-8 text-white animate-scale-in stagger-3",
+                  cardBodyAlignmentClass
+                )}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-sky-500/40 via-primary/20 to-violet-700/60 blur-[120px] opacity-80" aria-hidden="true" />
+                <div className="relative z-10 space-y-3">
+                  <div className="flex justify-center">
+                    <img
+                      src="/buzzai-card.svg"
+                      alt={isHebrew ? "BuzzAI - כרטיס קהילה" : "BuzzAI community card"}
+                      className="w-36 sm:w-48 drop-shadow-xl"
+                      loading="lazy"
+                    />
+                  </div>
+                  <p className={cn("text-sm md:text-base text-secondary dark:text-white/85 leading-relaxed font-medium", cardBodyAlignmentClass)}>
+                    {buzzAIContent.invite}
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      asChild
+                      className="flex-1 h-12 rounded-full text-base font-semibold shadow-lg shadow-primary/40 hover:shadow-primary/60 transition-shadow"
+                    >
+                      <a href={buzzAIChannelLink} target="_blank" rel="noopener noreferrer">
+                        {buzzAIContent.channelCta}
+                      </a>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="flex-1 h-12 rounded-full border-white/40 text-white hover:text-primary hover:border-primary/60 transition-colors"
+                    >
+                      <a href={buzzAIGroupLink} target="_blank" rel="noopener noreferrer">
+                        {buzzAIContent.groupCta}
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            </div>
           </div>
         </section>
 
