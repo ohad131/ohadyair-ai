@@ -281,7 +281,7 @@ export default function Home() {
       exitTimers.forEach(timerId => window.clearTimeout(timerId));
       exitTimers.clear();
     };
-  }, []);
+  }, [projects.length, blogPosts.length, tools.length]);
 
   // Track active section on scroll
   useEffect(() => {
