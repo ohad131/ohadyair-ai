@@ -154,23 +154,12 @@
 }
 
 @layer base {
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-
   * {
     @apply border-border outline-ring/50;
   }
   
   html {
     direction: rtl;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    overscroll-behavior-x: none;
-    touch-action: pan-y;
   }
   
   body {
@@ -181,17 +170,8 @@
     background-attachment: fixed;
     min-height: 100vh;
     position: relative;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: clip;
-    overscroll-behavior-x: contain;
-    transition: background-color 0.3s ease;
-  }
-
-  #root {
-    width: 100%;
-    max-width: 100%;
     overflow-x: hidden;
+    transition: background-color 0.3s ease;
   }
   
   .dark body {
@@ -1090,23 +1070,5 @@ html {
 .nav-open.vk-open #whatsapp-fab { display: none; }
 @media (max-width: 768px) {
   .nav-open #whatsapp-fab { display: none; }
-}
-
-@media (max-width: 640px) {
-  #whatsapp-fab {
-    width: 3.5rem;
-    height: 3.5rem;
-  }
-
-  .oi-chat-floating-button {
-    width: 4.75rem;
-    height: 4.75rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .animate-scan {
-    display: none !important;
-  }
 }
 

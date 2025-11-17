@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,15 +18,6 @@ const SUGGESTION_KEYS = [
   "chatSuggestionProjectIdeas",
   "chatSuggestionNextSteps",
 ] as const;
-
-const floatingWrapperStyle: CSSProperties = {
-  bottom: "calc(2rem + env(safe-area-inset-bottom, 0px))",
-  right: "calc(2rem + env(safe-area-inset-right, 0px))",
-};
-
-const chatPanelStyle: CSSProperties = {
-  width: "min(360px, calc(100vw - 3rem))",
-};
 
 function generateId(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 8)}-${Date.now()}`;
@@ -189,15 +180,11 @@ export function OIChatWidget() {
   const tooltipLabel = isOpen ? closeLabel : t.chatLauncherLabel;
 
   return (
-    <div
-      className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-3"
-      style={floatingWrapperStyle}
-    >
+    <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-3">
       {isOpen && (
         <div
           id="oi-chat-panel"
-          className="flex flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl"
-          style={chatPanelStyle}
+          className="flex w-[360px] max-w-[90vw] flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl"
         >
           <div className="flex items-start justify-between gap-2 border-b border-border bg-primary/5 px-5 py-4">
             <div>
