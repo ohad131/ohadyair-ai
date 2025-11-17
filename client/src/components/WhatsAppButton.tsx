@@ -15,7 +15,7 @@ export default function WhatsAppButton() {
       href={`https://wa.me/${phoneNumber}?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 group relative"
+      className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 group relative"
       style={floatingButtonStyle}
       aria-label="צור קשר בוואטסאפ"
     >

@@ -190,7 +190,7 @@ export function OIChatWidget() {
 
   return (
     <div
-      className="fixed z-50 flex flex-col items-end gap-3"
+      className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-3"
       style={floatingWrapperStyle}
     >
       {isOpen && (

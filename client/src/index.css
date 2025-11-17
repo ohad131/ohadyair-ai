@@ -1104,3 +1104,9 @@ html {
   }
 }
 
+@media (max-width: 768px) {
+  .animate-scan {
+    display: none !important;
+  }
+}
+
