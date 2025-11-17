@@ -3,7 +3,6 @@ import type { CSSProperties } from "react";
 const floatingButtonStyle: CSSProperties = {
   bottom: "calc(1rem + env(safe-area-inset-bottom, 0px))",
   left: "calc(1rem + env(safe-area-inset-left, 0px))",
-  insetInlineStart: "calc(1rem + env(safe-area-inset-left, 0px))",
 };
 
 export default function WhatsAppButton() {

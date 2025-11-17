@@ -22,7 +22,6 @@ const SUGGESTION_KEYS = [
 const floatingWrapperStyle: CSSProperties = {
   bottom: "calc(2rem + env(safe-area-inset-bottom, 0px))",
   right: "calc(2rem + env(safe-area-inset-right, 0px))",
-  insetInlineEnd: "calc(2rem + env(safe-area-inset-right, 0px))",
 };
 
 const chatPanelStyle: CSSProperties = {
