@@ -180,11 +180,17 @@ export function OIChatWidget() {
   const tooltipLabel = isOpen ? closeLabel : t.chatLauncherLabel;
 
   return (
-    <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-3">
+    <div
+      className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50 flex flex-col items-end gap-3"
+      style={{
+        bottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)",
+        right: "calc(env(safe-area-inset-right, 0px) + 1rem)",
+      }}
+    >
       {isOpen && (
         <div
           id="oi-chat-panel"
-          className="flex w-[360px] max-w-[90vw] flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl"
+          className="flex w-[360px] max-w-[calc(100vw-2.5rem)] sm:max-w-[90vw] flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl"
         >
           <div className="flex items-start justify-between gap-2 border-b border-border bg-primary/5 px-5 py-4">
             <div>
@@ -279,7 +285,7 @@ export function OIChatWidget() {
           aria-expanded={isOpen}
           aria-controls="oi-chat-panel"
           aria-label={tooltipLabel}
-          className="oi-chat-floating-button h-26 w-26"
+          className="oi-chat-floating-button h-[5rem] w-[5rem] sm:h-[6.5rem] sm:w-[6.5rem]"
         >
           <div className="oi-chat-icon-container flex flex-col items-center justify-center text-primary p-2">
             <span

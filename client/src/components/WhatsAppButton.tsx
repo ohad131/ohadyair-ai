@@ -1,6 +1,12 @@
+import type { CSSProperties } from "react";
+
 export default function WhatsAppButton() {
   const phoneNumber = "972504003234"; // Israel format without leading 0
   const message = encodeURIComponent("שלום! אני מעוניין/ת לשמוע עוד על השירותים שלך");
+  const safePositionStyle: CSSProperties = {
+    bottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)",
+    left: "calc(env(safe-area-inset-left, 0px) + 1rem)",
+  };
 
   return (
     <a
@@ -8,8 +14,9 @@ export default function WhatsAppButton() {
       href={`https://wa.me/${phoneNumber}?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 left-6 w-16 h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 group"
+      className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 group"
       aria-label="צור קשר בוואטסאפ"
+      style={safePositionStyle}
     >
       {/* WhatsApp Icon */}
       <svg
