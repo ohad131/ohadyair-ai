@@ -1,3 +1,5 @@
+import { getAllBlogPosts, getAllProjects } from "./db";
+
 const BASE_URL = "https://www.ohadyair.cloud";
 
 type ChangeFrequency =
@@ -16,8 +18,6 @@ type SitemapEntry = {
   priority?: number;
 };
 
-type NextSitemap = SitemapEntry[];
-
 const resolveDate = (value?: Date | string | null): Date => {
   if (!value) return new Date();
   if (value instanceof Date) return value;
@@ -32,10 +32,7 @@ const selectLatestDate = (entries: SitemapEntry[]): Date | undefined => {
   }, entries[0].lastModified);
 };
 
-const buildStaticRoutes = (opts: {
-  blogUpdatedAt?: Date;
-  projectsUpdatedAt?: Date;
-}): SitemapEntry[] => {
+const buildStaticRoutes = (opts: { blogUpdatedAt?: Date; projectsUpdatedAt?: Date }): SitemapEntry[] => {
   const now = new Date();
 
   return [
@@ -86,9 +83,7 @@ const buildStaticRoutes = (opts: {
 
 const fetchBlogEntries = async (): Promise<SitemapEntry[]> => {
   try {
-    const { getAllBlogPosts } = await import("../../server/db");
     const posts = await getAllBlogPosts();
-
     return posts.map(post => ({
       url: `${BASE_URL}/blog/${post.slug}`,
       lastModified: resolveDate(post.updatedAt ?? post.publishedAt),
@@ -103,9 +98,7 @@ const fetchBlogEntries = async (): Promise<SitemapEntry[]> => {
 
 const fetchProjectEntries = async (): Promise<SitemapEntry[]> => {
   try {
-    const { getAllProjects } = await import("../../server/db");
     const projects = await getAllProjects();
-
     return projects
       .filter(project => project.slug)
       .map(project => ({
@@ -120,7 +113,7 @@ const fetchProjectEntries = async (): Promise<SitemapEntry[]> => {
   }
 };
 
-export default async function sitemap(): Promise<NextSitemap> {
+export async function buildSitemapEntries(): Promise<SitemapEntry[]> {
   const [blogEntries, projectEntries] = await Promise.all([fetchBlogEntries(), fetchProjectEntries()]);
 
   const staticRoutes = buildStaticRoutes({
@@ -129,5 +122,28 @@ export default async function sitemap(): Promise<NextSitemap> {
   });
 
   return [...staticRoutes, ...blogEntries, ...projectEntries];
+}
+
+export async function generateSitemapXml(): Promise<string> {
+  const entries = await buildSitemapEntries();
+
+  const urls = entries
+    .map(entry => {
+      const parts = [
+        `<loc>${entry.url}</loc>`,
+        `<lastmod>${entry.lastModified.toISOString()}</lastmod>`,
+        entry.changefreq ? `<changefreq>${entry.changefreq}</changefreq>` : "",
+        typeof entry.priority === "number" ? `<priority>${entry.priority.toFixed(2)}</priority>` : "",
+      ];
+      return `<url>${parts.filter(Boolean).join("")}</url>`;
+    })
+    .join("");
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    urls,
+    "</urlset>",
+  ].join("");
 }
 

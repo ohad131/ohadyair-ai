@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { getImageRecord, getVideoRecord } from "../db";
+import { generateSitemapXml } from "../sitemap";
 const MAX_BODY_LIMIT = "200mb";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -115,6 +116,21 @@ async function startServer() {
   });
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  app.get("/sitemap.xml", async (_req, res) => {
+    try {
+      const xml = await generateSitemapXml();
+      res
+        .status(200)
+        .set({
+          "Content-Type": "application/xml",
+          "Cache-Control": "public, max-age=3600",
+        })
+        .send(xml);
+    } catch (error) {
+      console.error("[sitemap] Failed to generate sitemap", error);
+      res.status(500).send("Failed to generate sitemap");
+    }
+  });
   // tRPC API
   app.use(
     "/api/trpc",
