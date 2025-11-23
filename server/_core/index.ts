@@ -9,6 +9,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { getImageRecord, getVideoRecord } from "../db";
 import { generateSitemapXml } from "../sitemap";
+import { generateRobotsTxt } from "../robots";
 const MAX_BODY_LIMIT = "200mb";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -130,6 +131,16 @@ async function startServer() {
       console.error("[sitemap] Failed to generate sitemap", error);
       res.status(500).send("Failed to generate sitemap");
     }
+  });
+  app.get("/robots.txt", (_req, res) => {
+    const robots = generateRobotsTxt();
+    res
+      .status(200)
+      .set({
+        "Content-Type": "text/plain",
+        "Cache-Control": "public, max-age=3600",
+      })
+      .send(robots);
   });
   // tRPC API
   app.use(
